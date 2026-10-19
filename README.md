@@ -8,15 +8,19 @@ Ein Rätselspiel im Stil der alten Survival-Horror-Klassiker (feste Kamera, düs
 
 Mit jeder Reparatur wird die Halle heller, sauberer und lauter: Lampen gehen an, Dreck und Rost verschwinden, die Maschinen laufen wieder an – bis die Produktion komplett hochfährt.
 
+Gedacht zum **Selbstlernen zu Hause**. Spieldauer etwa **1,5–2 Stunden**. Jede gelöste Aufgabe landet als Lerneintrag im **Berichtsheft** (Inventar), zum Nachlesen und Wiederholen.
+
 ## Starten
 
-Kein Build, keine Installation – reines HTML5/JavaScript:
+**Für Azubis:** Einfach die Datei **`nachtschicht.html`** herunterladen und im Browser öffnen (Chrome, Edge, Firefox). Das ist eine einzige Datei mit allem drin (Grafik, Sound, Schriften), läuft auch offline und lässt sich per E-Mail, USB-Stick oder Lernplattform (z. B. mebis) verteilen.
 
-- `index.html` direkt im Browser öffnen (Chrome, Edge, Firefox), **oder**
-- über einen beliebigen Webserver ausliefern, z. B. `npx http-server .`, **oder**
-- per GitHub Pages veröffentlichen (Settings → Pages → Branch wählen).
+**Zum Weiterentwickeln:** `index.html` öffnen, die Quelltexte liegen in `css/`, `js/` und `fonts/`. Nach Änderungen die Einzeldatei neu bauen:
 
-Ohne Internet wird nur die Schriftart durch eine Systemschrift ersetzt, das Spiel läuft trotzdem. Auf Tablets erscheint ein Touch-Steuerkreuz.
+```
+python3 tools/build.py
+```
+
+Der Spielstand wird im Browser gespeichert (Stempeluhr in Umkleide und Kellergang, außerdem automatisch nach jeder Reparatur).
 
 ## Steuerung
 
@@ -28,12 +32,14 @@ Ohne Internet wird nur die Schriftart durch eine Systemschrift ersetzt, das Spie
 | M | Ton an/aus |
 | Esc | Fenster schließen |
 
-Gespeichert wird an der **Stempeluhr** in der Umkleide (im Browser, `localStorage`).
+Gespeichert wird an den **Stempeluhren** (Umkleide, Kellergang) und automatisch nach jeder Reparatur.
 
 ## Spielelemente
 
-- **Räume:** Umkleide, Halle 3, Lehrwerkstatt, Lager, Schaltraum, Meisterbüro
-- **Figuren mit gestuften Tipps:** Schorsch (Schichtführer, Elektro/Pneumatik), Alois (alter Zerspaner, Mechanik), Irmgard (Lageristin, Sicherheit). Wer öfter fragt, bekommt konkretere Hinweise.
+- **Räume:** Umkleide, Halle 3, Lehrwerkstatt, Lager, Schaltraum, Meisterbüro – und im Keller: Kellergang, E-Werkstatt, Kompressorraum, Hausmeisterraum
+- **Figuren mit gestuften Tipps:** Schorsch (Schichtführer), Alois (alter Zerspaner, Mechanik), Irmgard (Lageristin, Sicherheit), Dragan (Betriebselektriker, zwielichtig). Wer öfter fragt, bekommt konkretere Hinweise.
+- **9 Anlagen** müssen laufen: Hallenbeleuchtung, Motorhalterung, Bandgetriebe, Hauptkompressor, Pneumatik-Presse, Steuerleitung, Meldeleuchte, Bandsteuerung, Trockenofen.
+- **Berichtsheft:** Nach jedem gelösten Rätsel ein Lerneintrag mit Formeln und Merksätzen.
 - **Dokumente:** Hefteinträge, Tabellenbuch-Seiten, Aushänge – teilweise unleserlich, damit man selbst denken muss – sowie Story-Dokumente.
 - **Gesundheit:** Gefährliche Fehler (unter Spannung arbeiten, Handschuhe an der Bohrmaschine, falsch verschlauchte Pneumatik) kosten Gesundheit. Verbandpäckchen in den Erste-Hilfe-Kästen.
 - **Bewertung:** Am Ende gibt es eine „Beurteilung“ mit Note, abhängig von den Fehlern.
@@ -52,6 +58,10 @@ Gespeichert wird an der **Stempeluhr** in der Umkleide (im Browser, `localStorag
 | 8 | Werkstatt, Prüfstück | Messschieber mit 1/10-Nonius ablesen (= Code fürs Meisterbüro) | LF 2 |
 | 9 | Schaltraum, Steuerschrank | LED-Vorwiderstand R = (U − U<sub>F</sub>)/I, Farbcode lesen | LF 3 |
 | 10 | Schaltraum, Steuerschrank | Verknüpfungssteuerung mit Selbsthaltung, Tür-Überwachung, Not-Halt ohne Wiederanlauf | LF 4 |
+| 11 | Kellergang, Abzweigkasten | Multimeter: Spannung parallel, Durchgang nur spannungsfrei, Strom in Reihe, P = U · I | LF 3 |
+| 12 | Werkstatt, Säulenbohrmaschine | Schutzklasse I, Schutzleiterwiderstand ≤ 0,3 Ω, Schuko-Stecker, RCD 30 mA mit Prüftaste | LF 3 |
+| 13 | Kompressorraum | Schützschaltung mit Selbsthaltung verdrahten (Öffner in Reihe, Schließer parallel) | LF 3/4 |
+| 14 | Halle, Trockenofen | R = U²/P, Reihen- und Parallelschaltung von Heizstäben | LF 3 |
 
 <details>
 <summary><b>Lösungen für Lehrkräfte (Spoiler!)</b></summary>
@@ -66,13 +76,18 @@ Gespeichert wird an der **Stempeluhr** in der Umkleide (im Browser, `localStorag
 8. 27 mm + 4 · 0,1 mm = **27,4 mm** → Code **274**.
 9. R = (24 V − 2 V) / 0,02 A = **1100 Ω** → **braun-braun-rot** (gold).
 10. Baustein 1 **ODER** (S1, K1), Baustein 2 **NICHT** (S0), Baustein 3 **UND**: Q1 = (S1 ∨ K1) ∧ B1 ∧ ¬S0.
+11. V⎓, Buchse VΩ, parallel → 24,1 V. F7 aus, Ω: Ader 3 = OL → auf Reserveader 7 umklemmen. Strom: A⎓, Buchse A, in Reihe (F7 ein) → 0,21 A; P = 24 V · 0,21 A ≈ **5 W**.
+12. Schutzklasse **I**; 19,99 Ω → **nicht bestanden**; grün-gelb an den **Schutzkontakt-Bügel**; 0,12 Ω → bestanden; Prüftaste ohne Funktion → FI tauschen, **30 mA**.
+13. F2-96 → S0-11, S0-12 → S1-13, S1-14 → A1, K1-13 → S1-13, K1-14 → S1-14 (bzw. A1).
+14. R = 230² / 1000 = **52,9 Ω**; **2 Stäbe parallel**, R<sub>ges</sub> ≈ **26,45 Ω** → 2000 W.
 
-Ablauf grob: Spind → Halle (Schorsch) → Lager (Irmgard, Sicherheitsregeln; LS-Kasten, Gewindebohrer, Zahnräder, Schlauch) → Werkstatt (Alois, Werkzeugwand) → Schaltraum (Licht) → Bandantrieb (Platte ausbauen) → Werkstatt (bohren, Gewinde) → Bandantrieb (Platte, Zahnrad) → Presse → Steuerschrank ansehen → Alois (Widerstände) → Prüfstück/Code → Meisterbüro (Schaltplan) → Steuerschrank (Widerstand, Logik) → Hauptschalter ein → Bedienpult START.
+Ablauf grob: Spind → Halle (Schorsch) → Lager (Irmgard: Sicherheitsregeln → Schlüssel + Bolzenschneider; LS-Kasten, Verbindungsklemmen, Gewindebohrer, Zahnräder, Schlauch) → Werkstatt (Alois, Werkzeugwand, gesperrte Bohrmaschine) → Schaltraum (Licht) → Kellertreppe (Gitter aufknacken) → E-Werkstatt (Dragan: Multimeter, Gerätetester; FI-Karton, Aderleitung) → Hausmeisterraum (Hilfsschalterblock, Beweise) → Kompressorraum (Schützschaltung) → Abzweigkasten (Multimeter) → Werkstatt (Schutzmaßnahmen, bohren, Gewinde) → Bandantrieb (Platte, Zahnrad) → Presse → Trockenofen → Steuerschrank ansehen → Alois (Widerstände) → Prüfstück/Code → Meisterbüro (Schaltplan) → Steuerschrank (Widerstand, Logik) → Hauptschalter ein → Bedienpult START. Elektrische Arbeiten immer mit Hauptschalter AUS + Schloss; Prüfen und Programmieren mit Hauptschalter EIN.
 </details>
 
 ## Technik
 
-- `index.html`, `css/style.css`
+- `nachtschicht.html` – fertige Einzeldatei zum Verteilen (wird mit `tools/build.py` erzeugt)
+- `index.html`, `css/style.css`, `fonts/` (VT323 und Special Elite, SIL Open Font License)
 - `js/gfx.js` – prozedurale Pixelgrafik (Räume, Figuren, Icons), keine Bilddateien
 - `js/audio.js` – prozeduraler Sound über WebAudio (Brummen, Tropfen, Türen, Stromschlag …)
 - `js/data.js` – Gegenstände und Dokumente

@@ -1,3 +1,5 @@
+@font-face { font-family: 'VT323'; font-style: normal; font-weight: 400; font-display: swap; src: url(../fonts/VT323-latin.woff2) format('woff2'); }
+@font-face { font-family: 'Special Elite'; font-style: normal; font-weight: 400; font-display: swap; src: url(../fonts/SpecialElite-latin.woff2) format('woff2'); }
 * { box-sizing: border-box; }
 html, body { margin: 0; height: 100%; background: #000; color: #d8d4c8; overflow: hidden; }
 body { display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'VT323', 'Courier New', monospace; }
@@ -196,3 +198,42 @@ body.touch #touch { display: flex; }
 #touch .tu { grid-column: 2; grid-row: 1; } #touch .tl { grid-column: 1; grid-row: 2; } #touch .td { grid-column: 2; grid-row: 2; } #touch .tr { grid-column: 3; grid-row: 2; }
 #touch .acts { display: flex; gap: 12px; }
 #touch .acts button { width: 70px; height: 70px; border-radius: 50%; }
+
+/* Erweiterung */
+.mm { flex: 1; background: #2a2614; border: 2px solid #e6c000; border-radius: 10px; padding: 0.6em 0.8em; }
+.lcd { background: #9cb89c; color: #132013; font-size: 2.2em; text-align: center; padding: 0.15em; border: 2px solid #3a4a3a; letter-spacing: 0.08em; margin-bottom: 0.4em; font-family: 'VT323', monospace; }
+.lcd.big { max-width: 12em; margin: 0.4em auto; font-size: 1.6em; }
+.btn.off { border-color: #a33; color: #f99; }
+.ml { margin: 0.4em 0; min-height: 1.2em; }
+.tschild { display: inline-flex; align-items: center; gap: 0.6em; background: #c8c8c0; color: #111; padding: 0.3em 0.8em; border: 2px solid #777; }
+svg.sym { width: 1.6em; height: 1.6em; }
+svg.sym circle, svg.sym line { fill: none; stroke: #111; stroke-width: 2; }
+svg.plug { max-height: 10em; }
+svg.plug .pbody { fill: #222; stroke: #777; stroke-width: 2; }
+svg.plug .pin { fill: #c8a040; }
+svg.plug .pe { fill: #bbb; }
+svg.plug .w { fill: none; stroke-width: 4; }
+svg.plug .br { stroke: #7a4a20; } svg.plug .bl { stroke: #2a5ad8; } svg.plug .gy { stroke: #3a3; stroke-dasharray: 5 5; }
+svg.schuetz { max-height: 18em; }
+svg.schuetz .rail { stroke: #c33; stroke-width: 3; }
+svg.schuetz .rl { fill: #f88; font-size: 13px; }
+svg.schuetz .fixw { stroke: #c33; stroke-width: 2.5; }
+svg.schuetz .comp line { stroke: #ddd; stroke-width: 2; }
+svg.schuetz .comp text { fill: #e8b84a; font-size: 12px; text-anchor: middle; }
+svg.schuetz .coil { fill: #1c1b16; stroke: #ddd; stroke-width: 2; }
+svg.schuetz .wire { stroke: #e33; stroke-width: 3; cursor: pointer; }
+svg.schuetz .wire:hover { stroke: #f99; stroke-dasharray: 4 3; }
+svg.schuetz .term { cursor: pointer; }
+svg.schuetz .term circle { fill: #333; stroke: #e8b84a; stroke-width: 2; }
+svg.schuetz .term.sel circle { fill: #e8b84a; }
+svg.schuetz .term:hover circle { fill: #6a5a20; }
+svg.schuetz .term text { font-size: 11px; text-anchor: start; fill: #ccc; }
+.vgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4em; }
+.vbtn { background: #1a1a16; border: 1px solid #4a4638; color: #ddd; cursor: pointer; font-family: inherit; font-size: 0.9em; padding: 0.2em; }
+.vbtn.sel { border-color: #e8b84a; background: #2e2b20; }
+.vbtn span { display: block; }
+svg.vs { max-height: 2.6em; margin: 0; }
+svg.vs line { stroke: #9ab; stroke-width: 2; }
+svg.vs .hz { fill: #6a2a1a; stroke: #f84; stroke-width: 1.5; }
+#modal .panel.heft { background: #e8e4d4; }
+#modal .panel.heft h2 { color: #1a3a6a; }

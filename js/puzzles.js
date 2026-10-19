@@ -44,8 +44,8 @@ const PUZZLES = {
         seq = []; render(); return;
       }
       Game.closeModal(true);
-      Game.set('gotKey');
-      Game.say([['Irmgard', '…'], ['Irmgard', 'Fehlerfrei. Der Brandl hat recht gehabt mit dir.'], ['Irmgard', 'Da. Der Schaltraumschlüssel. Und wenn du LS-Schalter oder sonst was brauchst – nimm dir aus den Regeln. Ich schreib’s auf den Brandl.']], () => Game.give('schluessel'));
+      Game.set('gotKey'); Game.lernen('sicherheit');
+      Game.say([['Irmgard', '…'], ['Irmgard', 'Fehlerfrei. Der Brandl hat recht gehabt mit dir.'], ['Irmgard', 'Da. Der Schaltraumschlüssel. Und wenn du LS-Schalter oder sonst was brauchst – nimm dir aus den Regeln. Ich schreib’s auf den Brandl.'], ['Irmgard', 'Und nimm den Bolzenschneider mit. Der Kowalski hat das Kellergitter mit seinem eigenen Schloss zugesperrt. Seit wann sperrt ein Hausmeister vor uns zu?']], () => { Game.give('schluessel'); Game.give('bolzenschneider', true); Game.toast('Erhalten: Bolzenschneider'); });
     };
   },
 
@@ -74,7 +74,7 @@ const PUZZLES = {
       if (v === 'B6' || v === 'B10') { Game.mistake(); Snd.play('breaker'); fb(p, `Du setzt den ${v} ein … KLACK – beim Einschalten der Lampen löst er sofort aus. ${v.slice(1)} A &lt; 13 A: zu klein!`); return; }
       if (v === 'B32') { Game.mistake(); fb(p, 'Halt! Ein B32 würde bei 32 A erst auslösen – die 2,5-mm²-Leitung verträgt aber nur 20 A. Bei Überlast würde die Leitung heiß werden: Brandgefahr. Der LS muss die <b>Leitung</b> schützen!'); return; }
       Game.closeModal(true);
-      Game.take('ls');
+      Game.take('ls'); Game.lernen('ls');
       Snd.play('clank');
       Game.say(['I = 3000 W / 230 V ≈ 13,0 A. Der B16 liegt darüber und schützt die 2,5-mm²-Leitung (I<sub>z</sub> = 20 A).', 'Du rastest den B16 auf die Hutschiene, klemmst die Leitung an und ziehst die Klemme nach. Abdeckung drauf.', 'Jetzt: Schloss ab, Hauptschalter ein.'], () => Game.fix('licht'));
     });
@@ -123,7 +123,7 @@ const PUZZLES = {
         return;
       }
       Game.closeModal(true);
-      Game.take('platte'); Game.give('platte_gebohrt', true);
+      Game.take('platte'); Game.give('platte_gebohrt', true); Game.lernen('bohren');
       Snd.play('machine');
       Game.say(['n = 25 · 1000 / (π · 8,5) ≈ 936 1/min → Stufe 900.', 'Mit etwas Kühlschmierstoff frisst sich der 8,5er-Bohrer sauber durch den Stahl. Späne kringeln sich blau-silbern.', 'Kernloch fertig. Jetzt das Gewinde: Gewindebohrer ins Windeisen und am Schraubstock schneiden.'], () => { Snd.play('pickup'); Game.toast('Erhalten: ' + ITEMS.platte_gebohrt.name); });
     };
@@ -156,7 +156,7 @@ const PUZZLES = {
       if (t === 'a') { Game.mistake(); fb(p, 'Knacks! Die Späne verstopfen die Nuten, der Gewindebohrer klemmt … zum Glück ist er nicht abgebrochen. Nochmal – diesmal mit Spanbrechen.'); return; }
       if (t === 'c') { Game.mistake(); fb(p, 'Hammer auf einen gehärteten Gewindebohrer? Der bricht wie Glas – und steckt dann für immer in der Platte. Lass das.'); return; }
       Game.closeModal(true);
-      Game.take('platte_gebohrt'); Game.take('gewindeschneider'); Game.give('platte_fertig', true);
+      Game.take('platte_gebohrt'); Game.take('gewindeschneider'); Game.give('platte_fertig', true); Game.lernen('gewinde');
       Snd.play('ok');
       Game.say(['Vorschneider, Mittelschneider, Fertigschneider. Ein Tropfen Schneidöl, eine Umdrehung vor, eine halbe zurück.', 'Zum Schluss prüfst du mit einer M10-Schraube: Sie läuft satt und ohne Wackeln ins Gewinde.', 'Die Halteplatte ist fertig. Ab damit zum Bandantrieb in der Halle!'], () => { Snd.play('pickup'); Game.toast('Erhalten: ' + ITEMS.platte_fertig.name); });
     };
@@ -183,7 +183,7 @@ const PUZZLES = {
       const n2 = Math.round(1400 * 18 / z);
       if (z !== 72) { Game.mistake(); fb(p, `Mit z₂ = ${z} wäre n₂ = 1400 · 18 / ${z} ≈ ${n2} 1/min. ${n2 > 350 ? 'Zu schnell – die Gehäuse fliegen vom Band!' : 'Zu langsam – so schaffst du die 2000 Stück nie bis Montag.'}`); return; }
       Game.closeModal(true);
-      Game.take('zahnraeder');
+      Game.take('zahnraeder'); Game.lernen('getriebe');
       Snd.play('clank');
       Game.say(['i = 1400 / 350 = 4  →  z₂ = i · z₁ = 4 · 18 = 72.', 'Du setzt das Rad mit 72 Zähnen auf die Welle, sicherst es mit der Passfeder und stellst das Flankenspiel ein. Ein Klecks Fett drauf.'], () => Game.fix('getriebe'));
     });
@@ -255,7 +255,7 @@ const PUZZLES = {
       if (b < 5.5) { Game.mistake(); fb(p, `Mit ${b.toString().replace('.', ',')} bar drückt der Stempel zu schwach – die Gehäuse werden nicht sauber geprägt.`); return; }
       if (b > 6.5) { Game.mistake(); Snd.play('hiss'); fb(p, `Bei ${b.toString().replace('.', ',')} bar zischt das Sicherheitsventil. Über dem zulässigen Betriebsdruck!`); return; }
       Game.closeModal(true);
-      Game.take('schlauch');
+      Game.take('schlauch'); Game.lernen('pneumatik');
       Snd.play('hiss');
       Game.say(['Du schaltest die Druckluft auf. Kurzes Zischen – dann ist alles dicht.', 'Linker Taster: nichts. Rechter Taster: nichts. Beide zusammen: WUMMS. Der Stempel fährt herunter und federt sauber zurück.', 'Zweidruckventil = UND. So bleiben beide Hände außerhalb der Gefahrenzone.'], () => Game.fix('presse'));
     };
@@ -299,6 +299,7 @@ const PUZZLES = {
       }
       Game.closeModal(true);
       Snd.play('ok');
+      Game.lernen('widerstand');
       Game.say(['U<sub>R</sub> = 24 V − 2 V = 22 V;  R = 22 V / 0,02 A = 1100 Ω = 1,1 kΩ  →  braun-braun-rot.', 'Du klemmst den 1,1-kΩ-Widerstand anstelle des verkohlten auf die Klemmleiste.', 'Wenn der Hauptschalter wieder an ist, sollte die Meldeleuchte grün leuchten.'], () => Game.fix('meldung'));
     });
   },
@@ -334,7 +335,7 @@ const PUZZLES = {
       <div class="fb"></div>`, { cls: 'wide' });
     p.querySelector('.go').onclick = () => {
       const v = num(p.querySelector('#mv').value);
-      if (Math.abs(v - 27.4) < 0.001) { Game.set('codeKnown'); fb(p, 'Richtig: 27 mm + 4 × 0,1 mm = <b>27,4 mm</b>. Der Code fürs Meisterbüro lautet also <b>274</b>.', true); }
+      if (Math.abs(v - 27.4) < 0.001) { Game.set('codeKnown'); Game.lernen('messschieber'); fb(p, 'Richtig: 27 mm + 4 × 0,1 mm = <b>27,4 mm</b>. Der Code fürs Meisterbüro lautet also <b>274</b>.', true); }
       else { Game.mistake(); fb(p, isNaN(v) ? 'Gib den Messwert in mm ein, z. B. 12,7.' : `${p.querySelector('#mv').value} mm stimmt nicht. Nullstrich des Nonius → ganze mm; fluchtender Noniusstrich → Zehntel.`); }
     };
   },
@@ -433,9 +434,349 @@ const PUZZLES = {
       const rows = tests.map(tc => { q = evalQ(tc.s1, q, tc.b1, tc.s0); q = evalQ(tc.s1, q, tc.b1, tc.s0); const ok = q === tc.want; if (!ok) allOk = false; return `<tr class="${ok ? 'ok' : 'no'}"><td>${tc.t}</td><td>${q ? 'läuft' : 'steht'}</td><td>${ok ? '✔' : '✘'}</td></tr>`; });
       if (!allOk) { Game.mistake(); fb(p, `<table class="tb">${rows.join('')}</table>Das Programm erfüllt die Funktionsbeschreibung noch nicht.`); return; }
       Game.closeModal(true);
-      Game.take('schaltplan');
+      Game.take('schaltplan'); Game.lernen('logik');
       Snd.play('ok');
       Game.say(['Q1 = (S1 ODER K1) UND B1 UND NICHT S0.', 'Das Display springt von „ERR“ auf „RUN“. Alle Testfälle bestanden: Selbsthaltung, Tür-Überwachung, Not-Halt ohne Wiederanlauf.'], () => Game.fix('steuerung'));
     };
   },
 };
+
+// ------------------------------------------------------------
+//  Erweiterung: Elektro vertieft
+// ------------------------------------------------------------
+Object.assign(PUZZLES, {
+  // ---------------------------------------------------------------
+  // 11) Multimeter: Spannung, Durchgang, Strom (LF3) – Steuerleitung FB-01
+  // ---------------------------------------------------------------
+  multimeter() {
+    const st = { step: 1, f7: true, measured: {} };
+    const READ = { 1: '0,4 Ω', 2: '0,4 Ω', 3: 'OL', 4: '0,4 Ω', 5: '0,5 Ω', 6: '0,4 Ω', 7: '0,4 Ω' };
+    const p = Game.modal(`<h2>Abzweigkasten FB-01 – Steuerleitung 24 V DC</h2>
+      <div class="cols">
+        <div class="mm">
+          <div class="lcd">- - - -</div>
+          <label class="pl">Drehschalter <select id="dial"><option value="">–</option><option value="VDC">V ⎓ (Gleichspannung)</option><option value="VAC">V ~ (Wechselspannung)</option><option value="OHM">Ω / Durchgang</option><option value="ADC">A ⎓ (Gleichstrom)</option></select></label>
+          <label class="pl">Rote Messleitung in <select id="jack"><option value="">–</option><option value="VO">Buchse VΩ</option><option value="A">Buchse 10 A</option></select></label>
+          <p class="note">Schwarze Messleitung steckt in COM.</p>
+          <p>Steuersicherung F7 (24 V): <button class="btn small f7"></button></p>
+        </div>
+        <div class="side task"></div>
+      </div>
+      <div class="fb"></div>`, { cls: 'wide' });
+    const lcd = p.querySelector('.lcd');
+    const val = id => p.querySelector('#' + id).value;
+    const live = () => G.mainSwitch === 'on' && st.f7;
+    const f7btn = p.querySelector('.f7');
+    const renderF7 = () => { f7btn.textContent = st.f7 ? 'EIN – zum Ausschalten klicken' : 'AUS – zum Einschalten klicken'; f7btn.classList.toggle('off', !st.f7); };
+    f7btn.onclick = () => { st.f7 = !st.f7; Snd.play('breaker'); renderF7(); };
+    renderF7();
+    const setupOk = () => {
+      const d = val('dial'), j = val('jack');
+      if (!d || !j) { fb(p, 'Stell erst den Drehschalter ein und steck die rote Messleitung in eine Buchse.'); return false; }
+      if (j === 'A' && d !== 'ADC') { Game.mistake(); fb(p, 'Die rote Messleitung steckt in der A-Buchse, der Drehschalter steht aber nicht auf A. Gefährlich falsch – in der A-Buchse hat das Messgerät fast keinen Innenwiderstand!'); return false; }
+      if (d === 'ADC' && j !== 'A') { Game.mistake(); fb(p, 'Für eine Strommessung gehört die rote Messleitung in die A-Buchse.'); return false; }
+      return true;
+    };
+    const shortCircuit = () => {
+      Game.mistake(); Snd.play('zap'); lcd.textContent = 'FUSE';
+      if (!Game.hurt(10, 'Kurzschluss über das Messgerät.')) fb(p, 'PENG! Auf A und <b>parallel</b> angeschlossen ist das Messgerät praktisch ein Draht – Kurzschluss! Ein Lichtbogen, die Feinsicherung im Multimeter ist durch. (Zum Glück hat Dragan Ersatz im Koffer.) Strom misst man <b>in Reihe</b>.');
+    };
+    const tasks = {
+      1: `<p><b>Aufgabe 1:</b> Prüfe, ob an Klemme 1 (+) und Klemme 2 (−) die Steuerspannung anliegt.</p>
+          <label class="cb"><input type="radio" name="conn" value="par"> Messspitzen an Klemme 1 und 2 (parallel)</label>
+          <label class="cb"><input type="radio" name="conn" value="ser"> Ader an Klemme 1 lösen, Messgerät dazwischen (in Reihe)</label>
+          <div class="row"><button class="btn go1">Messen</button></div>`,
+      2: `<p><b>Aufgabe 2:</b> Miss die Adern 1–7 auf Durchgang. Dragan hat am Band alle Adernenden gebrückt.</p>
+          <div class="choices">${[1, 2, 3, 4, 5, 6, 7].map(n => `<button class="btn small ad" data-n="${n}">Ader ${n}${n === 7 ? ' (Reserve)' : ''}</button>`).join('')}</div>
+          <div class="ml"></div>
+          <p>Unterbrochene Ader: <select id="brk"><option value="">–</option>${[1, 2, 3, 4, 5, 6].map(n => `<option>${n}</option>`).join('')}</select> <button class="btn small go2">Umklemmen</button></p>`,
+      3: `<p><b>Aufgabe 3:</b> Für das Prüfprotokoll: Miss die Stromaufnahme der Schützspule K2 (Bandmotor) – und berechne ihre Leistung.</p>
+          <label class="cb"><input type="radio" name="conn" value="par"> Messspitzen an A1 und A2 der Spule (parallel)</label>
+          <label class="cb"><input type="radio" name="conn" value="ser"> Zuleitung an A1 lösen, Messgerät dazwischen (in Reihe)</label>
+          <div class="row"><button class="btn go3">Messen</button></div>
+          <p class="pw hidden">Leistung der Spule: P = <input class="inp" id="pw" size="5"> W <button class="btn small go4">Eintragen</button></p>`,
+    };
+    const renderTask = () => {
+      p.querySelector('.task').innerHTML = tasks[st.step];
+      const q = s => p.querySelector(s);
+      const conn = () => (p.querySelector('input[name=conn]:checked') || {}).value;
+      if (st.step === 1) q('.go1').onclick = () => {
+        if (!setupOk()) return;
+        const d = val('dial'), c = conn();
+        if (!c) { fb(p, 'Wie schließt du das Messgerät an?'); return; }
+        if (d === 'ADC' && c === 'par' && live()) { shortCircuit(); return; }
+        if (d === 'OHM' && live()) { Game.mistake(); lcd.textContent = 'Err'; Snd.play('err'); fb(p, 'Das Gerät piept und zeigt Unsinn. Widerstand nie unter Spannung messen!'); return; }
+        if (d === 'ADC') { Game.mistake(); fb(p, 'Gefragt ist die Spannung, nicht der Strom.'); return; }
+        if (d === 'OHM') { fb(p, 'Gefragt ist die Spannung.'); return; }
+        if (c === 'ser') { Game.mistake(); lcd.textContent = '23.9'; fb(p, 'In Reihe geschaltet unterbricht das Voltmeter mit seinem riesigen Innenwiderstand den Stromkreis – das Ergebnis taugt nichts. Spannung misst man <b>parallel</b>.'); return; }
+        if (d === 'VAC') { Game.mistake(); lcd.textContent = '0.3 ~'; fb(p, '0,3 V~? Die Steuerspannung ist <b>Gleichspannung</b> (DC). Falscher Messbereich.'); return; }
+        if (!live()) { lcd.textContent = '0.00 V'; fb(p, G.mainSwitch !== 'on' ? '0,00 V. Kein Wunder: Der Hauptschalter oben im Schaltraum ist aus.' : '0,00 V – die Steuersicherung F7 ist ausgeschaltet.'); return; }
+        lcd.textContent = '24.1 V'; Snd.play('ok');
+        fb(p, '24,1 V ⎓ – die Steuerspannung liegt an. Das Netzteil ist in Ordnung, der Fehler muss in der Leitung liegen.', true);
+        st.step = 2; renderTask();
+      };
+      if (st.step === 2) {
+        p.querySelectorAll('.ad').forEach(b => b.onclick = () => {
+          const d = val('dial');
+          if (!setupOk()) return;
+          if (d !== 'OHM') { fb(p, 'Für eine Durchgangsprüfung muss der Drehschalter auf Ω / Durchgang.'); return; }
+          if (live()) { Game.mistake(); lcd.textContent = 'Err'; Snd.play('err'); fb(p, 'Halt! Die Leitung steht noch unter Spannung. Widerstand und Durchgang misst man nur <b>spannungsfrei</b> – erst F7 ausschalten.'); return; }
+          const n = +b.dataset.n;
+          st.measured[n] = READ[n]; lcd.textContent = READ[n]; Snd.play(READ[n] === 'OL' ? 'select' : 'ok');
+          p.querySelector('.ml').innerHTML = Object.keys(st.measured).map(k => `Ader ${k}: <b>${st.measured[k]}</b>`).join(' · ');
+          p.querySelector('.fb').innerHTML = ''; p.querySelector('.fb').className = 'fb';
+        });
+        q('.go2').onclick = () => {
+          const b = +val('brk');
+          if (!b) { fb(p, 'Welche Ader ist unterbrochen?'); return; }
+          if (!st.measured[b]) { fb(p, `Ader ${b} hast du noch gar nicht gemessen. Erst messen, dann reparieren!`); return; }
+          if (b !== 3) { Game.mistake(); fb(p, `Ader ${b} hat ${st.measured[b]} – also Durchgang. „OL“ (overload) bedeutet: Widerstand unendlich groß → Unterbrechung.`); return; }
+          Snd.play('ok');
+          fb(p, 'Du klemmst Ader 3 auf beiden Seiten ab und legst das Signal mit den Verbindungsklemmen auf die Reserveader 7. Nachgemessen: 0,4 Ω. Beschriftung angepasst.', true);
+          st.step = 3; renderTask();
+        };
+      }
+      if (st.step === 3) {
+        q('.go3').onclick = () => {
+          if (!setupOk()) return;
+          const d = val('dial'), c = conn();
+          if (!c) { fb(p, 'Wie schließt du das Messgerät an?'); return; }
+          if (d === 'ADC' && c === 'par') { if (live()) shortCircuit(); else fb(p, 'Zum Glück ist gerade keine Spannung drauf – denn auf A und parallel wäre das ein Kurzschluss! Strom misst man in Reihe.'); return; }
+          if (d !== 'ADC') { fb(p, 'Gefragt ist der Strom: Drehschalter auf A ⎓.'); return; }
+          if (!live()) { lcd.textContent = '0.00 A'; fb(p, 'Es fließt kein Strom – der Stromkreis ist ausgeschaltet. Für die Strommessung müssen F7 ' + (G.mainSwitch !== 'on' ? 'und der Hauptschalter ' : '') + 'eingeschaltet sein.'); return; }
+          lcd.textContent = '0.21 A'; Snd.play('ok');
+          fb(p, 'Das Schütz zieht an: 0,21 A. Jetzt noch die Leistung berechnen.', true);
+          q('.pw').classList.remove('hidden');
+        };
+        q('.go4').onclick = () => {
+          const w = num(val('pw'));
+          if (!(w >= 4.9 && w <= 5.2)) { Game.mistake(); fb(p, isNaN(w) ? 'Trag die Leistung in Watt ein.' : `${val('pw')} W stimmt nicht. P = U · I.`); return; }
+          Game.closeModal(true);
+          Game.take('klemmen'); Game.lernen('multimeter');
+          Game.say(['P = U · I = 24 V · 0,21 A ≈ 5,0 W. Ins Prüfprotokoll eingetragen.', 'Spannung parallel, Strom in Reihe, Widerstand nur spannungsfrei. Die Steuerleitung zum Band ist wieder heil.'], () => Game.fix('leitung'));
+        };
+      }
+    };
+    renderTask();
+  },
+
+  // ---------------------------------------------------------------
+  // 12) Schutzmaßnahmen: Schutzklasse, Schutzleiter, RCD (LF3)
+  // ---------------------------------------------------------------
+  schutz() {
+    let step = 1;
+    const p = Game.modal(`<h2>Säulenbohrmaschine – elektrische Prüfung</h2><div class="sbody"></div><div class="fb"></div>`, { cls: 'wide' });
+    const body = p.querySelector('.sbody');
+    const radio = n => (p.querySelector(`input[name=${n}]:checked`) || {}).value;
+    const steps = {
+      1: () => `<p><b>1. Sichtprüfung:</b> Typenschild der Maschine.</p>
+        <div class="tschild"><b>SB 25</b> · 400 V 3~ · 0,75 kW · IP 54 · <svg viewBox="0 0 30 30" class="sym"><circle cx="15" cy="15" r="13"/><line x1="15" y1="5" x2="15" y2="15"/><line x1="7" y1="15" x2="23" y2="15"/><line x1="9.5" y1="19" x2="20.5" y2="19"/><line x1="12" y1="23" x2="18" y2="23"/></svg></div>
+        <p>Welche Schutzklasse hat die Maschine – und wie ist sie geschützt?</p>
+        <label class="cb"><input type="radio" name="sk" value="1"> Schutzklasse I – Schutzleiter am Gehäuse</label>
+        <label class="cb"><input type="radio" name="sk" value="2"> Schutzklasse II – Schutzisolierung</label>
+        <label class="cb"><input type="radio" name="sk" value="3"> Schutzklasse III – Schutzkleinspannung</label>
+        <div class="row"><button class="btn nx">Weiter</button></div>`,
+      2: () => `<p><b>2. Schutzleiterwiderstand messen</b> mit dem Gerätetester: Prüfspitze an blankes Metall des Gehäuses, Stecker der Maschine im Prüfgerät.</p>
+        <div class="row"><button class="btn ms">Messen</button></div><div class="lcd big">- - -</div>
+        <p>Ergebnis:</p>
+        <label class="cb"><input type="radio" name="r1" value="ok"> Bestanden</label>
+        <label class="cb"><input type="radio" name="r1" value="no"> Nicht bestanden – Schutzleiter unterbrochen</label>
+        <div class="row"><button class="btn nx">Weiter</button></div>`,
+      3: () => `<p><b>3. Stecker öffnen.</b> Braun und Blau sitzen an den Kontaktstiften, die grün-gelbe Ader hängt lose herum – die Klemmschraube wurde gelöst.</p>
+        <svg viewBox="0 0 220 150" class="fig plug"><circle cx="100" cy="55" r="48" class="pbody"/><circle cx="68" cy="55" r="7" class="pin"/><circle cx="132" cy="55" r="7" class="pin"/>
+        <rect x="92" y="6" width="16" height="10" class="pe"/><rect x="92" y="94" width="16" height="10" class="pe"/>
+        <path d="M98 146 L68 62" class="w br"/><path d="M104 146 L132 62" class="w bl"/><path d="M94 146 Q50 135 30 112" class="w gy"/><text x="40" y="140" class="small">grün-gelb (lose)</text>
+        <text x="68" y="40" class="small">Stift A</text><text x="132" y="40" class="small">Stift B</text><text x="170" y="10" class="small">Schutzkontakt-Bügel</text></svg>
+        <p>Grün-gelbe Ader anklemmen an:</p>
+        <label class="cb"><input type="radio" name="pe" value="a"> Kontaktstift A (zu Braun)</label>
+        <label class="cb"><input type="radio" name="pe" value="b"> Kontaktstift B (zu Blau)</label>
+        <label class="cb"><input type="radio" name="pe" value="pe"> Schutzkontakt-Bügel</label>
+        <div class="row"><button class="btn nx">Anklemmen</button></div>`,
+      4: () => `<p><b>4. Wiederholungsmessung</b> Schutzleiterwiderstand.</p>
+        <div class="row"><button class="btn ms">Messen</button></div><div class="lcd big">- - -</div>
+        <label class="cb"><input type="radio" name="r2" value="ok"> Bestanden (Grenzwert eingehalten)</label>
+        <label class="cb"><input type="radio" name="r2" value="no"> Nicht bestanden</label>
+        <div class="row"><button class="btn nx">Weiter</button></div>`,
+      5: () => `<p><b>5. Fehlerstrom-Schutzschalter.</b> Warum hat der FI nicht ausgelöst, als Alois das Gehäuse angefasst hat? An der Werkstatt-Unterverteilung: FI-Schutzschalter 40 A / 30 mA.</p>
+        <div class="row"><button class="btn tt">Prüftaste „T“ drücken</button></div>
+        <div class="fires hidden"><p>Was tust du?</p>
+        <label class="cb"><input type="radio" name="fi" value="weiter"> Weiterarbeiten – der LS-Schalter schützt ja auch</label>
+        <label class="cb"><input type="radio" name="fi" value="tausch"> FI austauschen (vorher Werkstatt-UV freischalten, sichern, prüfen)</label>
+        <p>Neuer FI aus dem Karton: <select id="idn"><option value="">–</option><option value="30">I<sub>ΔN</sub> = 30 mA</option><option value="300">I<sub>ΔN</sub> = 300 mA</option><option value="500">I<sub>ΔN</sub> = 500 mA</option></select></p>
+        <div class="row"><button class="btn nx">Einbauen und Prüftaste drücken</button></div></div>`,
+    };
+    const render = () => {
+      body.innerHTML = steps[step]();
+      const nx = body.querySelector('.nx'), ms = body.querySelector('.ms'), tt = body.querySelector('.tt');
+      let measured = false;
+      if (ms) ms.onclick = () => { measured = true; Snd.play('select'); body.querySelector('.lcd').textContent = step === 2 ? 'R(PE) > 19,99 Ω' : 'R(PE) = 0,12 Ω'; };
+      if (tt) tt.onclick = () => { Snd.play('clank'); fb(p, 'Nichts passiert. Die Taste lässt sich kaum bewegen – unter der Abdeckung klebt Sekundenkleber. Der FI ist <b>funktionsunfähig</b>!'); body.querySelector('.fires').classList.remove('hidden'); };
+      if (nx) nx.onclick = () => {
+        if (step === 1) {
+          const v = radio('sk'); if (!v) { fb(p, 'Wähle eine Antwort.'); return; }
+          if (v !== '1') { Game.mistake(); fb(p, 'Schau dir das Symbol genau an: Das ist das Erdungszeichen ⏚ – Schutzleiteranschluss.'); return; }
+          fb(p, 'Richtig: Schutzklasse I. Das Metallgehäuse ist über den Schutzleiter (PE) geerdet.', true); step = 2; render(); return;
+        }
+        if (step === 2 || step === 4) {
+          if (!measured) { fb(p, 'Erst messen!'); return; }
+          const v = radio(step === 2 ? 'r1' : 'r2'); if (!v) { fb(p, 'Bestanden oder nicht?'); return; }
+          if (step === 2 && v === 'ok') { Game.mistake(); fb(p, 'Über 19,99 Ω? Der Grenzwert liegt bei <b>0,3 Ω</b>. Der Schutzleiter ist praktisch nicht vorhanden – bei einem Fehler läge das Gehäuse unter Spannung!'); return; }
+          if (step === 4 && v === 'no') { Game.mistake(); fb(p, '0,12 Ω ist kleiner als der Grenzwert 0,3 Ω – also bestanden.'); return; }
+          fb(p, step === 2 ? 'Nicht bestanden. Grenzwert 0,3 Ω deutlich überschritten.' : '0,12 Ω ≤ 0,3 Ω – bestanden. (Isolationswiderstand: 250 MΩ, auch in Ordnung.)', true);
+          step++; render(); return;
+        }
+        if (step === 3) {
+          const v = radio('pe'); if (!v) { fb(p, 'Wohin mit der grün-gelben Ader?'); return; }
+          if (v !== 'pe') {
+            Game.mistake(); Game.closeModal(true); Snd.play('zap');
+            if (!Game.hurt(30, v === 'a' ? 'Der Schutzleiter lag an Außenleiter-Potenzial – das ganze Gehäuse stand unter Spannung.' : 'Der Schutzleiter war an einen stromführenden Kontakt geklemmt.'))
+              Game.say(['Du steckst den Stecker ein und berührst das Gehäuse – ZACK!', v === 'a' ? 'Jetzt liegt der Außenleiter direkt am Gehäuse! Und der defekte FI löst auch nicht aus.' : 'Auch der Neutralleiter kann Spannung gegen Erde führen. Und PE gehört nie an einen Stift!', 'Grün-gelb ist IMMER der Schutzleiter und gehört an den Schutzkontakt.']);
+            return;
+          }
+          Snd.play('ok'); fb(p, 'Grün-gelb an den Schutzkontakt-Bügel, Schraube fest, Zugentlastung drauf.', true); step = 4; render(); return;
+        }
+        if (step === 5) {
+          const v = radio('fi'); if (!v) { fb(p, 'Was tust du?'); return; }
+          if (v === 'weiter') { Game.mistake(); fb(p, 'Der LS schützt die <b>Leitung</b>, nicht den Menschen! Er löst erst bei vielen Ampere aus – für einen Menschen sind schon 50 mA lebensgefährlich. Ohne funktionierenden FI kein Personenschutz.'); return; }
+          const i = val => p.querySelector('#idn').value;
+          if (!i()) { fb(p, 'Welchen FI baust du ein?'); return; }
+          if (i() !== '30') { Game.mistake(); fb(p, `Ein FI mit ${i()} mA dient dem Brandschutz. Für den <b>Personenschutz</b> brauchst du I<sub>ΔN</sub> ≤ 30 mA.`); return; }
+          Game.closeModal(true);
+          Game.take('fi_kasten'); Game.set('schutzOk'); Game.lernen('schutz'); Snd.play('breaker');
+          Game.say(['Neuer FI 30 mA eingebaut. Prüftaste „T“ – KLACK! Er löst sauber aus. Wieder eingeschaltet.', 'Du reißt das Flatterband von der Bohrmaschine und klebst eine neue Prüfplakette drauf.', 'Schutzklasse I, Schutzleiter ≤ 0,3 Ω, FI 30 mA mit Prüftaste getestet. Jetzt darf hier wieder gebohrt werden.']);
+        }
+      };
+    };
+    render();
+  },
+
+  // ---------------------------------------------------------------
+  // 13) Schützschaltung mit Selbsthaltung (LF3/LF4)
+  // ---------------------------------------------------------------
+  schuetz() {
+    const T = {
+      L: [300, 20, 'L'], F2_95: [90, 45, '95'], F2_96: [90, 80, '96'], S0_11: [90, 105, '11'], S0_12: [90, 140, '12'],
+      S1_13: [90, 170, '13'], S1_14: [90, 205, '14'], K1_13: [210, 170, '13'], K1_14: [210, 205, '14'], A1: [90, 235, 'A1'], A2: [90, 285, 'A2'], N: [300, 310, 'N'],
+    };
+    const fixed = [['L', 'F2_95'], ['A2', 'N']];
+    let wires = [], sel = null;
+    const p = Game.modal(`<h2>Kompressor K-01 – Steuerstromkreis verdrahten</h2>
+      <p class="note">Klicke zwei Klemmen nacheinander an, um sie mit einer Ader zu verbinden. Klick auf eine Ader entfernt sie. (Stromlaufplan: siehe Dokumente.)</p>
+      <div class="cols"><svg viewBox="0 0 360 330" class="fig schuetz">
+        <line x1="20" y1="20" x2="340" y2="20" class="rail"/><text x="14" y="24" class="rl">L</text>
+        <line x1="20" y1="310" x2="340" y2="310" class="rail"/><text x="14" y="314" class="rl">N</text>
+        <line x1="90" y1="20" x2="90" y2="45" class="fixw"/><line x1="90" y1="285" x2="90" y2="310" class="fixw"/>
+        <g class="comp"><line x1="90" y1="45" x2="90" y2="54"/><line x1="90" y1="71" x2="90" y2="80"/><line x1="90" y1="54" x2="80" y2="71"/><line x1="90" y1="56" x2="96" y2="56"/><text x="40" y="66">F2</text></g>
+        <g class="comp"><line x1="90" y1="105" x2="90" y2="114"/><line x1="90" y1="131" x2="90" y2="140"/><line x1="90" y1="114" x2="80" y2="131"/><line x1="90" y1="116" x2="96" y2="116"/><text x="40" y="126">S0</text></g>
+        <g class="comp"><line x1="90" y1="170" x2="90" y2="179"/><line x1="90" y1="196" x2="90" y2="205"/><line x1="80" y1="179" x2="90" y2="196"/><text x="40" y="191">S1</text></g>
+        <g class="comp"><line x1="210" y1="170" x2="210" y2="179"/><line x1="210" y1="196" x2="210" y2="205"/><line x1="200" y1="179" x2="210" y2="196"/><text x="236" y="191">K1</text></g>
+        <g class="comp"><rect x="78" y="248" width="24" height="24" class="coil"/><line x1="90" y1="235" x2="90" y2="248"/><line x1="90" y1="272" x2="90" y2="285"/><text x="40" y="264">K1</text></g>
+        <g class="wires"></g><g class="terms"></g>
+      </svg>
+      <div class="side"><p><b>Bauteile</b></p><p class="note">F2 – Motorschutzrelais (Öffner 95-96)<br>S0 – AUS-Taster (Öffner 11-12)<br>S1 – EIN-Taster (Schließer 13-14)<br>K1 – Schützspule (A1-A2)<br>K1 – Hilfskontakt (Schließer 13-14, neu aufgesteckt)</p>
+        <div class="row"><button class="btn rs">Alle Adern entfernen</button><button class="btn go">Probelauf</button></div></div></div>
+      <div class="fb"></div>`, { cls: 'wide' });
+    const svgW = p.querySelector('.wires'), svgT = p.querySelector('.terms');
+    const render = () => {
+      svgW.innerHTML = wires.map((w, i) => `<line x1="${T[w[0]][0]}" y1="${T[w[0]][1]}" x2="${T[w[1]][0]}" y2="${T[w[1]][1]}" class="wire" data-i="${i}"/>`).join('');
+      svgT.innerHTML = Object.keys(T).map(k => `<g class="term ${sel === k ? 'sel' : ''}" data-k="${k}"><circle cx="${T[k][0]}" cy="${T[k][1]}" r="6"/><text x="${T[k][0] + 11}" y="${T[k][1] + 4}">${T[k][2]}</text></g>`).join('');
+      svgW.querySelectorAll('.wire').forEach(l => l.onclick = () => { wires.splice(+l.dataset.i, 1); Snd.play('select'); render(); });
+      svgT.querySelectorAll('.term').forEach(g => g.onclick = () => {
+        const k = g.dataset.k;
+        if (!sel) sel = k;
+        else if (sel === k) sel = null;
+        else {
+          const w = [sel, k].sort();
+          if (!wires.some(x => x[0] === w[0] && x[1] === w[1])) wires.push(w);
+          sel = null; Snd.play('clank');
+        }
+        render();
+      });
+    };
+    p.querySelector('.rs').onclick = () => { wires = []; sel = null; render(); };
+    // Simulation über Knotenverbindungen (Union-Find)
+    const sim = (s) => {
+      const par = {}; Object.keys(T).forEach(k => par[k] = k);
+      const f = k => par[k] === k ? k : (par[k] = f(par[k]));
+      const u = (a, b) => { par[f(a)] = f(b); };
+      fixed.concat(wires).forEach(w => u(w[0], w[1]));
+      if (!s.trip) u('F2_95', 'F2_96');
+      if (!s.s0) u('S0_11', 'S0_12');
+      if (s.s1) u('S1_13', 'S1_14');
+      if (s.k) u('K1_13', 'K1_14');
+      return { short: f('L') === f('N'), on: f('A1') === f('L') && f('A2') === f('N') };
+    };
+    const run = (s, kPrev) => { let k = kPrev; for (let i = 0; i < 4; i++) { const r = sim({ ...s, k }); if (r.short) return 'short'; k = r.on; } return k; };
+    p.querySelector('.go').onclick = () => {
+      if (!wires.length) { fb(p, 'Noch keine Adern verlegt.'); return; }
+      const tests = [
+        [{ s1: 0, s0: 0, trip: 0 }, false, 'Ruhezustand'],
+        [{ s1: 1, s0: 0, trip: 0 }, true, 'EIN-Taster S1 drücken'],
+        [{ s1: 0, s0: 0, trip: 0 }, true, 'S1 loslassen → Selbsthaltung'],
+        [{ s1: 0, s0: 1, trip: 0 }, false, 'AUS-Taster S0 drücken'],
+        [{ s1: 0, s0: 0, trip: 0 }, false, 'S0 loslassen → bleibt aus'],
+        [{ s1: 1, s0: 0, trip: 0 }, true, 'S1 drücken'],
+        [{ s1: 0, s0: 0, trip: 1 }, false, 'Motorschutz F2 löst aus'],
+      ];
+      let k = false, ok = true, rows = [];
+      for (const [s, want, t] of tests) {
+        const r = run(s, k);
+        if (r === 'short') { Game.mistake(); Snd.play('zap'); fb(p, `Beim Schritt „${t}“: <b>Kurzschluss</b> zwischen L und N! Die Steuersicherung fliegt raus. Irgendwo führt eine Ader an der Spule vorbei direkt von L nach N.`); return; }
+        k = r; const good = k === want; if (!good) ok = false;
+        rows.push(`<tr class="${good ? 'ok' : 'no'}"><td>${t}</td><td>K1 ${k ? 'zieht an' : 'abgefallen'}</td><td>${good ? '✔' : '✘'}</td></tr>`);
+      }
+      if (!ok) { Game.mistake(); fb(p, `<table class="tb">${rows.join('')}</table>Die Schaltung verhält sich noch nicht wie im Stromlaufplan.`); return; }
+      Game.closeModal(true);
+      Game.take('hilfskontakt'); Game.lernen('schuetz'); Snd.play('clank');
+      Game.say(['Probelauf mit Prüfstecker: EIN – K1 zieht an und hält sich selbst. AUS – fällt ab. Motorschutz – fällt ab. Perfekt.', 'Öffner in Reihe für AUS, Schließer parallel für EIN. Abdeckung drauf.', 'Sobald der Hauptschalter oben wieder an ist, läuft der Kompressor.'], () => Game.fix('kompressor'));
+    };
+    render();
+  },
+
+  // ---------------------------------------------------------------
+  // 14) Trockenofen: Reihen-/Parallelschaltung (LF3)
+  // ---------------------------------------------------------------
+  ofen() {
+    const R1 = 230 * 230 / 1000;
+    const V = [
+      { id: 'a', t: '1 Stab', r: R1 },
+      { id: 'b', t: '2 Stäbe in Reihe', r: 2 * R1 },
+      { id: 'c', t: '2 Stäbe parallel', r: R1 / 2 },
+      { id: 'e', t: '3 Stäbe parallel', r: R1 / 3 },
+      { id: 'f', t: '2 parallel, 1 in Reihe dazu', r: R1 / 2 + R1 },
+      { id: 'g', t: '2 in Reihe, parallel zu 1', r: (2 * R1 * R1) / (3 * R1) },
+    ];
+    const hz = (x, y) => `<rect x="${x}" y="${y - 6}" width="22" height="12" class="hz"/>`;
+    const L = (x1, y1, x2, y2) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
+    const draw = {
+      a: L(5, 30, 49, 30) + hz(49, 30) + L(71, 30, 155, 30),
+      b: L(5, 30, 30, 30) + hz(30, 30) + L(52, 30, 90, 30) + hz(90, 30) + L(112, 30, 155, 30),
+      c: L(5, 30, 50, 30) + L(50, 15, 50, 45) + L(50, 15, 69, 15) + hz(69, 15) + L(91, 15, 110, 15) + L(50, 45, 69, 45) + hz(69, 45) + L(91, 45, 110, 45) + L(110, 15, 110, 45) + L(110, 30, 155, 30),
+      e: L(5, 30, 50, 30) + L(50, 8, 50, 52) + [8, 30, 52].map(y => L(50, y, 69, y) + hz(69, y) + L(91, y, 110, y)).join('') + L(110, 8, 110, 52) + L(110, 30, 155, 30),
+      f: L(5, 30, 25, 30) + L(25, 15, 25, 45) + L(25, 15, 35, 15) + hz(35, 15) + L(57, 15, 67, 15) + L(25, 45, 35, 45) + hz(35, 45) + L(57, 45, 67, 45) + L(67, 15, 67, 45) + L(67, 30, 95, 30) + hz(95, 30) + L(117, 30, 155, 30),
+      g: L(5, 30, 25, 30) + L(25, 15, 25, 45) + L(25, 15, 35, 15) + hz(35, 15) + L(57, 15, 80, 15) + hz(80, 15) + L(102, 15, 125, 15) + L(25, 45, 57, 45) + hz(57, 45) + L(79, 45, 125, 45) + L(125, 15, 125, 45) + L(125, 30, 155, 30),
+    };
+    let pick = null;
+    const p = Game.modal(`<h2>Trockenofen TO-3 – Heizstäbe klemmen</h2>
+      <p class="note">Typenschild: 3 Heizstäbe je 230 V / 1000 W · Betriebsart „Lack trocknen“: 2,0 kW (± 5 %) · Anschluss 230 V</p>
+      <div class="step"><label>1. Widerstand eines Heizstabs: R = <input class="inp" id="r1" size="6"> Ω</label></div>
+      <div class="step"><p>2. Wie klemmst du die Heizstäbe?</p>
+        <div class="vgrid">${V.map(v => `<button class="vbtn" data-id="${v.id}"><svg viewBox="0 0 160 60" class="fig vs">${draw[v.id]}</svg><span>${v.t}</span></button>`).join('')}</div></div>
+      <div class="step"><label>3. Ersatzwiderstand deiner Schaltung: R<sub>ges</sub> = <input class="inp" id="rg" size="6"> Ω</label></div>
+      <div class="fb"></div><div class="row"><button class="btn go">Klemmen &amp; Probeheizen</button></div>`, { cls: 'wide' });
+    p.querySelectorAll('.vbtn').forEach(b => b.onclick = () => { pick = b.dataset.id; Snd.play('select'); p.querySelectorAll('.vbtn').forEach(x => x.classList.toggle('sel', x === b)); });
+    p.querySelector('.go').onclick = () => {
+      const r1 = num(p.querySelector('#r1').value);
+      if (!(r1 >= 52.4 && r1 <= 53.4)) { Game.mistake(); fb(p, isNaN(r1) ? 'Berechne zuerst den Widerstand eines Heizstabs.' : `${p.querySelector('#r1').value} Ω stimmt nicht. Aus P = U² / R folgt R = U² / P.`); return; }
+      if (!pick) { fb(p, 'Wähle eine Schaltung.'); return; }
+      const v = V.find(x => x.id === pick);
+      const rg = num(p.querySelector('#rg').value);
+      if (!(Math.abs(rg - v.r) / v.r < 0.03)) { Game.mistake(); fb(p, isNaN(rg) ? 'Wie groß ist der Ersatzwiderstand deiner Schaltung?' : `R<sub>ges</sub> = ${p.querySelector('#rg').value} Ω passt nicht zu „${v.t}“. Reihe: R addieren. Parallel: 1/R<sub>ges</sub> = 1/R<sub>1</sub> + 1/R<sub>2</sub>.`); return; }
+      const P = Math.round(230 * 230 / v.r);
+      if (pick !== 'c') { Game.mistake(); fb(p, `R<sub>ges</sub> ≈ ${v.r.toFixed(1).replace('.', ',')} Ω → P = U² / R ≈ <b>${P} W</b>. ${P > 2100 ? 'Zu heiß – der Lack wirft Blasen!' : 'Zu kalt – der Lack bleibt klebrig.'} Gefordert sind 2000 W.`); return; }
+      Game.closeModal(true);
+      Game.lernen('ofen'); Snd.play('ok');
+      Game.say(['R = (230 V)² / 1000 W = 52,9 Ω. Zwei Stäbe parallel: 26,45 Ω → P = (230 V)² / 26,45 Ω = 2000 W.', 'Du klemmst zwei Heizstäbe parallel, der dritte bleibt abgeklemmt und isoliert. Brücken aus Aderleitung, sauber mit Aderendhülsen.', 'Abdeckung zu. Sobald der Strom wieder da ist, heizt der Ofen mit genau 2 kW.'], () => Game.fix('ofen'));
+    };
+  },
+});

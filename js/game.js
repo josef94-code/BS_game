@@ -6,9 +6,12 @@ const FIXES = [
   { id: 'licht', name: 'Hallenbeleuchtung' },
   { id: 'halterung', name: 'Motorhalterung' },
   { id: 'getriebe', name: 'Bandgetriebe' },
+  { id: 'kompressor', name: 'Hauptkompressor' },
   { id: 'presse', name: 'Pneumatik-Presse' },
+  { id: 'leitung', name: 'Steuerleitung Band' },
   { id: 'meldung', name: 'Meldeleuchte' },
   { id: 'steuerung', name: 'Bandsteuerung' },
+  { id: 'ofen', name: 'Trockenofen' },
 ];
 const SAVE_KEY = 'nachtschicht_save_v1';
 
@@ -17,7 +20,7 @@ let G = null; // Spielzustand (wird gespeichert)
 function newState() {
   return {
     room: 'umkleide', u: 0.5, v: 0.8, dir: 'U',
-    inv: [], files: [], flags: {}, hp: 100,
+    inv: [], files: [], notes: [], flags: {}, hp: 100,
     mainSwitch: 'on', // 'on' | 'off' | 'locked'
     mistakes: 0, heals: 0, zaps: 0, time: 0, hints: {}, talk: {}, ver: 0,
   };
@@ -58,6 +61,9 @@ const Game = {
     if (open !== false) this.readFile(id);
   },
   fixed(id) { return !!G.flags['fix_' + id]; },
+  lernen(id) {
+    if (!G.notes.includes(id)) { G.notes.push(id); setTimeout(() => this.toast('Berichtsheft: neuer Eintrag „' + BERICHT[id].title + '“'), 900); }
+  },
   fixCount() { return FIXES.filter(f => this.fixed(f.id)).length; },
   restore() { return this.flag('ending') ? 1 : this.fixCount() / FIXES.length; },
   hallLight() { return this.fixed('licht') && G.mainSwitch === 'on'; },
@@ -67,13 +73,13 @@ const Game = {
     const f = FIXES.find(x => x.id === id);
     this.toast('REPARIERT: ' + f.name + '  —  Produktion ' + Math.round(this.restore() * 100) + ' %', 4);
     Snd.setMood(this.restore(), false);
-    this.autosaveHint();
+    if (this.save()) setTimeout(() => this.toast('Fortschritt automatisch gespeichert.'), 1800);
     if (cb) cb();
   },
   mistake() { G.mistakes++; },
   clock() {
     // 22:14 Uhr + 55 min je Reparatur + Spielzeit (1 Spielminute je 8 s)
-    let m = 22 * 60 + 14 + this.fixCount() * 55 + Math.floor(G.time / 8);
+    let m = 22 * 60 + 14 + this.fixCount() * 38 + Math.floor(G.time / 8);
     if (!this.flag('ending')) m = Math.min(m, 24 * 60 + 5 * 60 + 40);
     else m = 24 * 60 + 5 * 60 + 58;
     m %= 1440;
@@ -214,9 +220,6 @@ const Game = {
   load() {
     try { const s = JSON.parse(localStorage.getItem(SAVE_KEY)); if (!s) return false; G = Object.assign(newState(), s); return true; } catch (e) { return false; }
   },
-  autosaveHint() {
-    if (!this.flag('saveHint')) { this.set('saveHint'); setTimeout(() => this.toast('Tipp: An der Stempeluhr in der Umkleide kannst du speichern.', 4), 4500); }
-  },
 
   // ---------- Start / Ende ----------
   start(load) {
@@ -258,7 +261,7 @@ const Game = {
   renderInv() {
     const el = $('#inventory');
     const cond = this.condition();
-    const tabs = [['items', 'Gegenstände'], ['files', 'Dokumente'], ['map', 'Karte'], ['status', 'Produktion']];
+    const tabs = [['items', 'Gegenstände'], ['files', 'Dokumente'], ['notes', 'Berichtsheft'], ['map', 'Karte'], ['status', 'Produktion']];
     let body = '';
     if (this.invTab === 'items') {
       const sel = G.inv[this.invSel];
@@ -271,6 +274,8 @@ const Game = {
         ${this.combine ? `<p class="note">Wähle einen zweiten Gegenstand, um ihn mit „${ITEMS[this.combine].name}“ zu kombinieren.</p>` : ''}` : '<p class="note">Leerer Platz.</p>'}</div>`;
     } else if (this.invTab === 'files') {
       body = `<div class="files">${G.files.length ? G.files.map(f => `<div class="file" data-f="${f}">📄 ${FILES[f].title}</div>`).join('') : '<p class="note">Noch keine Dokumente gefunden.</p>'}</div>`;
+    } else if (this.invTab === 'notes') {
+      body = `<div class="files">${G.notes.length ? '<p class="note">Was du heute Nacht gelernt hast – zum Nachlesen und Wiederholen:</p>' + G.notes.map(n => `<div class="file" data-n="${n}">✎ ${BERICHT[n].title}</div>`).join('') : '<p class="note">Noch keine Einträge. Nach jeder gelösten Aufgabe schreibst du hier auf, was du gelernt hast.</p>'}</div>`;
     } else if (this.invTab === 'map') {
       body = this.mapSvg();
     } else {
@@ -285,7 +290,8 @@ const Game = {
     el.querySelectorAll('canvas[data-icon]').forEach(c => drawIcon(c.getContext('2d'), c.dataset.icon));
     el.querySelectorAll('.tab').forEach(t => t.onclick = () => { this.invTab = t.dataset.t; this.combine = null; Snd.play('select'); this.renderInv(); });
     el.querySelectorAll('.slot').forEach(s => s.onclick = () => { this.invSel = +s.dataset.i; this.slotAction(false); });
-    el.querySelectorAll('.file').forEach(f => f.onclick = () => this.readFileFromInv(f.dataset.f));
+    el.querySelectorAll('.file[data-f]').forEach(f => f.onclick = () => this.readFileFromInv(f.dataset.f));
+    el.querySelectorAll('.file[data-n]').forEach(f => f.onclick = () => this.readNote(f.dataset.n));
     const u = el.querySelector('.use'); if (u) u.onclick = () => this.useItem();
     const cb = el.querySelector('.comb'); if (cb) cb.onclick = () => { this.combine = this.combine ? null : G.inv[this.invSel]; Snd.play('select'); this.renderInv(); };
   },
@@ -298,6 +304,13 @@ const Game = {
     $('#inventory').classList.add('hidden');
     this.mode = 'play';
     this.readFile(f, () => { this.openInv('files'); });
+  },
+  readNote(n) {
+    $('#inventory').classList.add('hidden');
+    this.mode = 'play';
+    const b = BERICHT[n];
+    this.modal(`<div class="doc"><h2>Berichtsheft: ${b.title}</h2>${b.html}</div><div class="row"><button class="btn ok">Zurück</button></div>`, { cls: 'paper heft', onClose: () => this.openInv('notes') });
+    $('#modal .ok').onclick = () => this.closeModal();
   },
   useItem() {
     const id = G.inv[this.invSel];
@@ -324,10 +337,11 @@ const Game = {
     const rooms = [
       ['werkstatt', 'Werkstatt', 20, 20, 120, 70], ['halle', 'Halle 3', 150, 20, 200, 150], ['lager', 'Lager', 360, 20, 120, 70],
       ['umkleide', 'Umkleide', 20, 100, 120, 70], ['schaltraum', 'Schaltraum', 190, -40, 90, 50], ['buero', 'Meisterbüro', 360, 100, 120, 70],
+      ['keller', 'Kellergang', 150, 200, 200, 40], ['ewerkstatt', 'E-Werkstatt', 20, 190, 120, 60], ['kompressor', 'Kompressor', 360, 190, 120, 60], ['hausmeister', 'Hausmeister', 205, 250, 90, 40],
     ];
     const known = r => G.flags['seen_' + r] || r === G.room;
-    return `<svg class="map" viewBox="0 -50 500 230">${rooms.map(([id, n, x, y, w, h]) => known(id) ? `<rect x="${x}" y="${y}" width="${w}" height="${h}" class="${id === G.room ? 'cur' : ''}"/><text x="${x + w / 2}" y="${y + h / 2 + 4}">${n}</text>` : `<rect x="${x}" y="${y}" width="${w}" height="${h}" class="unk"/><text x="${x + w / 2}" y="${y + h / 2 + 4}">?</text>`).join('')}
-      <line x1="140" y1="55" x2="150" y2="55"/><line x1="140" y1="135" x2="150" y2="135"/><line x1="350" y1="55" x2="360" y2="55"/><line x1="350" y1="135" x2="360" y2="135"/><line x1="235" y1="10" x2="235" y2="20"/></svg>
+    return `<svg class="map" viewBox="0 -50 500 350">${rooms.map(([id, n, x, y, w, h]) => known(id) ? `<rect x="${x}" y="${y}" width="${w}" height="${h}" class="${id === G.room ? 'cur' : ''}"/><text x="${x + w / 2}" y="${y + h / 2 + 4}">${n}</text>` : `<rect x="${x}" y="${y}" width="${w}" height="${h}" class="unk"/><text x="${x + w / 2}" y="${y + h / 2 + 4}">?</text>`).join('')}
+      <line x1="140" y1="55" x2="150" y2="55"/><line x1="140" y1="135" x2="150" y2="135"/><line x1="350" y1="55" x2="360" y2="55"/><line x1="350" y1="135" x2="360" y2="135"/><line x1="235" y1="10" x2="235" y2="20"/>${known('keller') ? '<line x1="300" y1="170" x2="300" y2="200"/><line x1="140" y1="220" x2="150" y2="220"/><line x1="350" y1="220" x2="360" y2="220"/><line x1="250" y1="240" x2="250" y2="250"/>' : ''}</svg>
       <p class="note center">Du bist hier: <b>${ROOMS[G.room].name}</b></p>`;
   },
 
@@ -354,6 +368,7 @@ const Game = {
     if (this.mode === 'inv') {
       if (this.invTab === 'items') { if (this.combine) this.slotAction(true); else if (G.inv[this.invSel] && ITEMS[G.inv[this.invSel]].use) this.useItem(); }
       else if (this.invTab === 'files' && G.files.length) this.readFileFromInv(G.files[this.invSel] || G.files[0]);
+      else if (this.invTab === 'notes' && G.notes.length) this.readNote(G.notes[this.invSel] || G.notes[0]);
       return;
     }
     if (this.mode === 'play' && this.hot) {
@@ -383,12 +398,12 @@ const Game = {
       if (map[k] === 'dn') { this.choiceSel = (this.choiceSel + 1) % this.choiceOpts.length; this.renderChoice(); Snd.play('select'); }
     }
     if (this.mode === 'inv') {
-      const n = this.invTab === 'items' ? Math.max(12, G.inv.length) : G.files.length;
+      const n = this.invTab === 'items' ? Math.max(12, G.inv.length) : this.invTab === 'notes' ? G.notes.length : G.files.length;
       if (map[k] === 'l') { this.invSel = Math.max(0, this.invSel - 1); this.renderInv(); }
       if (map[k] === 'r') { this.invSel = Math.min(n - 1, this.invSel + 1); this.renderInv(); }
       if (map[k] === 'u') { this.invSel = Math.max(0, this.invSel - 6); this.renderInv(); }
       if (map[k] === 'dn') { this.invSel = Math.min(n - 1, this.invSel + 6); this.renderInv(); }
-      if (k === 'tab') { e.preventDefault(); const ts = ['items', 'files', 'map', 'status']; this.invTab = ts[(ts.indexOf(this.invTab) + 1) % 4]; this.invSel = 0; this.renderInv(); }
+      if (k === 'tab') { e.preventDefault(); const ts = ['items', 'files', 'notes', 'map', 'status']; this.invTab = ts[(ts.indexOf(this.invTab) + 1) % ts.length]; this.invSel = 0; this.renderInv(); }
     }
     if (k === 'e' || k === ' ' || k === 'enter') {
       if (this.mode === 'modal') return; // Formulare im Modal nicht stören
@@ -467,7 +482,12 @@ const Game = {
     this.stepT -= dt * run;
     if (this.stepT <= 0) { this.stepT = 0.32; Snd.play('step'); }
     // Ausgang an der Vorderkante
-    if (R.frontExit && G.v >= R.walk.v1 - 0.005 && dy > 0) { const e = R.frontExit; this.goto(e.room, e.u, e.v, e.dir); }
+    const e = R.frontExit;
+    if (e && G.v >= R.walk.v1 - 0.005 && dy > 0 && (e.u0 === undefined || (G.u >= e.u0 && G.u <= e.u1))) {
+      const msg = e.lock && e.lock();
+      if (msg) { G.v -= 0.04; this.keys = {}; this.say(msg); }
+      else this.goto(e.room, e.u, e.v, e.dir);
+    }
   },
   free(R, u, v) {
     const w = R.walk;

@@ -17,6 +17,7 @@ const TOPICS = {
     title: 'Wie kriege ich das Licht wieder an?',
     open: () => !Game.fixed('licht'),
     hints: {
+      Dragan: ['Licht? Unterverteilung im Schaltraum, F3. Freischalten, sichern, prüfen – und dann rechnen, welcher LS passt.', 'Leistung zusammenzählen, I gleich P durch U. Der LS muss drüber liegen, aber unter dem, was die Leitung verträgt.', 'Rund 13 Ampere. B16. Nicht B32, sonst brennt dir die 2,5er-Leitung ab.'],
       Schorsch: ['Die Hallenbeleuchtung hängt im Schaltraum an der Unterverteilung, Stromkreis F3. Ersatz-LS gibt’s im Lager, linkes Regal. Und bevor du in den Schrank langst: Hauptschalter aus, Schloss dran, prüfen!', 'Zwölf Lampen à 250 Watt, alle parallel an 230 Volt. Leistungen zusammenzählen, dann I = P durch U. Den LS nimmst du so, dass er über dem Betriebsstrom liegt – aber die Leitung noch schützt.', '3000 Watt durch 230 Volt, das sind gut 13 Ampere. B10 fliegt dir sofort raus, B32 schützt die 2,5er-Leitung nimmer. Bleibt der B16. Und danach Schloss ab und wieder einschalten, sonst bleibt’s dunkel.'],
     },
   },
@@ -40,7 +41,7 @@ const TOPICS = {
     title: 'Wie bringe ich die Presse zum Laufen?',
     open: () => !Game.fixed('presse'),
     hints: {
-      Schorsch: ['Die Presse? Schläuche zerschnitten, Ventil falsch verschlaucht. Neuer Schlauch liegt im Lager auf der Palette. Und der Kompressor braucht Strom – Hauptschalter muss an sein.', 'Am 5/2-Ventil: 1 ist die Luft rein, 2 und 4 gehen zum Zylinder, 3 und 5 sind Abluft. In Grundstellung ist 1 mit 2 verbunden – überleg dir, wo der Stempel in Ruhe stehen muss. Und Zweihandbedienung heißt: nur wenn BEIDE Hände drücken.', 'Kolbenstangenseite an 2, damit der Stempel in Ruhe oben bleibt. Kolbenseite an 4. Schalldämpfer auf 3 und 5. Zweihand ist UND – also Zweidruckventil. Und 6 bar, steht auf dem Typenschild.'],
+      Schorsch: ['Die Presse? Schläuche zerschnitten, Ventil falsch verschlaucht. Neuer Schlauch liegt im Lager auf der Palette. Und ohne Druckluft vom Hauptkompressor im Keller geht eh nix – der braucht Strom, Hauptschalter muss an sein.', 'Am 5/2-Ventil: 1 ist die Luft rein, 2 und 4 gehen zum Zylinder, 3 und 5 sind Abluft. In Grundstellung ist 1 mit 2 verbunden – überleg dir, wo der Stempel in Ruhe stehen muss. Und Zweihandbedienung heißt: nur wenn BEIDE Hände drücken.', 'Kolbenstangenseite an 2, damit der Stempel in Ruhe oben bleibt. Kolbenseite an 4. Schalldämpfer auf 3 und 5. Zweihand ist UND – also Zweidruckventil. Und 6 bar, steht auf dem Typenschild.'],
       Irmgard: ['Pneumatikschlauch? Liegt auf der Palette, vorne links. Und im Katalog auf der Theke steht, wie die Ventile funktionieren.', 'Lies den Katalog. Steht alles drin. Ich sag’s nicht zweimal.', 'Eins rein, zwei und vier raus zum Zylinder, drei und fünf Abluft. So. Jetzt hab ich’s doch zweimal gesagt.'],
     },
   },
@@ -67,6 +68,46 @@ const TOPICS = {
       Schorsch: ['Die Kleinsteuerung im Steuerschrank ist leer. Den Schaltplan mit der Logik hat der Brandl im Büro im Aktenschrank.', 'Start ODER Selbsthaltung – das hält das Band am Laufen, wenn du den Taster loslässt. Und das Ganze nur, wenn Tür zu UND NICHT Not-Halt.', 'Erster Baustein ODER, der Not-Halt kommt durch ein NICHT, und am Schluss alles mit UND zusammen.'],
     },
   },
+  keller: {
+    title: 'Wie komme ich in den Keller?',
+    open: () => !Game.flag('kellerOffen'),
+    hints: {
+      Schorsch: ['Der Keller? Die Treppe ist hinten rechts in der Halle, vorne beim Kompressorkessel. Der Kowalski hat das Gitter mit seinem eigenen Schloss zugesperrt.', 'Die Irmgard hat einen Bolzenschneider. Die gibt ihn dir, wenn sie dir traut.', 'Bolzenschneider von der Irmgard, Schloss knacken, runter. Und nimm die Lampe mit, da unten ist’s finster.'],
+      Irmgard: ['Unten im Keller? Da hat seit Wochen nur noch der Kowalski was verloren. Und der Dragan.', 'Mein Bolzenschneider kriegt jedes Schloss auf.', 'Treppe vorne rechts in der Halle. Schloss ab. Fertig.'],
+    },
+  },
+  schutz: {
+    title: 'Was ist mit der Bohrmaschine?',
+    open: () => Game.flag('sawDrill') && !Game.flag('schutzOk'),
+    hints: {
+      Alois: ['Die Säulenbohrmaschine hat mich gezwickt, wie ich sie angefasst hab. Gehäuse unter Spannung, wett ich. Und der FI hat nicht ausgelöst! Ohne Prüfung rühr ich die nimmer an.', 'Der Dragan unten in der E-Werkstatt hat einen Gerätetester. Schutzleiter messen, FI prüfen – das ist sein Revier.', 'Schutzleiter ist der grün-gelbe. Und ein FI für Personenschutz hat 30 Milliampere, das weiß sogar ich.'],
+      Dragan: ['Bohrmaschine kribbelt? Schutzleiter. Immer der Schutzleiter. Miss mit dem Gerätetester zwischen Gehäuse und Schutzkontakt am Stecker.', 'Mehr als 0,3 Ohm heißt durchgefallen. Dann Stecker aufmachen. Und wenn der FI bei der Prüftaste nicht auslöst, ist er Schrott – neue liegen hier im Regal.', 'Grün-gelb an den Schutzkontakt-Bügel, nie an einen Stift! Neuer FI: 30 Milliampere, nicht 300. 300 ist Brandschutz, kein Personenschutz.'],
+    },
+  },
+  kompressor: {
+    title: 'Was ist mit dem Kompressor?',
+    open: () => !Game.fixed('kompressor'),
+    hints: {
+      Schorsch: ['Die Druckluft kommt vom Hauptkompressor im Keller. Wenn der steht, kannst die Presse vergessen. Frag den Dragan, der ist da unten.', 'Ich bin kein Elektriker. Irgendwas mit Schütz und Selbsthaltung, hat der Dragan gemurmelt.', 'Frag den Dragan. Wirklich.'],
+      Dragan: ['Im Schaltkasten vom Kompressor fehlt der Hilfsschalterblock, und ein paar Adern sind raus. Den Block hat wohl einer mitgehen lassen – schau mal beim Kowalski hinten im Gang. Aderleitung liegt bei mir zwischen den Kabeltrommeln.', 'AUS-Befehle sind Öffner und kommen in Reihe: Motorschutz F2, dann S0. Dann der EIN-Taster S1 als Schließer, dann die Spule. Der Hilfskontakt K1 13-14 parallel zum EIN-Taster. Und vorher freischalten!', 'F2 96 auf S0 11, S0 12 auf S1 13, S1 14 auf A1. Dann K1 13 an S1 13 und K1 14 an S1 14. Fertig ist die Selbsthaltung.'],
+    },
+  },
+  leitung: {
+    title: 'Was ist mit der Steuerleitung?',
+    open: () => Game.flag('sawLeitung') && !Game.fixed('leitung'),
+    hints: {
+      Dragan: ['Die Steuerleitung vom Band läuft durch den Abzweigkasten im Kellergang. Wenn da eine Ader durch ist, läuft oben gar nix. Miss nach – mein Multimeter hast du ja. Verbindungsklemmen hat die Irmgard.', 'Erst Spannung messen: V Gleichspannung, rote Leitung in VΩ, parallel. Dann Steuersicherung raus und jede Ader auf Durchgang – Widerstand misst man nie unter Spannung!', 'Die Ader mit „OL“ ist hin. Leg das Signal auf die Reserveader 7. Und Strom misst du in Reihe, mit der roten Leitung in der A-Buchse – parallel knallt’s. P gleich U mal I.'],
+      Schorsch: ['Die Steuerleitung? Da musst mit dem Messgerät ran. Der Dragan weiß, wie.', 'Frag den Dragan.', 'Der Dragan. Keller. E-Werkstatt.'],
+    },
+  },
+  ofen: {
+    title: 'Was ist mit dem Trockenofen?',
+    open: () => !Game.fixed('ofen'),
+    hints: {
+      Schorsch: ['Der Trockenofen vorne links trocknet den Lack auf den Gehäusen. Irgendwer hat da drin rumgepfuscht. Lies das Typenschild.', 'Drei Heizstäbe, und der Ofen soll 2 Kilowatt bringen. Mehr weiß ich ned. Frag den Dragan.', 'Der Dragan hat gesagt: zwei parallel, einer bleibt weg. Ich hab keine Ahnung, was das heißt.'],
+      Dragan: ['Der Trockenofen? Lies das Typenschild. Drei Heizstäbe, jeder 1000 Watt bei 230 Volt. Der Lack will 2 Kilowatt. Brücken machst du mit Aderleitung. Und freischalten!', 'Rechne erst aus, welchen Widerstand ein Heizstab hat: R gleich U² durch P. Dann überleg: Reihe macht den Widerstand größer, parallel kleiner. P gleich U² durch R.', 'Zwei Stäbe parallel, der dritte bleibt abgeklemmt. 52,9 Ohm durch zwei gleich gut 26,5 Ohm. Macht 2000 Watt.'],
+    },
+  },
   start: {
     title: 'Was jetzt?',
     open: () => FIXES.every(f => Game.fixed(f.id)) && !Game.flag('ending'),
@@ -74,6 +115,7 @@ const TOPICS = {
       Schorsch: ['Was fragst mich? Hauptschalter an, und dann am Bedienpult START drücken!', 'Hauptschalter an, Bedienpult, START.', 'START. Jetzt.'],
       Alois: ['Jetzt fehlt nur noch, dass einer am Bedienpult auf START drückt. Und das bist du.', 'Bedienpult. Grüner Knopf.', 'Na geh scho!'],
       Irmgard: ['Worauf wartest du? Draußen wird’s hell.', 'Bedienpult in der Halle. START.', 'Los jetzt.'],
+      Dragan: ['Hauptschalter rein und START drücken. Worauf wartest du, auf mich?', 'START.', 'Na los.'],
     },
   },
 };
@@ -193,6 +235,34 @@ const NPC = {
       ], 'Irmgard');
     },
   },
+  dragan: {
+    name: 'Dragan', look: LOOKS.dragan,
+    talk() {
+      if (Game.flag('ending')) { Game.say([['Dragan', 'Na? Hast du’s doch geschafft. Ohne dass ich dir die Hand halten musste.'], ['Dragan', 'Und ja – das Multimeter kannst behalten. Für die Berufsschule.']]); return; }
+      if (!Game.flag('met_dragan')) {
+        Game.set('met_dragan');
+        Game.say([
+          ['Dragan', 'Wer … ? Ah. Brandls Azubi. Hat er dich geschickt, um mich zu kontrollieren?'],
+          ['Dragan', 'Dragan. Betriebselektriker. Nachtbereitschaft, falls es dich interessiert.'],
+          ['Dragan', 'Und ja, ich riech nach Schnaps. Das ist Kräutertee. Mit Schuss. Geht dich nix an.'],
+          ['Dragan', '… Du willst die Halle wieder zum Laufen bringen? Allein? Hm.'],
+          ['Dragan', 'Da. Mein Multimeter und der Gerätetester. Wennst was kaputt machst, zahlst du. Und wennst nicht weiterweißt, komm runter.'],
+        ], () => { Game.give('multimeter'); Game.give('geraetetester', true); Game.toast('Erhalten: Gerätetester'); });
+        return;
+      }
+      if (G.files.includes('sabotage') && !Game.flag('dragan_kow')) {
+        Game.set('dragan_kow');
+        Game.say([['Dragan', 'Kowalskis Liste? Zeig her.'], ['Dragan', '… Dieser Hund. Den FI in der Werkstatt hat er auch manipuliert. Der Alois hätte tot sein können.'], ['Dragan', 'Du denkst, ich steck mit drin, oder? Der Falk war bei mir, ja. Hat mir einen Umschlag hingelegt. Ich hab ihn rausgeworfen. Glaub’s oder lass es.']]);
+        return;
+      }
+      hintMenu('Dragan', () => storyLine('Dragan', [
+        ['Der Falk war vor zwei Wochen hier unten. Feiner Anzug, teure Schuhe. Hat mir einen Umschlag auf den Tisch gelegt.', 'Was drin war? Geht dich nix an. Ich hab ihn jedenfalls nicht behalten.'],
+        ['Kowalski hat sich einen Schlüssel fürs Kellergitter nachmachen lassen. Hab ich dem Brandl gesagt. Der hat nur genickt.'],
+        ['Ich hab hier 1999 angefangen. Damals waren im Keller sechs Elektriker. Jetzt bin nur noch ich da. Und die Ratten.'],
+        ['Weißt, was der häufigste Fehler von Azubis ist? Messen, ohne nachzudenken. Erst überlegen: Was will ich messen, wie muss das Gerät dran?'],
+      ]));
+    },
+  },
   brandl: {
     name: 'Meister Brandl', look: LOOKS.brandl,
     talk() { Game.say([['Brandl', 'Geh heim und schlaf dich aus, Azubi. Am Montag fängst du richtig an.'], ['Brandl', 'Tagschicht. Versprochen.']]); },
@@ -217,6 +287,7 @@ const ENDING = {
       ['Brandl', 'Gut gemacht, Azubi.'],
       ['Brandl', 'Ich lag die halbe Nacht hinterm Rolltor auf der Lauer. Vor einer Stunde kam Kowalski mit einem Seitenschneider – wollte dir die Steuerleitung kappen.'],
       ['Brandl', 'Die Polizei hat ihn draußen am Tor erwischt. In der Tasche: unser LS-Schalter, ein Zahnrad mit 72 Zähnen – und ein Umschlag von der Falk Grundbesitz.'],
+      ['Dragan', 'Und seine Liste aus dem Keller liegt schon bei der Polizei. Die hat der Azubi gefunden.'],
       ['Brandl', 'Die Frühschicht kommt gleich. Bis Montag schaffen wir die zweitausend Gehäuse locker.'],
       ['Brandl', 'Weißt du, warum ich dich geschickt hab? Weil du noch weißt, was im Tabellenbuch steht. Und weil du nicht in einen Schrank langst, bevor du freigeschaltet hast.'],
       ['Brandl', 'Probezeit bestanden, würd ich sagen.'],
@@ -224,7 +295,7 @@ const ENDING = {
   },
   zeugnis() {
     const m = G.mistakes;
-    const note = m <= 1 ? 1 : m <= 3 ? 2 : m <= 6 ? 3 : m <= 9 ? 4 : m <= 13 ? 5 : 6;
+    const note = m <= 2 ? 1 : m <= 5 ? 2 : m <= 9 ? 3 : m <= 14 ? 4 : m <= 20 ? 5 : 6;
     const txt = ['', 'sehr gut', 'gut', 'befriedigend', 'ausreichend', 'mangelhaft', 'ungenügend'][note];
     const mins = Math.floor(G.time / 60);
     const p = Game.modal(`<div class="doc zeugnis"><h2>Beurteilung Nachtschicht</h2>
@@ -247,6 +318,10 @@ const ENDING = {
         <li>LED-Vorwiderstand berechnet und Farbcode gelesen (LF 3)</li>
         <li>Messschieber mit Nonius abgelesen (LF 2)</li>
         <li>Verknüpfungssteuerung mit Selbsthaltung entworfen (LF 4)</li>
+        <li>Spannung, Strom und Durchgang mit dem Multimeter gemessen, Leitungsfehler gefunden (LF 3)</li>
+        <li>Schutzklasse, Schutzleiter und Fehlerstrom-Schutzschalter geprüft (LF 3)</li>
+        <li>Schützschaltung mit Selbsthaltung verdrahtet (LF 3/4)</li>
+        <li>Reihen- und Parallelschaltung von Heizwiderständen berechnet (LF 3)</li>
       </ul>
       <p class="note center">ENDE – Danke fürs Spielen!</p>
       <div class="row"><button class="btn stay">Durch die Halle laufen</button><button class="btn nw">Neues Spiel</button></div></div>`, { cls: 'paper', noClose: true });

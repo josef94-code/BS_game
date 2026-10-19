@@ -299,6 +299,7 @@ const LOOKS = {
   irmgard: { body: '#5a2a32', legs: '#2a2a33', skin: '#e2b49a', hair: '#9a9a9a', glasses: true, bun: true },
   brandl: { body: '#e8e8e0', legs: '#2c3c5c', skin: '#d6a07c', hair: '#3a3a3a', beard: '#3a3a3a' },
   kowalski: { body: '#050506', legs: '#050506', skin: '#0a0a0a', hair: '#050505', cap: '#050505' },
+  dragan: { body: '#7a6a3a', legs: '#33363a', skin: '#c8a080', hair: '#1a1a1a', beard: '#2a2420', belt: '#222' },
   arbeiter1: { body: '#2c4a86', legs: '#253f73', skin: '#c08868', hair: '#222', cap: '#a33' },
   arbeiter2: { body: '#3a5a3a', legs: '#2a3a2a', skin: '#e8c0a0', hair: '#c8a040' },
 };
@@ -359,6 +360,23 @@ function drawIcon(ctx, id) {
     case 'schaltplan':
       R(8, 6, 32, 38, '#e6e0cc'); for (let i = 0; i < 6; i++) R(12, 12 + i * 5, 24, 1, '#447');
       R(14, 30, 8, 8, 'rgba(0,0,0,0)'); c.strokeStyle = '#a22'; c.strokeRect(14.5, 31.5, 8, 7); c.strokeRect(26.5, 31.5, 8, 7); break;
+    case 'bolzenschneider':
+      c.strokeStyle = '#c22'; c.lineWidth = 4; c.beginPath(); c.moveTo(6, 42); c.lineTo(22, 22); c.moveTo(16, 44); c.lineTo(26, 24); c.stroke();
+      poly(c, [[22, 22], [26, 24], [40, 6], [34, 6]], '#888'); poly(c, [[24, 23], [28, 25], [44, 10], [42, 6]], '#777'); break;
+    case 'geraetetester':
+      R(6, 10, 36, 30, '#2a5a9a'); R(10, 14, 20, 10, '#9c9'); text(c, '0,12Ω', 20, 19.5, '#131', 5.5); R(34, 14, 5, 5, '#e6c000'); R(10, 28, 28, 8, '#222'); for (let i = 0; i < 3; i++) circle(c, 16 + i * 8, 32, 2, '#ddd'); break;
+    case 'multimeter':
+      R(12, 4, 24, 40, '#e6c000'); R(15, 8, 18, 10, '#9c9'); text(c, '24.1', 24, 13.5, '#131', 6); circle(c, 24, 27, 6, '#333'); line(c, 24, 27, 28, 23, '#ddd', 1.5);
+      circle(c, 17, 39, 2, '#111'); circle(c, 24, 39, 2, '#c22'); circle(c, 31, 39, 2, '#c22'); break;
+    case 'fi_kasten':
+      R(8, 12, 32, 30, '#c8b890'); R(8, 12, 32, 4, '#a89870'); R(16, 18, 16, 20, '#eee'); R(19, 22, 10, 5, '#2a2'); circle(c, 24, 33, 2.4, '#e6c000'); text(c, 'T', 24, 33.5, '#111', 4); break;
+    case 'aderleitung':
+      c.strokeStyle = '#111'; c.lineWidth = 3; c.beginPath(); c.arc(24, 24, 14, 0, Math.PI * 1.8); c.stroke();
+      c.strokeStyle = '#24c'; c.beginPath(); c.arc(24, 24, 9, 0, Math.PI * 1.85); c.stroke(); R(34, 30, 8, 3, '#c22'); R(40, 30, 4, 3, '#bbb'); break;
+    case 'hilfskontakt':
+      R(10, 12, 28, 26, '#ddd'); R(10, 12, 28, 4, '#bbb'); text(c, '13', 17, 22, '#222', 6); text(c, '14', 31, 22, '#222', 6); R(14, 26, 6, 6, '#999'); R(28, 26, 6, 6, '#999'); break;
+    case 'klemmen':
+      R(6, 18, 36, 20, '#c8b890'); for (let i = 0; i < 4; i++) { R(9 + i * 8, 10, 6, 10, '#f0f0f0'); R(9 + i * 8, 10, 6, 3, '#e67a00'); } break;
     default:
       R(12, 12, 24, 24, '#777');
   }

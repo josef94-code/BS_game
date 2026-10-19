@@ -143,8 +143,9 @@ ROOMS.halle = {
     { u0: 0.93, u1: 1.0, v0: 0.4, v1: 0.52 },   // Kompressor
     { u0: 0.41, u1: 0.47, v0: 0.56, v1: 0.62 }, // Bedienpult
     { u0: 0.21, u1: 0.27, v0: 0.7, v1: 0.76 },  // Stehpult
-    { u0: 0.0, u1: 0.08, v0: 0.5, v1: 0.64 },   // Fässer
+    { u0: 0.0, u1: 0.11, v0: 0.46, v1: 0.66 },  // Trockenofen
   ],
+  frontExit: { room: 'keller', u: 0.5, v: 0.86, dir: 'U', u0: 0.74, u1: 0.95, lock: () => HALL.kellerLock() },
   darkness: st => st.hall ? 0.6 - st.r * 0.5 : 0.9 - st.r * 0.08,
   lights(st, t) {
     const L = [];
@@ -195,10 +196,10 @@ ROOMS.halle = {
     sign(ctx, (r0.x + r1.x) / 2, r0.y - 97, 40, 7, '#1d2a3a', '#d8e0f0', 'TOR 3 – VERSAND', 4.3);
     // Produktionstafel
     const tp = proj(R, 0.44, 0);
-    rect(ctx, tp.x - 20, 96, 40, 26, '#14161a'); rect(ctx, tp.x - 19, 97, 38, 5, '#2a2f38');
+    rect(ctx, tp.x - 20, 96, 40, 30, '#14161a'); rect(ctx, tp.x - 19, 97, 38, 5, '#2a2f38');
     text(ctx, 'PRODUKTION', tp.x, 99.7, '#aab', 3.6);
     FIXES.forEach((fx, i) => {
-      const x = tp.x - 15 + (i % 3) * 15, y = 107 + Math.floor(i / 3) * 9;
+      const x = tp.x - 13 + (i % 3) * 13, y = 106 + Math.floor(i / 3) * 7;
       const on = Game.fixed(fx.id);
       circle(ctx, x, y, 2.4, on ? '#3f3' : '#511'); if (on) circle(ctx, x, y, 1, '#dfd');
     });
@@ -273,10 +274,21 @@ ROOMS.halle = {
       const b = box(ctx, R, 0.215, 0.265, 0.71, 0.75, 3, '#6a5034', { lift: 26 });
       rect(ctx, b.x0 + 4, b.top - 1, 10, 3, '#d8d0b0');
     } },
-    { v: 0.63, draw(ctx, st) { // Fässer
+    { v: 0.66, draw(ctx, st, t) { // Trockenofen
       const R = ROOMS.halle;
-      let p = proj(R, 0.035, 0.55); barrel(ctx, p.x, p.y, p.s, mixc('#5a2a1a', '#2a5a8a', st.r));
-      p = proj(R, 0.06, 0.62); barrel(ctx, p.x, p.y, p.s, mixc('#3a3a1a', '#2a5a8a', st.r));
+      const b = box(ctx, R, -0.06, 0.11, 0.46, 0.66, 46, mixc('#4a4440', '#8a8a84', st.r));
+      const hot = Game.fixed('ofen') && st.main === 'on';
+      rect(ctx, b.x1 - 30, b.top + 8, 22, 26, '#222'); rect(ctx, b.x1 - 28, b.top + 10, 18, 22, hot ? `rgb(${200 + Math.sin(t * 3) * 30},90,30)` : '#2a1a14');
+      rect(ctx, b.x1 - 44, b.top + 6, 10, 6, '#111'); text(ctx, hot ? '180°' : (st.main === 'on' ? 'ERR' : ''), b.x1 - 39, b.top + 9, hot ? '#f84' : '#a22', 4);
+      text(ctx, 'TO-3', b.x1 - 39, b.top + 18, '#ddd', 4);
+    } },
+    { v: 0.99, draw(ctx, st) { // Kellertreppe
+      const R = ROOMS.halle;
+      const a = proj(R, 0.76, 0.9), c = proj(R, 0.95, 0.9);
+      for (let k = 0; k < 4; k++) rect(ctx, a.x, a.y + 4 + k * 8, c.x - a.x, 2, '#3a3a36');
+      rect(ctx, a.x - 2, a.y - 22, 3, 60, '#5a5a20'); rect(ctx, c.x - 1, c.y - 22, 3, 60, '#5a5a20'); rect(ctx, a.x - 2, a.y - 22, c.x - a.x + 4, 3, mixc('#8a7a20', '#d8b020', st.r));
+      if (!Game.flag('kellerOffen')) { for (let x = a.x; x < c.x; x += 6) rect(ctx, x, a.y - 19, 1.5, 40, '#4a4a44'); rect(ctx, (a.x + c.x) / 2 - 3, a.y - 6, 6, 7, '#a88a30'); }
+      sign(ctx, (a.x + c.x) / 2, a.y - 30, 36, 8, '#1d4a2a', '#d8f0d8', '▼ KELLER', 5);
     } },
   ],
   npcs() {
@@ -286,6 +298,7 @@ ROOMS.halle = {
       list.push({ ...NPC.alois, u: 0.32, v: 0.62, dir: 'R' });
       list.push({ ...NPC.irmgard, u: 0.62, v: 0.72, dir: 'L' });
       list.push({ ...NPC.brandl, u: 0.67, v: 0.2, dir: 'D' });
+      list.push({ ...NPC.dragan, u: 0.3, v: 0.82, dir: 'R' });
       list.push({ name: 'Arbeiter', look: LOOKS.arbeiter1, u: 0.86, v: 0.4, dir: 'L', talk: () => Game.say([['Frühschicht', 'Morgen! Was ist denn hier passiert? Es läuft ja alles!']]) });
       list.push({ name: 'Arbeiterin', look: LOOKS.arbeiter2, u: 0.2, v: 0.28, dir: 'R', talk: () => Game.say([['Frühschicht', 'Das Band läuft wie neu. Und der Boden ist gefegt. Ich glaub, ich träum.']]) });
     }
@@ -337,13 +350,32 @@ ROOMS.halle = {
     { u: 0.86, v: 0.37, label: 'Pneumatik-Presse', use() { HALL.presse(); } },
     { u: 0.44, v: 0.65, label: 'Bedienpult Förderband', use() { HALL.pult(); } },
     { u: 0.24, v: 0.79, label: 'Schichtbuch', use() { Game.addFile('schichtbuch'); } },
-    { u: 0.96, v: 0.55, label: 'Kompressor', use() {
-      Game.say(G.mainSwitch === 'on' ? 'Der Kompressor tuckert. Das Manometer am Kessel zeigt 9 bar.' : 'Der Kompressor steht still. Kein Strom – der Hauptschalter im Schaltraum ist aus.');
+    { u: 0.96, v: 0.55, label: 'Druckluftbehälter', use() {
+      if (Game.fixed('kompressor') && G.mainSwitch === 'on') Game.say('Der Druckluftbehälter. Das Manometer zeigt 9 bar. Von unten hört man den Hauptkompressor brummen.');
+      else Game.say(['Der Druckluftbehälter der Halle. Das Manometer zeigt 0 bar.', 'Die Luft kommt vom Hauptkompressor im Keller. ' + (Game.fixed('kompressor') ? 'Der ist repariert – aber ohne Strom (Hauptschalter!) läuft er nicht.' : 'Der scheint zu stehen.')]);
     } },
+    { u: 0.14, v: 0.57, label: 'Trockenofen', use() { HALL.ofen(); } },
+    { u: 0.85, v: 0.9, label: 'Kellertreppe', use() { const m = HALL.kellerLock(); if (m) Game.say(m); else Game.goto('keller', 0.5, 0.86, 'U'); } },
   ],
 };
 
 const HALL = {
+  kellerLock() {
+    if (Game.flag('kellerOffen')) return null;
+    if (!Game.has('bolzenschneider')) return ['Ein Gitter versperrt die Kellertreppe. Daran hängt ein fettes Vorhängeschloss mit eingeritztem „K.“.', 'Ohne Werkzeug kommst du da nicht durch.'];
+    Game.set('kellerOffen'); Snd.play('clank');
+    return ['Du setzt den Bolzenschneider an. KNACK. Kowalskis Schloss fällt scheppernd auf die Stufen.', 'Aus dem Keller weht kalte, modrige Luft herauf.'];
+  },
+  ofen() {
+    if (Game.fixed('ofen')) { Game.say(G.mainSwitch === 'on' ? 'Der Trockenofen läuft mit 2 kW. Drinnen glüht es warm.' : 'Der Ofen ist richtig geklemmt. Ohne Strom heizt er aber nicht.'); return; }
+    if (!Game.flag('ofenSeen')) {
+      Game.set('ofenSeen');
+      Game.say(['Der Durchlauf-Trockenofen. Hier trocknet der Lack der Gehäuse.', 'Hinter der Klemmenabdeckung: drei Heizstäbe, wild durcheinander geklemmt. Auf dem Typenschild klebt ein Edding-Gekritzel …'], () => Game.addFile('ofen_schild'));
+      return;
+    }
+    if (!Game.has('aderleitung')) { Game.say('Zum Umklemmen der Heizstäbe brauchst du Aderleitung für die Brücken. In einer Elektrowerkstatt gibt’s so was.'); return; }
+    SR.safety('dem Trockenofen', () => Game.puzzle('ofen'));
+  },
   antrieb() {
     if (!Game.fixed('halterung')) {
       if (Game.has('platte_fertig')) {
@@ -368,6 +400,7 @@ const HALL = {
   presse() {
     if (Game.fixed('presse')) { Game.say(G.mainSwitch === 'on' ? 'Die Presse stampft sauber im Takt. Zweihandbedienung funktioniert.' : 'Die Presse ist fertig verschlaucht. Ohne Strom am Kompressor bewegt sie sich aber nicht.'); return; }
     if (!Game.has('schlauch')) { Game.say(['Die Pneumatik-Presse. Die Schläuche am 5/2-Wegeventil hängen lose herum, einer ist zerschnitten.', 'Ohne neuen Pneumatikschlauch geht hier nichts.']); return; }
+    if (!Game.fixed('kompressor')) { Game.say(['Du hast den Schlauch – aber auf der Druckluftleitung ist kein Druck.', 'Die Druckluft kommt vom Hauptkompressor im Keller. Der muss erst wieder laufen.']); return; }
     if (G.mainSwitch !== 'on') { Game.say('Du hast den Schlauch – aber der Kompressor hat keinen Strom. Erst muss der Hauptschalter im Schaltraum wieder an sein.'); return; }
     Game.puzzle('pneumatik');
   },
@@ -428,6 +461,7 @@ ROOMS.werkstatt = {
     rect(ctx, d.x - 16 * d.s, d.y - 54 * d.s, 30 * d.s, 4 * d.s, '#4a4a4a');
     rect(ctx, d.x - 12 * d.s, d.y - 6 * d.s, 26 * d.s, 6 * d.s, '#3a3a3a');
     line(ctx, d.x + 12 * d.s, d.y - 90 * d.s, d.x + 22 * d.s, d.y - 80 * d.s, '#aaa', 1.5);
+    if (!Game.flag('schutzOk')) { for (let k = 0; k < 6; k++) rect(ctx, d.x - 18 * d.s + k * 6 * d.s, d.y - 62 * d.s + k * 2, 6 * d.s, 3, k % 2 ? '#eee' : '#c22'); rect(ctx, d.x + 4, d.y - 76 * d.s, 10, 7, '#eee'); text(ctx, '!', d.x + 9, d.y - 73 * d.s, '#c22', 6); }
     // Aushang an der Bohrmaschine
     const ap = proj(R, 0.76, 0); rect(ctx, ap.x - 7, ap.y - 70, 14, 18, '#d8d0a8'); rect(ctx, ap.x - 6, ap.y - 69, 12, 3, '#26a'); for (let k = 0; k < 4; k++) rect(ctx, ap.x - 5, ap.y - 64 + k * 3, 10, 1, '#555');
     // Regal rechts
@@ -485,6 +519,12 @@ ROOMS.werkstatt = {
       Game.say('Ein schwerer Parallelschraubstock. Die Schutzbacken aus Alu sind voller Kerben.');
     } },
     { u: 0.67, v: 0.19, label: 'Säulenbohrmaschine', use() {
+      if (!Game.flag('schutzOk')) {
+        if (!Game.flag('sawDrill')) { Game.set('sawDrill'); Game.say(['Um die Säulenbohrmaschine ist rot-weißes Flatterband gewickelt. Ein Zettel: „GESPERRT! Gehäuse kribbelt!! – A.“', 'Daneben hängt das Prüfprotokoll.'], () => Game.addFile('dguv')); return; }
+        if (Game.has('geraetetester') && Game.has('fi_kasten')) { Game.puzzle('schutz'); return; }
+        Game.say(['Gesperrt. Bevor hier jemand bohrt, muss die Maschine elektrisch geprüft werden: Schutzleiter, FI-Schutzschalter.', Game.has('geraetetester') ? 'Den Gerätetester hast du. Falls der FI defekt ist, brauchst du Ersatz.' : 'Dafür brauchst du einen Gerätetester. Vielleicht hat der Betriebselektriker einen?']);
+        return;
+      }
       if (Game.has('platte')) { Game.puzzle('bohren'); return; }
       if (Game.has('platte_gebohrt') || Game.has('platte_fertig') || Game.fixed('halterung')) { Game.say('Die Bohrmaschine. Du hast hier schon gute Arbeit geleistet.'); return; }
       Game.say('Eine alte Säulenbohrmaschine. Wenn du etwas zum Bohren hättest …');
@@ -569,9 +609,10 @@ ROOMS.lager = {
   },
   npcs() { if (Game.flag('ending')) return []; return [{ ...NPC.irmgard, u: 0.5, v: 0.05, dir: 'D', r: 55, block: false }]; },
   hotspots: [
-    { u: 0.15, v: 0.22, label: 'Regal (Elektro)', glint: () => !Game.flag('took_ls'), gh: 60, use() {
+    { u: 0.15, v: 0.22, label: 'Regal (Elektro)', glint: () => !Game.flag('took_ls') || !Game.flag('took_klemmen'), gh: 60, use() {
       if (!Game.flag('took_ls')) { Game.set('took_ls'); Game.give('ls'); Game.say('Zwischen Kabeltrommeln und Schukosteckern: ein Sortimentskasten mit Leitungsschutzschaltern. B6, B10, B16, B32.'); }
-      else Game.say('Kabeltrommeln, Aderendhülsen, ein Karton Lüsterklemmen. „Lüsterklemmen??“ – Irmgard würde sagen: Verbindungsklemmen.');
+      else if (!Game.flag('took_klemmen')) { Game.set('took_klemmen'); Game.give('klemmen'); Game.say('Kabeltrommeln, Aderendhülsen – und ein Karton „Lüsterklemmen“. Irmgard hat das Wort durchgestrichen und „VERBINDUNGSKLEMMEN“ darübergeschrieben. Du nimmst ihn mit.'); }
+      else Game.say('Kabeltrommeln und Aderendhülsen. Sonst nichts Brauchbares.');
     } },
     { u: 0.82, v: 0.22, label: 'Regal (Werkzeug)', glint: () => !Game.flag('took_gb'), gh: 60, use() {
       if (!Game.flag('took_gb')) { Game.set('took_gb'); Game.give('gewindebohrer'); Game.say('In einer Schublade mit der Aufschrift „Gewinde“: ein Satz Handgewindebohrer M10. Drei Stück, mit 1, 2 und 3 Ringen.'); }
@@ -684,7 +725,7 @@ const SR = {
   // Prüft die Sicherheitsregeln vor Arbeiten im Schrank. cb() wird bei Erfolg aufgerufen.
   safety(what, cb) {
     if (G.mainSwitch === 'on') {
-      Game.ask(`Der Hauptschalter steht auf EIN. Trotzdem die Abdeckung der ${what} abschrauben und loslegen?`, [
+      Game.ask(`Der Hauptschalter steht auf EIN. Trotzdem an ${what} arbeiten?`, [
         { t: 'Ja, geht schon schnell', f: () => {
           G.zaps++; Game.mistake(); Snd.play('zap');
           if (!Game.hurt(40, 'Stromschlag beim Arbeiten unter Spannung. Regel 1: FREISCHALTEN!')) Game.say(['ZZZACK! Ein Schlag fährt dir durch den Arm.', 'Regel Nr. 1: FREISCHALTEN! Erst den Hauptschalter aus.']);
@@ -712,7 +753,7 @@ const SR = {
       Game.say(['Hauptschalter aus und gesichert. Aber Regel 3: Spannungsfreiheit feststellen!', 'Dafür brauchst du einen zweipoligen Spannungsprüfer. An Alois’ Werkzeugwand hängt einer.']);
       return;
     }
-    Game.say([`Du prüfst mit dem zweipoligen Spannungsprüfer alle Leiter in der ${what} gegeneinander und gegen PE.`, 'Keine LED leuchtet. Spannungsfrei. (Erden und Kurzschließen ist bei Niederspannung hier nicht nötig, benachbarte Teile sind abgedeckt.)'], cb);
+    Game.say([`Du prüfst mit dem zweipoligen Spannungsprüfer alle Leiter an ${what} gegeneinander und gegen PE.`, 'Keine LED leuchtet. Spannungsfrei. (Erden und Kurzschließen ist bei Niederspannung hier nicht nötig, benachbarte Teile sind abgedeckt.)'], cb);
   },
   verteilung() {
     if (Game.fixed('licht')) { Game.say(G.mainSwitch === 'on' ? 'Alle LS-Schalter drin, alle eingeschaltet. F3 Hallenbeleuchtung: B16.' : 'Der neue B16 sitzt. Jetzt Schloss ab und Hauptschalter wieder ein!'); return; }
@@ -722,7 +763,7 @@ const SR = {
       return;
     }
     if (!Game.has('ls')) { Game.say('Für F3 fehlt ein Leitungsschutzschalter. Ersatz gibt es bestimmt im Lager.'); return; }
-    SR.safety('Verteilung', () => Game.puzzle('sicherung'));
+    SR.safety('der Verteilung', () => Game.puzzle('sicherung'));
   },
   hauptschalter() {
     const s = G.mainSwitch;
@@ -766,7 +807,7 @@ const SR = {
     const opts = [];
     if (!Game.fixed('meldung')) opts.push({ t: 'Vorwiderstand der Meldeleuchte ersetzen', f: () => {
       if (!Game.has('widerstaende')) { Game.say('Du brauchst Ersatz-Widerstände. Wer hat hier so was rumliegen? Vielleicht einer der alten Hasen.'); return; }
-      SR.safety('Steuerschrank', () => Game.puzzle('widerstand'));
+      SR.safety('dem Steuerschrank', () => Game.puzzle('widerstand'));
     } });
     if (!Game.fixed('steuerung')) opts.push({ t: 'Kleinsteuerung programmieren', f: () => {
       if (!Game.has('schaltplan')) { Game.say('Ohne Schaltplan weißt du nicht, wie die Logik aussehen soll. Der Plan liegt sicher im Meisterbüro.'); return; }
@@ -847,5 +888,314 @@ ROOMS.buero = {
     { u: 0.3, v: 0.18, label: 'Fenster zur Halle', use() { Game.say(Game.hallLight() ? 'Von hier oben sieht man die ganze Halle. Das Licht brennt. Sieht fast wieder aus wie eine Fabrik.' : 'Unten ist alles schwarz. Nur das Mondlicht malt Streifen auf den Hallenboden. War da gerade eine Bewegung beim Rolltor?'); } },
     { u: 0.96, v: 0.52, label: 'Erste-Hilfe-Kasten', glint: () => !Game.flag('eh_buero'), gh: 50, use: firstAid('eh_buero', 1) },
     { u: 0.03, v: 0.26, r: 30, label: 'Tür zur Halle', use() { Game.goto('halle', 0.93, 0.2, 'L'); } },
+  ],
+};
+
+// =====================================================================
+//  KELLERGANG
+// =====================================================================
+function pipesAlong(ctx, R, y, col) {
+  const f = R.floor;
+  line(ctx, f.xbl, y, f.xbr, y, col, 3);
+  const k = f.sf / f.sb;
+  const yl = f.yf - (f.yb - y) * k;
+  line(ctx, f.xbl, y, f.xfl, yl, col, 3 * 1.6); line(ctx, f.xbr, y, f.xfr, yl, col, 3 * 1.6);
+}
+function stampClock(ctx, x, y) {
+  rect(ctx, x - 9, y - 24, 18, 24, '#3a3530'); rect(ctx, x - 6, y - 21, 12, 8, '#d8d0b8');
+  text(ctx, '--:--', x, y - 17, '#a22', 3.6); rect(ctx, x - 3, y - 10, 6, 5, '#151515');
+}
+
+ROOMS.keller = {
+  name: 'Kellergang',
+  seed: 701,
+  floor: { yb: 140, yf: 270, xbl: 160, xbr: 320, xfl: -60, xfr: 540, sb: 0.48, sf: 1 },
+  wallTop: 46,
+  walk: { u0: 0.06, u1: 0.94, v0: 0.1, v1: 0.95 },
+  frontExit: { room: 'halle', u: 0.85, v: 0.86, dir: 'U', u0: 0.3, u1: 0.7 },
+  darkness: st => 0.84 - st.r * 0.4,
+  lights(st, t) {
+    return [
+      { x: 240, y: 60, r: 130, a: 0.75, cone: 60, flicker: st.r < 0.7, col: 'rgba(255,200,120,0.08)' },
+      { x: 240, y: 175, r: 60, a: 0.35, col: 'rgba(200,30,20,0.12)' },
+      { x: proj(this, 0.5, 0).x, y: 110, r: 30, a: 0.4, col: 'rgba(255,180,90,0.25)' },
+    ];
+  },
+  onEnter() {
+    if (!Game.flag('kellerSeen')) {
+      Game.set('kellerSeen'); Snd.play('sting');
+      Game.say(['Der Keller. Es riecht nach Moder und Schmieröl. Irgendwo tropft Wasser.', 'Am Ende des Gangs steht eine Tür einen Spalt offen. Dahinter flackert schwaches Licht.']);
+    }
+  },
+  drawBg(ctx, st) {
+    const R = this, f = R.floor;
+    shell(ctx, R, { ceil: '#070708', wall: mixc('#34302a', '#5a564c', st.r), floor: mixc('#242422', '#44443e', st.r), tilesU: 4, tilesV: 10, tileAlpha: 0.3 });
+    wallTex(ctx, R, 'brick');
+    pipesAlong(ctx, R, 58, mixc('#4a3020', '#7a5a3a', st.r));
+    pipesAlong(ctx, R, 66, '#2a3a4a');
+    // Kabeltrasse
+    pipesAlong(ctx, R, 74, '#1a1a1a');
+    // Tür am Ende (Hausmeister) – angelehnt
+    const d = proj(R, 0.5, 0);
+    rect(ctx, d.x - 12, d.y - 42, 24, 42, '#141414'); rect(ctx, d.x - 11, d.y - 41, 8, 41, '#050505');
+    poly(ctx, [[d.x - 3, d.y - 41], [d.x + 11, d.y - 41], [d.x + 11, d.y], [d.x - 3, d.y]], '#4a3a2a');
+    sign(ctx, d.x, d.y - 49, 34, 7, '#3a3a3a', '#ddd', 'HAUSMEISTER', 4.2);
+    // Stempeluhr + Werkszeitung an der Rückwand
+    stampClock(ctx, proj(R, 0.15, 0).x, d.y - 18);
+    rect(ctx, proj(R, 0.82, 0).x - 8, d.y - 44, 16, 20, '#c8b880'); for (let k = 0; k < 5; k++) rect(ctx, proj(R, 0.82, 0).x - 6, d.y - 40 + k * 3, 12, 1, '#665');
+    // Seitentüren
+    sideDoor(ctx, R, 'L', 0.22, 0.42, 76, '#3a4a5a', 'E-WERKSTATT');
+    sideDoor(ctx, R, 'R', 0.22, 0.42, 76, '#4a4a40', 'KOMPRESSOR');
+    // Abzweigkasten rechts
+    const ab = proj(R, 1, 0.66);
+    poly(ctx, [[ab.x - 4, ab.y - 70 * ab.s], [ab.x - 4, ab.y - 40 * ab.s], [ab.x - 30, ab.y - 44 * ab.s + 8], [ab.x - 30, ab.y - 72 * ab.s + 6]], '#7a7a70', '#222', 1);
+    text(ctx, 'FB-01', ab.x - 17, ab.y - 58 * ab.s + 3, '#111', 5);
+    // Treppe nach oben (vorne)
+    sign(ctx, 240, 258, 34, 8, '#1d4a2a', '#d8f0d8', '▼ HALLE', 5);
+    // Pfützen
+    const rr = rngf(9);
+    for (let i = 0; i < 5; i++) { const p = proj(R, rr(), rr() * 0.9 + 0.05); ellipse(ctx, p.x, p.y, 14 * p.s, 3 * p.s, 'rgba(60,70,90,0.35)'); }
+    grime(ctx, R, 707, 1 - st.r * 0.85);
+  },
+  drawFx(ctx, st, t) {
+    // Tropfen
+    const k = (t * 0.7) % 1, p = proj(this, 0.62, 0.55);
+    if (k < 0.8) rect(ctx, p.x, lerp(70, p.y - 2, k / 0.8), 1, 2, 'rgba(160,180,220,0.7)');
+    else ellipse(ctx, p.x, p.y, (k - 0.8) * 30, (k - 0.8) * 8, 'rgba(160,180,220,0.4)');
+  },
+  hotspots: [
+    { u: 0.15, v: 0.12, label: 'Stempeluhr (Speichern)', use() { ROOMS.umkleide.hotspots.find(h => h.label.startsWith('Stempeluhr')).use(); } },
+    { u: 0.82, v: 0.12, label: 'Zeitungsausschnitt', use() { Game.addFile('werkszeitung'); } },
+    { u: 0.5, v: 0.1, label: 'Tür (Hausmeister)', use() { Game.goto('hausmeister', 0.5, 0.86, 'U'); } },
+    { u: 0.05, v: 0.32, r: 30, label: 'Tür zur E-Werkstatt', use() { Game.goto('ewerkstatt', 0.92, 0.26, 'L'); } },
+    { u: 0.95, v: 0.32, r: 30, label: 'Tür zum Kompressorraum', use() { Game.goto('kompressor', 0.08, 0.26, 'R'); } },
+    { u: 0.93, v: 0.66, r: 30, label: 'Abzweigkasten Steuerleitung FB-01', use() {
+      if (Game.fixed('leitung')) { Game.say('Der Abzweigkasten. Ader 3 ist abgeklemmt, das Signal läuft jetzt über die Reserveader 7. Sauber beschriftet.'); return; }
+      if (!Game.flag('sawLeitung')) { Game.set('sawLeitung'); Game.say(['Ein grauer Abzweigkasten: „Steuerleitung FB-01 Förderband, 24 V DC“.', 'Durch diesen Kasten läuft die Steuerleitung vom Schaltraum zum Band. Am Kabel sieht man frische Kratzer – als hätte jemand daran herumgeschnitten.'], () => ROOMS.keller.hotspots[5].use()); return; }
+      if (!Game.has('multimeter')) { Game.say('Um herauszufinden, ob eine Ader beschädigt ist, brauchst du ein Messgerät.'); return; }
+      if (!Game.has('klemmen')) { Game.say('Du hast ein Multimeter. Aber falls eine Ader durch ist, brauchst du auch Verbindungsklemmen zum Umklemmen. Irmgard hat bestimmt welche.'); return; }
+      Game.puzzle('multimeter');
+    } },
+  ],
+};
+
+// =====================================================================
+//  E-WERKSTATT
+// =====================================================================
+ROOMS.ewerkstatt = {
+  name: 'E-Werkstatt',
+  seed: 702,
+  floor: { yb: 150, yf: 270, xbl: 90, xbr: 390, xfl: -30, xfr: 510, sb: 0.62, sf: 1 },
+  wallTop: 20,
+  walk: { u0: 0.04, u1: 0.96, v0: 0.18, v1: 0.95 },
+  blockers: [{ u0: 0.08, u1: 0.3, v0: 0.5, v1: 0.68 }],
+  darkness: st => 0.82 - st.r * 0.42,
+  lights(st) {
+    return [
+      { x: 180, y: 36, r: 150, a: 0.85, cone: 80, flicker: true, col: 'rgba(170,220,255,0.07)' },
+      { x: proj(this, 0.22, 0.58).x, y: proj(this, 0.22, 0.58).y - 36, r: 80, a: 0.85, col: 'rgba(255,190,100,0.2)' },
+    ];
+  },
+  drawBg(ctx, st) {
+    const R = this;
+    shell(ctx, R, { ceil: '#09090a', wall: mixc('#3a4248', '#6a7880', st.r), floor: mixc('#2a2c2e', '#50545a', st.r), tilesU: 8, tilesV: 6 });
+    wallTex(ctx, R, 'panel');
+    tubeLamp(ctx, 180, 30, 50, true); tubeLamp(ctx, 320, 30, 50, false);
+    // Prüfplatz an der Rückwand
+    const a = proj(R, 0.08, 0), b = proj(R, 0.46, 0);
+    rect(ctx, a.x, a.y - 70, b.x - a.x, 36, '#2a2c30');
+    for (let i = 0; i < 6; i++) { rect(ctx, a.x + 6 + i * 22, a.y - 64, 16, 12, '#111'); rect(ctx, a.x + 8 + i * 22, a.y - 62, 12, 5, ['#2a6', '#a82', '#26a', '#2a6', '#a22', '#666'][i]); }
+    for (let i = 0; i < 8; i++) circle(ctx, a.x + 10 + i * 16, a.y - 44, 2.4, ['#c22', '#111', '#e6c000', '#2a2', '#24c', '#c22', '#111', '#ddd'][i]);
+    sign(ctx, (a.x + b.x) / 2, a.y - 76, 46, 7, '#c8b020', '#111', 'PRÜFPLATZ', 4.4);
+    rect(ctx, a.x, a.y - 34, b.x - a.x, 34, '#3a3a36'); rect(ctx, a.x, a.y - 34, b.x - a.x, 3, '#5a5a50');
+    // Pinnwand
+    const pw = proj(R, 0.55, 0);
+    rect(ctx, pw.x - 14, pw.y - 76, 28, 22, '#8a6a40'); rect(ctx, pw.x - 11, pw.y - 73, 9, 11, '#ddd'); rect(ctx, pw.x + 1, pw.y - 72, 10, 8, '#e8d890'); rect(ctx, pw.x - 8, pw.y - 60, 14, 4, '#bbb');
+    // Regal mit Kartons
+    const r0 = proj(R, 0.64, 0), r1 = proj(R, 0.84, 0);
+    for (let k = 0; k < 4; k++) rect(ctx, r0.x, r0.y - 6 - k * 22, r1.x - r0.x, 2, '#5a5a5a');
+    rect(ctx, r0.x, r0.y - 74, 2, 74, '#444'); rect(ctx, r1.x - 2, r0.y - 74, 2, 74, '#444');
+    const rr = rngf(21);
+    for (let k = 0; k < 3; k++) for (let x = r0.x + 3; x < r1.x - 12; x += 13) rect(ctx, x, r0.y - 18 - k * 22, 11, 12, ['#8a7a5a', '#6a6a6a', '#3a5a8a', '#8a5a3a'][Math.floor(rr() * 4)]);
+    // Kabeltrommeln
+    const kt = proj(R, 0.92, 0.12);
+    for (const [dx, c] of [[-8, '#c84'], [8, '#333']]) { circle(ctx, kt.x + dx, kt.y - 12, 11, '#5a4a30'); circle(ctx, kt.x + dx, kt.y - 12, 8, c); circle(ctx, kt.x + dx, kt.y - 12, 3, '#222'); }
+    sideDoor(ctx, R, 'R', 0.14, 0.38, 76, '#3a4a5a', 'KELLER');
+    warnSign(ctx, 120, 60, 1.2);
+    grime(ctx, R, 777, 1 - st.r * 0.9);
+  },
+  props: [
+    { v: 0.68, draw(ctx, st) { // Dragans Schreibtisch
+      const R = ROOMS.ewerkstatt;
+      box(ctx, R, 0.09, 0.11, 0.52, 0.67, 24, '#333', { noTop: true }); box(ctx, R, 0.27, 0.29, 0.52, 0.67, 24, '#333', { noTop: true });
+      const b = box(ctx, R, 0.08, 0.3, 0.51, 0.68, 3, '#4a4a42', { lift: 24 });
+      const lp = proj(R, 0.19, 0.58);
+      rect(ctx, lp.x - 1, lp.y - 40, 2, 12, '#333'); poly(ctx, [[lp.x - 6, lp.y - 40], [lp.x + 6, lp.y - 40], [lp.x + 3, lp.y - 45], [lp.x - 3, lp.y - 45]], '#8a2a2a');
+      rect(ctx, b.x0 + 8, b.top - 9, 5, 9, '#5a6a5a'); rect(ctx, b.x0 + 8, b.top - 10, 5, 2, '#333');
+      rect(ctx, b.x1 - 22, b.top - 3, 14, 4, '#e0d8c0');
+    } },
+  ],
+  npcs() { if (Game.flag('ending')) return []; return [{ ...NPC.dragan, u: 0.36, v: 0.58, dir: 'L' }]; },
+  hotspots: [
+    { u: 0.27, v: 0.2, label: 'Prüfplatz', use() { Game.addFile('multimeter_heft'); } },
+    { u: 0.55, v: 0.2, label: 'Pinnwand', use() { Game.addFile('schutz_heft'); } },
+    { u: 0.74, v: 0.2, label: 'Regal', glint: () => !Game.flag('took_fi'), gh: 60, use() {
+      if (!Game.flag('took_fi')) { Game.set('took_fi'); Game.give('fi_kasten'); Game.say('Im Regal: ein Karton neuer FI-Schutzschalter. 30 mA, 300 mA, 500 mA. Daneben ein Ordner „Grundlagen“.'); return; }
+      Game.addFile('rp_heft');
+    } },
+    { u: 0.9, v: 0.24, label: 'Kabeltrommeln', glint: () => !Game.flag('took_ader'), gh: 30, use() {
+      if (!Game.flag('took_ader')) { Game.set('took_ader'); Game.give('aderleitung'); Game.say('Zwischen den Kabeltrommeln: eine Rolle Aderleitung 1,5 mm², Aderendhülsen und eine Crimpzange.'); }
+      else Game.say('NYM-J 3×1,5, NYM-J 5×2,5, Steuerleitung 7×1. Genug Kabel für eine ganze Halle.');
+    } },
+    { u: 0.24, v: 0.72, label: 'Schreibtisch', use() { Game.say(Game.flag('ending') ? 'Die Thermoskanne ist leer. Daneben ein Zettel: „Danke, Azubi. – D.“' : 'Eine Thermoskanne, die nach „Kräutertee“ riecht. Ein Stapel Prüfprotokolle. Und eine Visitenkarte: „Dr. F. Falk – Falk Grundbesitz GmbH“. Zerknüllt.'); } },
+    { u: 0.97, v: 0.26, r: 30, label: 'Tür zum Kellergang', use() { Game.goto('keller', 0.08, 0.32, 'R'); } },
+  ],
+};
+
+// =====================================================================
+//  KOMPRESSORRAUM
+// =====================================================================
+ROOMS.kompressor = {
+  name: 'Kompressorraum',
+  seed: 703,
+  floor: { yb: 150, yf: 270, xbl: 100, xbr: 380, xfl: -20, xfr: 500, sb: 0.64, sf: 1 },
+  wallTop: 22,
+  walk: { u0: 0.04, u1: 0.96, v0: 0.2, v1: 0.95 },
+  blockers: [{ u0: 0.28, u1: 0.78, v0: 0.06, v1: 0.46 }],
+  darkness: st => 0.82 - st.r * 0.42,
+  lights(st, t) {
+    const L = [{ x: 240, y: 30, r: 140, a: 0.6, cone: 50, flicker: true }];
+    const sk = proj(this, 0.88, 0);
+    L.push({ x: sk.x, y: sk.y - 50, r: 16, a: 0.5, col: Game.fixed('kompressor') && st.main === 'on' ? 'rgba(40,255,60,0.4)' : 'rgba(255,40,40,0.35)' });
+    return L;
+  },
+  drawBg(ctx, st) {
+    const R = this;
+    shell(ctx, R, { ceil: '#08080a', wall: mixc('#3a3a34', '#66665c', st.r), floor: mixc('#28261f', '#4c4a40', st.r), tilesU: 6, tilesV: 6 });
+    wallTex(ctx, R, 'brick');
+    hangLamp(ctx, 240, 26, R.wallTop, true, 1);
+    pipesAlong(ctx, R, 50, '#2a4a6a');
+    // Schaltkasten rechts an der Rückwand
+    const sk = proj(R, 0.88, 0);
+    rect(ctx, sk.x - 14, sk.y - 74, 28, 34, '#7a8088'); rect(ctx, sk.x - 12, sk.y - 72, 24, 6, '#ddd'); text(ctx, 'K-01', sk.x, sk.y - 69, '#222', 4);
+    circle(ctx, sk.x - 6, sk.y - 58, 3, '#2a2'); circle(ctx, sk.x + 6, sk.y - 58, 3, '#a22');
+    text(ctx, 'I', sk.x - 6, sk.y - 52, '#ddd', 3.6); text(ctx, '0', sk.x + 6, sk.y - 52, '#ddd', 3.6);
+    if (!Game.fixed('kompressor')) { line(ctx, sk.x - 8, sk.y - 40, sk.x - 12, sk.y - 30, '#c22', 1); line(ctx, sk.x - 4, sk.y - 40, sk.x - 2, sk.y - 28, '#24c', 1); }
+    // Wartungsplan links
+    const wp = proj(R, 0.12, 0); rect(ctx, wp.x - 9, wp.y - 70, 18, 22, '#d8d0b0'); rect(ctx, wp.x - 8, wp.y - 69, 16, 3, '#26a'); for (let k = 0; k < 5; k++) rect(ctx, wp.x - 7, wp.y - 63 + k * 3, 14, 1, '#555');
+    sideDoor(ctx, R, 'L', 0.14, 0.38, 76, '#4a4a40', 'KELLER');
+    grime(ctx, R, 733, 1 - st.r * 0.9);
+  },
+  props: [
+    { v: 0.46, draw(ctx, st, t) {
+      const R = ROOMS.kompressor;
+      const run = Game.fixed('kompressor') && st.main === 'on';
+      // Druckbehälter liegend
+      const b = box(ctx, R, 0.3, 0.76, 0.3, 0.45, 8, '#3a3a3a');
+      const c0 = proj(R, 0.32, 0.38), c1 = proj(R, 0.74, 0.38);
+      rect(ctx, c0.x, c0.y - 34 * c0.s, c1.x - c0.x, 26 * c0.s, mixc('#5a2a20', '#b83a2a', st.r));
+      ellipse(ctx, c0.x, c0.y - 21 * c0.s, 5, 13 * c0.s, mixc('#4a2018', '#982a20', st.r));
+      ellipse(ctx, c1.x, c1.y - 21 * c1.s, 5, 13 * c1.s, mixc('#6a3a2a', '#c84a3a', st.r));
+      rect(ctx, c0.x, c0.y - 30 * c0.s, c1.x - c0.x, 3, 'rgba(255,255,255,0.12)');
+      // Motor + Verdichter oben drauf
+      const m = proj(R, 0.45, 0.33);
+      const shake = run ? Math.sin(t * 60) * 0.6 : 0;
+      rect(ctx, m.x - 20 + shake, m.y - 58 * m.s, 26, 22, '#2a4a6a'); rect(ctx, m.x + 10 + shake, m.y - 62 * m.s, 20, 26, '#555');
+      for (let k = 0; k < 4; k++) rect(ctx, m.x + 11 + shake, m.y - 60 * m.s + k * 6, 18, 2, '#777');
+      // Manometer
+      const mp = proj(R, 0.7, 0.4); circle(ctx, mp.x, mp.y - 42 * mp.s, 5, '#ddd'); const ang = run ? -2.2 + 3.2 * 0.9 : -2.2;
+      line(ctx, mp.x, mp.y - 42 * mp.s, mp.x + Math.cos(ang) * 4, mp.y - 42 * mp.s + Math.sin(ang) * 4, '#a22', 1);
+    } },
+  ],
+  hotspots: [
+    { u: 0.12, v: 0.22, label: 'Wartungsplan', use() { Game.say(['„Wartungsplan Hauptkompressor K-01: Ölstand wöchentlich, Kondensat täglich ablassen, Ansaugfilter monatlich.“', 'Die letzten drei Einträge fehlen. Stattdessen steht da in krakeliger Schrift: „Wird eh abgerissen.“']); } },
+    { u: 0.52, v: 0.5, label: 'Kompressor', use() {
+      if (!Game.flag('brandl2')) { Game.set('brandl2'); Game.say('Auf dem Druckbehälter liegt ein herausgerissenes Notizbuchblatt. Die Handschrift des Meisters!', () => Game.addFile('brandl2')); return; }
+      Game.say(Game.fixed('kompressor') ? (G.mainSwitch === 'on' ? 'Der Kompressor rattert und füllt den Kessel. 9 bar.' : 'Bereit – aber ohne Strom (Hauptschalter!) steht er still.') : 'Ein 15-kW-Schraubenkompressor mit liegendem Druckbehälter. Mechanisch sieht alles in Ordnung aus. Das Problem muss im Schaltkasten liegen.');
+    } },
+    { u: 0.88, v: 0.22, label: 'Schaltkasten K-01', use() { KOMP.schaltkasten(); } },
+    { u: 0.03, v: 0.26, r: 30, label: 'Tür zum Kellergang', use() { Game.goto('keller', 0.92, 0.32, 'L'); } },
+  ],
+};
+const KOMP = {
+  schaltkasten() {
+    if (Game.fixed('kompressor')) { Game.say('Schütz, Motorschutz, Taster – alles verdrahtet. Selbsthaltung über den Hilfskontakt 13-14.'); return; }
+    if (!Game.flag('sawSchuetz')) {
+      Game.set('sawSchuetz');
+      Game.say(['Der Schaltkasten des Kompressors: Schütz K1, Motorschutzrelais F2, EIN- und AUS-Taster.', 'Mehrere Adern sind abgeklemmt. Und am Schütz fehlt der aufsteckbare Hilfsschalterblock – nur die leeren Rastnasen sind noch da.', 'Innen in der Tür klebt ein Stromlaufplan.'], () => Game.addFile('schuetz_plan'));
+      return;
+    }
+    if (!Game.has('hilfskontakt')) { Game.say('Ohne den Hilfsschalterblock 13/14 gibt es keine Selbsthaltung – der Kompressor würde nur laufen, solange man den EIN-Taster gedrückt hält. Wer hat das Teil wohl mitgenommen?'); return; }
+    if (!Game.has('aderleitung')) { Game.say('Für die fehlenden Verbindungen brauchst du Aderleitung. In der E-Werkstatt gibt es bestimmt welche.'); return; }
+    SR.safety('dem Kompressor-Schaltkasten', () => Game.puzzle('schuetz'));
+  },
+};
+
+// =====================================================================
+//  HAUSMEISTERRAUM
+// =====================================================================
+ROOMS.hausmeister = {
+  name: 'Hausmeisterraum',
+  seed: 704,
+  floor: { yb: 155, yf: 270, xbl: 130, xbr: 350, xfl: 0, xfr: 480, sb: 0.68, sf: 1 },
+  wallTop: 30,
+  walk: { u0: 0.05, u1: 0.95, v0: 0.22, v1: 0.95 },
+  blockers: [{ u0: 0.66, u1: 0.98, v0: 0.42, v1: 0.62 }],
+  frontExit: { room: 'keller', u: 0.5, v: 0.14, dir: 'D', u0: 0.3, u1: 0.7 },
+  darkness: st => 0.84 - st.r * 0.3,
+  lights(st, t) {
+    const x = 240 + Math.sin(t * 1.3) * 18 * (st.end ? 0.1 : 1);
+    return [{ x, y: 60, r: 120, a: 0.85, col: 'rgba(255,190,110,0.12)' }];
+  },
+  onEnter() {
+    if (!Game.flag('hmSeen')) {
+      Game.set('hmSeen'); Snd.play('sting');
+      Game.say(['Eine nackte Glühbirne pendelt hin und her, als hätte sie gerade jemand angestoßen.', 'Ein Radio rauscht leise. Hier hat jemand gewohnt – oder sich versteckt.']);
+    }
+  },
+  drawBg(ctx, st) {
+    const R = this;
+    shell(ctx, R, { ceil: '#080706', wall: mixc('#3a3228', '#5a5040', st.r), floor: mixc('#2a2620', '#46403a', st.r), tilesU: 6, tilesV: 5 });
+    wallTex(ctx, R, 'brick');
+    // Pinnwand mit roten Fäden
+    const pw = proj(R, 0.5, 0);
+    rect(ctx, pw.x - 34, pw.y - 92, 68, 40, '#6a5030');
+    const rr = rngf(77), pts = [];
+    for (let i = 0; i < 7; i++) { const x = pw.x - 28 + rr() * 54, y = pw.y - 88 + rr() * 30; pts.push([x, y]); rect(ctx, x - 4, y - 3, 9, 7, i === 0 ? '#e8e0c8' : ['#ccc', '#aab', '#dcb'][i % 3]); }
+    ctx.strokeStyle = '#c22'; ctx.lineWidth = 0.6; ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.stroke();
+    // Werkbank links
+    const wb = box(ctx, R, 0.05, 0.36, 0.0, 0.14, 26, '#4a3a28', { top: '#5a4632' });
+    rect(ctx, wb.x0 + 8, wb.top - 6, 10, 6, '#333'); rect(ctx, wb.x0 + 30, wb.top - 3, 16, 3, '#888');
+    // Spind
+    const sp = proj(R, 0.86, 0); rect(ctx, sp.x - 12, sp.y - 70, 24, 70, '#4a5058'); rect(ctx, sp.x - 1, sp.y - 70, 1, 70, '#222');
+    // Radio
+    rect(ctx, wb.x1 - 22, wb.top - 9, 16, 9, '#5a3a2a'); circle(ctx, wb.x1 - 17, wb.top - 4.5, 2.5, '#222'); rect(ctx, wb.x1 - 12, wb.top - 7, 5, 4, '#cc9');
+    grime(ctx, R, 744, 1 - st.r * 0.6);
+  },
+  props: [
+    { v: 0.62, draw(ctx, st) { // Pritsche
+      const R = ROOMS.hausmeister;
+      box(ctx, R, 0.66, 0.98, 0.43, 0.61, 12, '#3a4a3a');
+      const b = box(ctx, R, 0.67, 0.97, 0.44, 0.6, 3, '#5a6a50', { lift: 12 });
+      rect(ctx, b.x0 + 4, b.top - 3, 18, 4, '#8a8a7a');
+      if (!G.files.includes('sms')) { rect(ctx, b.x1 - 20, b.top - 2, 6, 3, '#111'); rect(ctx, b.x1 - 19, b.top - 2, 4, 1, '#4af'); }
+    } },
+  ],
+  drawFront(ctx, st, t) { const a = 0.4 + 0.3 * Math.sin(t * 3); ctx.fillStyle = `rgba(200,220,200,${a})`; ctx.font = '7px monospace'; ctx.textAlign = 'center'; ctx.fillText('▼', 240, 266); },
+  hotspots: [
+    { u: 0.5, v: 0.24, label: 'Pinnwand', use() {
+      if (!G.files.includes('sabotage')) Game.say(['Fotos der Halle: der LS-Schalter, der Bandmotor, die Presse, der Kompressor. Rote Fäden verbinden alles.', 'In der Mitte: eine Liste.'], () => Game.addFile('sabotage'));
+      else Game.addFile('sabotage');
+    } },
+    { u: 0.2, v: 0.2, label: 'Werkbank', glint: () => !Game.flag('took_hk'), gh: 40, use() {
+      if (!Game.flag('took_hk')) { Game.set('took_hk'); Game.give('hilfskontakt'); Game.say(['In der Schublade unter der Werkbank: ein ausgebauter LS-Schalter-Karton (leer), ein Zahnrad-Abdruck im Staub …', '… und ein Hilfsschalterblock 13/14. Genau der fehlt am Kompressor!']); }
+      else Game.say(['Seitenschneider, Isolierband, eine Packung Zigaretten. Und eine Quittung: „Audi Zentrum – Anzahlung“.']);
+    } },
+    { u: 0.82, v: 0.66, label: 'Pritsche', use() {
+      if (!G.files.includes('sms')) Game.say('Auf der Pritsche liegt ein altes Handy. Das Display leuchtet noch.', () => Game.addFile('sms'));
+      else Game.say('Eine durchgelegene Pritsche. Kowalski hat hier wohl öfter übernachtet.');
+    } },
+    { u: 0.86, v: 0.24, label: 'Spind', use() { Game.say('Kowalskis zweiter Spind. Drin: ein Blaumann, eine Sturmhaube und eine Taschenlampe mit Rotlichtfilter. Für Nachtarbeit, bei der man nicht gesehen werden will.'); } },
+    { u: 0.34, v: 0.2, label: 'Radio', use() { Snd.play('hiss'); Game.say('… rrrsch … „… und für Montag erwarten wir Regen. Und nun die Verkehrsmeldungen …“ … rrrsch.'); } },
   ],
 };
