@@ -5,6 +5,7 @@ Sammlung von Lernspielen. Jedes Spiel liegt in einem eigenen Ordner und hat dort
 | Spiel | Zielgruppe | Ordner |
 |---|---|---|
 | **NACHTSCHICHT** – Survival-Rätselspiel in einer verrotteten Werkshalle | Mechatroniker/-in, 1. Ausbildungsjahr (LF 1–4) | [`nachtschicht/`](nachtschicht/) |
+| **STRANDGUT** – 3D-Survival-Spiel: gestrandet auf einer Insel, Flucht mit einem selbstgebauten Solarboot | Mechatroniker/-in, 10. Jahrgangsstufe (LF 1–5) | [`strandgut/`](strandgut/) |
 
 `index.html` im Hauptordner ist eine kleine Startseite mit Links zu allen Spielen.
 
