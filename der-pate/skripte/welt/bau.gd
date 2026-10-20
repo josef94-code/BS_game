@@ -249,6 +249,7 @@ static func tex(name: String) -> Texture2D:
 		"jeans": img = _jeans()
 		"strick": img = _beton(Color(0.85, 0.85, 0.85), 0.25, 60.0)
 		"fleck": img = _fleck()
+		"maschendraht": img = _maschendraht()
 		"holz": img = _holz()
 		"teppich": img = _beton(Color(0.42, 0.08, 0.09), 0.1, 18.0)
 		"metall": img = _schmutz(_metall(), 0.2, 8, false)
@@ -386,4 +387,17 @@ static func _fleck() -> Image:
 			var d := Vector2(x - 64, y - 64).length() / 64.0
 			var a := clampf((1.0 - d) * 1.6 + (rausch.get_pixel(x, y).r - 0.5) * 1.2, 0.0, 1.0)
 			img.set_pixel(x, y, Color(0.05, 0.04, 0.03, a * 0.75))
+	return img
+
+
+## Maschendraht (Rauten aus Draht, dazwischen durchsichtig)
+static func _maschendraht() -> Image:
+	var img := Image.create(64, 64, false, Image.FORMAT_RGBA8)
+	for y in 64:
+		for x in 64:
+			var a := absf(fmod(x + y, 32.0) - 16.0)
+			var b := absf(fmod(x - y + 64.0, 32.0) - 16.0)
+			var draht := minf(absf(a - 16.0), absf(b - 16.0))
+			var alpha := clampf(2.2 - draht, 0.0, 1.0)
+			img.set_pixel(x, y, Color(0.7, 0.72, 0.7, alpha))
 	return img

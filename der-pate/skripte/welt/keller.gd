@@ -41,6 +41,8 @@ var _schraubendreher: Node3D
 var _marker: Node3D
 var _sammel := {}
 var _zeit := 0.0
+var _uhr_stunde: Node3D
+var _uhr_minute: Node3D
 
 # Häufig benutzte Materialien
 var m_beton: StandardMaterial3D
@@ -72,6 +74,7 @@ func _ready() -> void:
 	_foerderband()
 	_schaltschrank()
 	_deko()
+	_details()
 	_sammelobjekte()
 	_marker_bauen()
 
@@ -798,6 +801,205 @@ func _plakat(pos: Vector3, rot_y: float, text: String, farbe: Color) -> void:
 	l.shaded = true
 
 
+# ---------------------------------------------------------------- Kleinkram und Abnutzung
+
+func _details() -> void:
+	var metall := Bau.mat(Color(0.7, 0.72, 0.74), "metall", 1.5, 0.0, false, 0.45)
+	var dunkel := Bau.mat(Color(0.15, 0.15, 0.16), "", 1.0, 0.0)
+	var rot := Bau.mat(Color(0.75, 0.08, 0.07), "", 1.0, 0.0, false, 0.4)
+	# Lüftungskanal unter der Decke mit Flanschen und Gitter
+	var kanal_z := -2.6
+	Bau.box(self, Vector3(16.0, 0.45, 0.6), Vector3(-4.0, 3.62, kanal_z), metall)
+	var fx := -11.6
+	while fx < 4.0:
+		Bau.box(self, Vector3(0.06, 0.52, 0.66), Vector3(fx, 3.62, kanal_z), metall)
+		fx += 1.6
+	Bau.box(self, Vector3(0.5, 0.02, 0.4), Vector3(-6.0, 3.39, kanal_z), dunkel)
+	for i in 6:
+		Bau.box(self, Vector3(0.02, 0.025, 0.38), Vector3(-6.2 + i * 0.08, 3.38, kanal_z), metall)
+	Bau.box(self, Vector3(0.6, 0.6, 0.45), Vector3(4.2, 3.6, kanal_z), metall)
+	Bau.zylinder(self, 0.22, 0.6, Vector3(4.2, 3.95, kanal_z), metall)
+	# Kabeltrasse mit Kabeln an der Nordwand
+	Bau.box(self, Vector3(18.0, 0.04, 0.3), Vector3(1.0, 3.15, -T + 0.2), metall)
+	var kabel_farben := [Color(0.1, 0.1, 0.1), Color(0.35, 0.35, 0.38), Color(0.2, 0.22, 0.45), Color(0.55, 0.55, 0.5)]
+	for i in 6:
+		Bau.zylinder(self, 0.018, 18.0, Vector3(1.0, 3.19, -T + 0.1 + i * 0.04), Bau.mat(kabel_farben[i % 4], "", 1.0, 0.0, false, 0.5), Vector3(0, 0, PI / 2), false, -1.0, 6)
+	for x in [-7.0, -3.0, 1.0, 5.0, 9.0]:
+		Bau.box(self, Vector3(0.04, 0.3, 0.3), Vector3(x, 3.3, -T + 0.2), metall)
+	# Kabel von der Trasse hinunter zum Schaltschrank und zur Klingel
+	for x in [7.7, 7.85, 8.0]:
+		Bau.zylinder(self, 0.02, 0.95, Vector3(x, 2.7, -T + 0.15), dunkel, Vector3.ZERO, false, -1.0, 6)
+	# Rohre mit Absperrventilen am Heizkessel
+	var rohr := Bau.mat(Color(0.55, 0.2, 0.12), "metall", 1.0, 0.0)
+	for z in [-7.8, -5.4]:
+		Bau.zylinder(self, 0.06, 3.0, Vector3(-B + 0.25, 2.0, z), rohr)
+		Bau.zylinder(self, 0.06, 1.4, Vector3(-B + 0.95, 3.4, z), rohr, Vector3(0, 0, PI / 2))
+		Bau.torus(self, 0.08, 0.13, Vector3(-B + 0.42, 1.4, z), rot, Vector3(0, 0, PI / 2))
+		Bau.zylinder(self, 0.02, 0.18, Vector3(-B + 0.34, 1.4, z), metall, Vector3(0, 0, PI / 2))
+	Bau.zylinder(self, 0.11, 0.05, Vector3(-B + 0.35, 1.9, -6.6), metall, Vector3(0, 0, PI / 2))
+	Bau.zylinder(self, 0.09, 0.06, Vector3(-B + 0.37, 1.9, -6.6), Bau.leucht(Color(0.9, 0.9, 0.82), 0.5), Vector3(0, 0, PI / 2))
+	# Feuerlöscher
+	for f in [[Vector3(-B + 0.25, 0, 6.08), PI / 2], [Vector3(6.6, 0, -T + 0.25), 0.0], [Vector3(B - 0.25, 0, -3.6), -PI / 2]]:
+		_feuerloescher(f[0], f[1])
+	# Lichtschalter, Steckdose und Kleinverteiler an der Tür
+	var weiss := Bau.mat(Color(0.92, 0.92, 0.88), "", 1.0, 0.0)
+	Bau.box(self, Vector3(0.03, 0.09, 0.09), Vector3(-B + 0.02, 1.05, 7.95), weiss)
+	Bau.box(self, Vector3(0.03, 0.09, 0.09), Vector3(-B + 0.02, 0.3, 7.95), weiss)
+	Bau.box(self, Vector3(0.12, 0.5, 0.4), Vector3(-B + 0.06, 1.6, 8.45), Bau.mat(Color(0.85, 0.86, 0.84), "metall", 1.0, 0.0))
+	Bau.schild(self, "UV-K1", Vector3(-B + 0.13, 1.78, 8.45), 20, Color(0.1, 0.1, 0.1), PI / 2)
+	# Wanduhr (zeigt die Spielzeit)
+	var uhr := Node3D.new()
+	uhr.position = Vector3(1.0, 2.6, -T + 0.06)
+	add_child(uhr)
+	Bau.zylinder(uhr, 0.26, 0.06, Vector3.ZERO, dunkel, Vector3(PI / 2, 0, 0), false, -1.0, 24)
+	Bau.zylinder(uhr, 0.23, 0.065, Vector3.ZERO, Bau.mat(Color(0.95, 0.94, 0.88), "", 1.0, 0.0), Vector3(PI / 2, 0, 0), false, -1.0, 24)
+	for i in 12:
+		var w := i * TAU / 12.0
+		Bau.box(uhr, Vector3(0.012, 0.035, 0.005), Vector3(sin(w) * 0.19, cos(w) * 0.19, 0.035), dunkel).rotation.z = -w
+	_uhr_stunde = Node3D.new()
+	_uhr_stunde.position.z = 0.04
+	uhr.add_child(_uhr_stunde)
+	Bau.box(_uhr_stunde, Vector3(0.016, 0.12, 0.004), Vector3(0, 0.05, 0), dunkel)
+	_uhr_minute = Node3D.new()
+	_uhr_minute.position.z = 0.045
+	uhr.add_child(_uhr_minute)
+	Bau.box(_uhr_minute, Vector3(0.01, 0.18, 0.004), Vector3(0, 0.08, 0), dunkel)
+	# Hausmeister-Ecke: Tischchen, Stuhl, Thermoskanne, Zeitung
+	var ecke := Node3D.new()
+	ecke.position = Vector3(-10.4, 0, -3.6)
+	add_child(ecke)
+	Bau.box(ecke, Vector3(0.9, 0.04, 0.6), Vector3(0, 0.74, 0), m_holz)
+	for dx in [-0.4, 0.4]:
+		for dz in [-0.25, 0.25]:
+			Bau.box(ecke, Vector3(0.04, 0.72, 0.04), Vector3(dx, 0.36, dz), metall)
+	Bau.zylinder(ecke, 0.05, 0.28, Vector3(-0.25, 0.9, 0.1), Bau.mat(Color(0.2, 0.35, 0.6), "", 1.0, 0.0, false, 0.3))
+	Bau.zylinder(ecke, 0.045, 0.05, Vector3(-0.25, 1.06, 0.1), dunkel)
+	var zeitung := Bau.box(ecke, Vector3(0.38, 0.01, 0.28), Vector3(0.15, 0.765, 0.0), Bau.mat(Color(0.88, 0.86, 0.8), "", 1.0, 0.0))
+	zeitung.rotation.y = 0.3
+	var titel := Bau.schild(ecke, "LINCOLN DAILY", Vector3(0.15, 0.772, -0.05), 16, Color(0.1, 0.1, 0.1))
+	titel.rotation = Vector3(-PI / 2, 0.3, 0)
+	Bau.box(ecke, Vector3(0.42, 0.04, 0.42), Vector3(0.1, 0.45, 0.55), m_holz)
+	Bau.box(ecke, Vector3(0.42, 0.45, 0.04), Vector3(0.1, 0.7, 0.75), m_holz)
+	for dx in [-0.08, 0.28]:
+		for dz in [0.38, 0.72]:
+			Bau.box(ecke, Vector3(0.03, 0.45, 0.03), Vector3(dx, 0.22, dz), metall)
+	Bau.kollisionsbox(ecke, Vector3(0.9, 0.9, 1.1), Vector3(0, 0.45, 0.25))
+	_form(-10.4, -3.35, 0.9, 1.1, Color(0.55, 0.4, 0.25))
+	# Maschendraht-Verschlag (Lager des Hausmeisters) mit altem Schulkram
+	_verschlag()
+	# Alte Schulstühle, gestapelt
+	for i in 4:
+		_stuhl(Vector3(3.4, i * 0.42, 7.9), 0.2 * i - 0.3, i > 0)
+	Bau.kollisionsbox(self, Vector3(0.6, 1.8, 0.6), Vector3(3.4, 0.9, 7.9))
+	_form(3.4, 7.9, 0.6, 0.6, Color(0.5, 0.3, 0.2))
+	# Kartonstapel
+	for k in [[Vector3(-6.6, 0, -8.3), 3], [Vector3(2.6, 0, -8.2), 2], [Vector3(10.6, 0, -7.2), 4]]:
+		var p: Vector3 = k[0]
+		for i in int(k[1]):
+			var gross := Vector3(0.6 - i * 0.04, 0.42, 0.5 - i * 0.03)
+			var kiste := Bau.box(self, gross, p + Vector3(randf_range(-0.05, 0.05), 0.21 + i * 0.42, 0), m_karton)
+			kiste.rotation.y = randf_range(-0.2, 0.2)
+		Bau.kollisionsbox(self, Vector3(0.6, 0.42 * k[1], 0.5), p + Vector3(0, 0.21 * k[1], 0))
+		_form(p.x, p.z, 0.6, 0.5, Color(0.65, 0.5, 0.3))
+	# Mülltonne
+	Bau.zylinder(self, 0.28, 0.85, Vector3(-2.6, 0.43, 6.4), Bau.mat(Color(0.3, 0.38, 0.3), "metall", 1.0, 0.0), Vector3.ZERO, true, 0.3, 12)
+	Bau.zylinder(self, 0.32, 0.05, Vector3(-2.6, 0.88, 6.4), metall, Vector3.ZERO, false, -1.0, 12)
+	# Bodengully bei der Pfütze
+	Bau.box(self, Vector3(0.4, 0.01, 0.4), Vector3(-7.5, 0.006, -4.3), dunkel)
+	for i in 5:
+		Bau.box(self, Vector3(0.36, 0.012, 0.025), Vector3(-7.5, 0.008, -4.46 + i * 0.08), metall)
+	# Wasserflecken an den Wänden
+	for w in [[Vector3(-5.0, 2.9, -T + 0.02), 0.0], [Vector3(6.0, 3.2, -T + 0.02), 0.0], [Vector3(-B + 0.02, 3.0, 0.5), PI / 2], [Vector3(B - 0.02, 2.8, 3.2), -PI / 2]]:
+		var mi := MeshInstance3D.new()
+		var qm := QuadMesh.new()
+		qm.size = Vector2(1.6, 2.2)
+		mi.mesh = qm
+		var m := StandardMaterial3D.new()
+		m.albedo_texture = Bau.tex("fleck")
+		m.albedo_color = Color(1, 1, 1, 0.55)
+		m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		mi.material_override = m
+		mi.position = w[0]
+		mi.rotation.y = w[1]
+		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		add_child(mi)
+
+
+func _feuerloescher(pos: Vector3, rot_y: float) -> void:
+	var f := Node3D.new()
+	f.position = pos
+	f.rotation.y = rot_y
+	add_child(f)
+	var rot := Bau.mat(Color(0.78, 0.06, 0.05), "", 1.0, 0.0, false, 0.35)
+	var dunkel := Bau.mat(Color(0.1, 0.1, 0.1), "", 1.0, 0.0)
+	Bau.zylinder(f, 0.09, 0.5, Vector3(0, 0.75, 0.12), rot, Vector3.ZERO, false, -1.0, 12)
+	Bau.kugel(f, 0.09, Vector3(0, 1.0, 0.12), rot, Vector3(1, 0.5, 1))
+	Bau.box(f, Vector3(0.04, 0.08, 0.04), Vector3(0, 1.07, 0.12), dunkel)
+	Bau.box(f, Vector3(0.12, 0.02, 0.03), Vector3(0.03, 1.1, 0.12), dunkel)
+	Bau.zylinder(f, 0.012, 0.35, Vector3(0.08, 0.9, 0.18), dunkel)
+	Bau.box(f, Vector3(0.12, 0.15, 0.005), Vector3(0, 0.78, 0.211), Bau.mat(Color(0.95, 0.95, 0.9), "", 1.0, 0.0))
+	Bau.box(f, Vector3(0.2, 0.2, 0.01), Vector3(0, 1.45, 0.005), Bau.mat(Color(0.8, 0.08, 0.06), "", 1.0, 0.0))
+	Bau.schild(f, "F", Vector3(0, 1.45, 0.012), 40, Color.WHITE)
+
+
+func _stuhl(pos: Vector3, rot_y: float, gestapelt: bool) -> void:
+	var s := Node3D.new()
+	s.position = pos
+	s.rotation.y = rot_y
+	add_child(s)
+	var sitz := Bau.mat(Color(0.75, 0.45, 0.15), "holz", 2.0, 0.0)
+	var gestell := Bau.mat(Color(0.25, 0.28, 0.32), "metall", 1.0, 0.0, false, 0.4)
+	var hoehe := 0.45
+	Bau.box(s, Vector3(0.42, 0.03, 0.4), Vector3(0, hoehe, 0), sitz)
+	Bau.box(s, Vector3(0.42, 0.22, 0.02), Vector3(0, hoehe + 0.3, 0.2), sitz)
+	if not gestapelt:
+		for dx in [-0.18, 0.18]:
+			for dz in [-0.17, 0.17]:
+				Bau.box(s, Vector3(0.025, hoehe, 0.025), Vector3(dx, hoehe * 0.5, dz), gestell)
+	for dx in [-0.18, 0.18]:
+		Bau.box(s, Vector3(0.025, 0.32, 0.025), Vector3(dx, hoehe + 0.16, 0.19), gestell)
+
+
+func _verschlag() -> void:
+	var x0 := -B
+	var x1 := -9.4
+	var z0 := 3.3
+	var z1 := 5.9
+	var draht := StandardMaterial3D.new()
+	draht.albedo_texture = Bau.tex("maschendraht")
+	draht.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+	draht.alpha_scissor_threshold = 0.4
+	draht.cull_mode = BaseMaterial3D.CULL_DISABLED
+	draht.uv1_triplanar = true
+	draht.uv1_world_triplanar = true
+	draht.uv1_scale = Vector3.ONE * 4.0
+	draht.metallic = 0.5
+	draht.roughness = 0.4
+	var pfosten := Bau.mat(Color(0.5, 0.52, 0.5), "metall", 1.0, 0.0, false, 0.4)
+	var hoch := 2.6
+	# Seitenwände und Vorderseite (mit Tür)
+	for z in [z0, z1]:
+		Bau.box(self, Vector3(x1 - x0, hoch, 0.01), Vector3((x0 + x1) * 0.5, hoch * 0.5, z), draht)
+		Bau.kollisionsbox(self, Vector3(x1 - x0, hoch, 0.1), Vector3((x0 + x1) * 0.5, hoch * 0.5, z))
+		Bau.box(self, Vector3(0.06, hoch, 0.06), Vector3(x1, hoch * 0.5, z), pfosten)
+	Bau.box(self, Vector3(0.01, hoch, z1 - z0 - 1.0), Vector3(x1, hoch * 0.5, z0 + (z1 - z0 - 1.0) * 0.5), draht)
+	var tuer := Bau.box(self, Vector3(0.01, hoch - 0.1, 0.95), Vector3(x1 + 0.35, hoch * 0.5, z1 - 0.65), draht)
+	tuer.rotation.y = 0.6
+	Bau.kollisionsbox(self, Vector3(0.1, hoch, z1 - z0 - 1.0), Vector3(x1, hoch * 0.5, z0 + (z1 - z0 - 1.0) * 0.5))
+	for z in [z0, z1]:
+		Bau.box(self, Vector3(x1 - x0, 0.05, 0.05), Vector3((x0 + x1) * 0.5, hoch, z), pfosten)
+	Bau.box(self, Vector3(0.05, 0.05, z1 - z0), Vector3(x1, hoch, (z0 + z1) * 0.5), pfosten)
+	Bau.schild(self, "LAGER – HAUSMEISTER", Vector3(x1 + 0.03, 2.35, (z0 + z1) * 0.5 - 0.5), 26, Color(0.95, 0.85, 0.2), PI / 2, 5)
+	# Inhalt: Kisten, Farbeimer, eine alte Tafel, ein Fahrrad-Rahmen
+	for i in 3:
+		Bau.box(self, Vector3(0.55, 0.45, 0.5), Vector3(-11.4, 0.23 + i * 0.45, 3.75), m_karton)
+	for i in 3:
+		Bau.zylinder(self, 0.14, 0.28, Vector3(-10.2 + i * 0.32, 0.14, 5.5), Bau.mat([Color(0.85, 0.85, 0.82), Color(0.2, 0.45, 0.75), Color(0.9, 0.7, 0.1)][i], "", 1.0, 0.0), Vector3.ZERO, false, -1.0, 12)
+	var tafel := Bau.box(self, Vector3(0.05, 1.0, 1.6), Vector3(-11.75, 1.0, 4.8), Bau.mat(Color(0.1, 0.22, 0.15), "beton", 2.0, 0.0))
+	tafel.rotation.z = 0.12
+	_form((x0 + x1) * 0.5, (z0 + z1) * 0.5, x1 - x0, z1 - z0, Color(0.45, 0.47, 0.45))
+
+
 # ---------------------------------------------------------------- Sammelobjekte
 
 func _sammelobjekte() -> void:
@@ -913,6 +1115,10 @@ func _process(delta: float) -> void:
 			k.position.x += delta * 0.9
 			if k.position.x > B + 0.2:
 				k.position.x = 0.4
+	# Wanduhr
+	var minuten := float(Spielstand.d.get("uhrzeit", 1290.0))
+	_uhr_minute.rotation.z = -fmod(minuten, 60.0) / 60.0 * TAU
+	_uhr_stunde.rotation.z = -fmod(minuten / 60.0, 12.0) / 12.0 * TAU
 	# Marker & Sammelobjekte
 	if _marker.visible:
 		_marker.get_node("Ring").scale = Vector3.ONE * (1.0 + sin(_zeit * 3.0) * 0.08)

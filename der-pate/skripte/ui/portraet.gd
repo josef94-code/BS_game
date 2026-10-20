@@ -36,7 +36,7 @@ func _init(groesse: Vector2i = Vector2i(640, 800)) -> void:
 	var spot := SpotLight3D.new()
 	spot.position = Vector3(-1.2, 3.2, 1.6)
 	spot.light_color = Color(1.0, 0.85, 0.6)
-	spot.light_energy = 6.0
+	spot.light_energy = 3.8
 	spot.spot_range = 8.0
 	spot.spot_angle = 30.0
 	welt.add_child(spot)
@@ -48,9 +48,9 @@ func _init(groesse: Vector2i = Vector2i(640, 800)) -> void:
 	kante.omni_range = 5.0
 	welt.add_child(kante)
 	var kam := Camera3D.new()
-	kam.fov = 28
+	kam.fov = 26
 	welt.add_child(kam)
-	kam.look_at_from_position(Vector3(0.0, 1.62, 3.4), Vector3(0, 1.42, 0))
+	kam.look_at_from_position(Vector3(0.0, 1.62, 2.3), Vector3(0, 1.48, 0))
 
 
 func _process(_delta: float) -> void:

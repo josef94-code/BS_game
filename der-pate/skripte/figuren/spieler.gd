@@ -28,6 +28,8 @@ func _ready() -> void:
 		"haut": Color(0.86, 0.66, 0.5),
 		"haare": Color(0.08, 0.06, 0.05),
 		"frisur": "kurz",
+		"augenfarbe": Color(0.22, 0.15, 0.1),
+		"haaransatz": 0.33,
 		"jacke": Color(0.5, 0.1, 0.14),
 		"jacke_textur": "strick",
 		"hose": Color(0.32, 0.42, 0.62),

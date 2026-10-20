@@ -30,7 +30,9 @@ var _oberarm: Array[Node3D] = []
 var _ellbogen: Array[Node3D] = []
 var _rumpf: Node3D
 var _kopf: Node3D
-var _augen: Array[Node3D] = []
+var _gesicht_mat: StandardMaterial3D
+var _gesicht_offen: Texture2D
+var _gesicht_zu: Texture2D
 var _phase := 0.0
 var _zeit := 0.0
 var _blinzeln := 2.0
@@ -50,7 +52,7 @@ func _ready() -> void:
 	_bauen()
 
 
-func _m(c: Color, textur: String = "", skala: float = 4.0) -> StandardMaterial3D:
+func _m(c: Color, textur: String = "", skala: float = 4.0, kontur: bool = true) -> StandardMaterial3D:
 	var m := StandardMaterial3D.new()
 	m.albedo_color = c
 	m.roughness = 0.85
@@ -62,7 +64,8 @@ func _m(c: Color, textur: String = "", skala: float = 4.0) -> StandardMaterial3D
 	if stil["comic"]:
 		m.diffuse_mode = BaseMaterial3D.DIFFUSE_TOON
 		m.specular_mode = BaseMaterial3D.SPECULAR_TOON
-		m.next_pass = Bau.kontur_mat(0.008, true)
+		if kontur:
+			m.next_pass = Bau.kontur_mat(0.008, true)
 	return m
 
 
@@ -118,7 +121,7 @@ func _bauen() -> void:
 		Bau.box(_rumpf, Vector3(0.045, 0.03, 0.016), Vector3(0, 0.575, -0.126), kraw)
 		var dunkel := _m(Color(stil["jacke"]).darkened(0.35), stil["jacke_textur"])
 		for seite in [-1, 1]:
-			var revers := Bau.box(_rumpf, Vector3(0.045, 0.26, 0.012), Vector3(0.06 * seite, 0.46, -0.126), dunkel)
+			var revers := Bau.box(_rumpf, Vector3(0.04, 0.2, 0.012), Vector3(0.055 * seite, 0.49, -0.126), dunkel)
 			revers.rotation.z = 0.33 * seite
 		Bau.box(_rumpf, Vector3(0.05, 0.02, 0.01), Vector3(-0.11, 0.45, -0.122), weiss)
 		for i in 2:
@@ -163,43 +166,36 @@ func _bauen() -> void:
 
 func _kopf_bauen(haut: StandardMaterial3D) -> void:
 	var k := _kopf
-	_kug(k, 0.105, Vector3.ZERO, haut, Vector3(0.88, 1.1, 1.0))
-	_kug(k, 0.075, Vector3(0, -0.058, -0.025), haut, Vector3(1.0, 0.75, 1.0))
+	# Kopf mit gemaltem Gesicht (zweite Textur mit geschlossenen Augen zum Blinzeln)
+	var gesicht_stil := {
+		"haut": stil["haut"], "haare": stil["haare"], "augenfarbe": stil.get("augenfarbe", Color(0.35, 0.25, 0.15)),
+		"bart": stil.get("bart", 0.0), "haaransatz": stil.get("haaransatz", 0.3),
+	}
+	_gesicht_offen = Gesicht.textur(gesicht_stil, false)
+	_gesicht_zu = Gesicht.textur(gesicht_stil, true)
+	_gesicht_mat = _m(Color.WHITE)
+	_gesicht_mat.albedo_texture = _gesicht_offen
+	_gesicht_mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	var kopf := _kug(k, 0.105, Vector3.ZERO, _gesicht_mat, Vector3(0.88, 1.12, 0.98))
+	(kopf.mesh as SphereMesh).radial_segments = 18
+	(kopf.mesh as SphereMesh).rings = 12
 	for seite in [-1, 1]:
-		_kug(k, 0.024, Vector3(0.091 * seite, -0.005, 0.006), haut, Vector3(0.45, 1.0, 0.8))
-	var nase := Bau.box(k, Vector3(0.022, 0.042, 0.028), Vector3(0, -0.012, -0.103), _m(Color(stil["haut"]).darkened(0.05)))
+		_kug(k, 0.024, Vector3(0.09 * seite, -0.005, 0.006), haut, Vector3(0.45, 1.0, 0.8))
+	var nase := Bau.box(k, Vector3(0.02, 0.04, 0.026), Vector3(0, -0.012, -0.1), _m(Color(stil["haut"]).darkened(0.03), "", 4.0, false))
 	nase.rotation.x = 0.25
-	# Augen (mit Blinzeln), Brauen
-	var weiss := _m(Color(0.96, 0.95, 0.92))
-	var pupille := _m(Color(0.16, 0.12, 0.08))
 	var haar := _m(stil["haare"])
-	for seite in [-1, 1]:
-		var auge := Node3D.new()
-		auge.position = Vector3(0.034 * seite, 0.02, -0.096)
-		k.add_child(auge)
-		Bau.box(auge, Vector3(0.026, 0.013, 0.006), Vector3.ZERO, weiss)
-		Bau.box(auge, Vector3(0.011, 0.013, 0.004), Vector3(0, 0, -0.004), pupille)
-		_augen.append(auge)
-		var braue := Bau.box(k, Vector3(0.032, 0.008, 0.01), Vector3(0.035 * seite, 0.041, -0.097), haar)
-		braue.rotation.z = -0.1 * seite
-	# Mund: leichtes Lächeln
-	var lippe := _m(Color(0.62, 0.3, 0.27))
-	Bau.box(k, Vector3(0.036, 0.007, 0.006), Vector3(0, -0.053, -0.097), lippe)
-	for seite in [-1, 1]:
-		var ecke := Bau.box(k, Vector3(0.012, 0.006, 0.006), Vector3(0.021 * seite, -0.049, -0.094), lippe)
-		ecke.rotation.z = 0.5 * seite
 	# Frisur: nach hinten gekippte Haarkappe, vorne eine Tolle
-	var kappe := _kug(k, 0.112, Vector3(0, 0.012, 0.004), haar, Vector3(0.92, 1.0, 1.02), true)
-	kappe.rotation.x = 0.42
+	var kappe := _kug(k, 0.11, Vector3(0, 0.03, 0.006), haar, Vector3(0.92, 0.95, 1.02), true)
+	kappe.rotation.x = 0.5
 	match stil["frisur"]:
 		"tolle":
-			var tolle := Bau.box(k, Vector3(0.13, 0.04, 0.07), Vector3(0, 0.1, -0.06), haar)
-			tolle.rotation.x = -0.4
-			for seite in [-1, 1]:
-				Bau.box(k, Vector3(0.012, 0.05, 0.04), Vector3(0.088 * seite, 0.0, -0.02), haar)
+			# nach oben gekämmte Tolle aus zwei abgeflachten Kugeln
+			var tolle := _kug(k, 0.07, Vector3(0, 0.1, -0.045), haar, Vector3(1.25, 0.55, 1.0))
+			tolle.rotation.x = -0.35
+			_kug(k, 0.05, Vector3(0.015, 0.118, -0.068), haar, Vector3(1.4, 0.45, 0.9))
 		_:
-			var pony := Bau.box(k, Vector3(0.14, 0.03, 0.05), Vector3(0, 0.085, -0.075), haar)
-			pony.rotation.x = -0.25
+			var pony := _kug(k, 0.07, Vector3(0, 0.085, -0.05), haar, Vector3(1.3, 0.45, 1.0))
+			pony.rotation.x = -0.2
 
 
 func _process(delta: float) -> void:
@@ -226,9 +222,8 @@ func _process(delta: float) -> void:
 	_kopf.rotation.y = sin(_zeit * 0.5) * 0.06 * (1.0 - minf(bewegung, 1.0))
 	# Blinzeln
 	_blinzeln -= delta
-	var zu := _blinzeln < 0.0
-	for a in _augen:
-		a.scale.y = 0.15 if zu else 1.0
+	if _gesicht_mat:
+		_gesicht_mat.albedo_texture = _gesicht_zu if _blinzeln < 0.0 else _gesicht_offen
 	if _blinzeln < -0.12:
 		_blinzeln = randf_range(2.0, 5.0)
 
