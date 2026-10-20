@@ -73,10 +73,12 @@ func _ablauf() -> void:
 		spiel.interagieren("pate")
 		await _warte(1.2)
 		await _foto(q["id"] + "_dialog")
-		await _bis_frei()
-		await _warte(1.0)
+		while spiel.dialog.ist_aktiv():
+			spiel.dialog.automatisch_weiter()
+			await _warte(0.15)
+		await _warte(1.3)
 		await _foto(q["id"] + "_titel")
-		await _warte(3.5)
+		await _bis_frei()
 		if Spielstand.quest_status(q["id"]) != "aktiv":
 			push_error("Quest nicht aktiv: " + q["id"])
 			fehler += 1

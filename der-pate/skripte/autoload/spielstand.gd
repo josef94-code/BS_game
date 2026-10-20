@@ -43,6 +43,7 @@ func neu(name: String) -> void:
 		"pos": [],
 		"blick": 0.0,
 		"spielzeit": 0.0,
+		"uhrzeit": 21.0 * 60.0 + 30.0,
 	}
 	geladen = false
 
@@ -50,6 +51,8 @@ func neu(name: String) -> void:
 func _process(delta: float) -> void:
 	if not get_tree().paused:
 		d["spielzeit"] = float(d.get("spielzeit", 0.0)) + delta
+		# Spieluhr: eine Spielminute pro Sekunde (wie bei GTA)
+		d["uhrzeit"] = fmod(float(d.get("uhrzeit", 1290.0)) + delta, 1440.0)
 
 
 # ---------------------------------------------------------------- Quests

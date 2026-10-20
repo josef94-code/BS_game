@@ -31,14 +31,15 @@ func _ready() -> void:
 	Stil.setze(_balken_unten, Control.PRESET_BOTTOM_WIDE, 0, 0, 0, 90)
 
 	_box = PanelContainer.new()
-	_box.add_theme_stylebox_override("panel", Stil.box(Color(0.04, 0.03, 0.04, 0.92), Stil.GOLD, 3, 12))
+	_box.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
 	_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_wurzel.add_child(_box)
-	Stil.setze(_box, Control.PRESET_CENTER_BOTTOM, -620, -290, 620, -40)
+	Stil.setze(_box, Control.PRESET_CENTER_BOTTOM, -620, -250, 620, -20)
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 8)
 	_box.add_child(v)
-	_name = Stil.label("", 28, Stil.GOLD_HELL, 6, Stil.fett())
+	_name = Stil.label("", 24, Stil.GOLD_HELL, 6, Stil.hud_schrift())
+	_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(_name)
 	_text = RichTextLabel.new()
 	_text.bbcode_enabled = true
@@ -46,13 +47,16 @@ func _ready() -> void:
 	_text.scroll_active = false
 	_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_text.custom_minimum_size = Vector2(1180, 90)
-	_text.add_theme_font_size_override("normal_font_size", 27)
-	_text.add_theme_font_size_override("italics_font_size", 27)
+	_text.add_theme_font_override("normal_font", Stil.hud_schrift())
+	_text.add_theme_font_size_override("normal_font_size", 31)
+	_text.add_theme_font_size_override("italics_font_size", 29)
+	_text.add_theme_constant_override("outline_size", 9)
+	_text.add_theme_color_override("font_outline_color", Color.BLACK)
 	v.add_child(_text)
 	_wahl_box = VBoxContainer.new()
 	_wahl_box.add_theme_constant_override("separation", 6)
 	v.add_child(_wahl_box)
-	_weiter = Stil.label("[E] / Leertaste / Klick  ▶", 17, Color(1, 1, 1, 0.5))
+	_weiter = Stil.label("E / Leertaste / Klick  ▶", 16, Color(1, 1, 1, 0.45), 3, Stil.hud_schrift())
 	_weiter.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	v.add_child(_weiter)
 	_wurzel.visible = false
@@ -86,7 +90,7 @@ func _zeige(e: Dictionary) -> void:
 	_name.visible = name != ""
 	_name.add_theme_color_override("font_color", Stil.farbe(sp.get("farbe", "#ffffff")))
 	var t: String = String(e.get("t", "")).replace("{name}", Spielstand.d["name"])
-	_text.text = ("[i]%s[/i]" % t) if e.get("s", "") == "erzaehler" else t
+	_text.text = "[center]%s[/center]" % (("[i]%s[/i]" % t) if e.get("s", "") == "erzaehler" else t)
 	_text.visible_ratio = 0.0
 	_tippen = 0.0
 	_weiter.visible = true

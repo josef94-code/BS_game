@@ -53,7 +53,7 @@ func _ready() -> void:
 	Stil.setze(links, Control.PRESET_LEFT_WIDE, 110, 90, 820, -60)
 	var ueber := Stil.label("LINCOLN HIGH PRÄSENTIERT", 24, Color(0.9, 0.85, 0.75), 0, Stil.schreibmaschine())
 	links.add_child(ueber)
-	var titel := Stil.label("DER PATE", 150, Stil.GOLD_HELL, 26, Stil.fett())
+	var titel := Stil.label("DER PATE", 170, Color(0.96, 0.8, 0.45), 24, Stil.titel_schrift())
 	links.add_child(titel)
 	links.add_child(Stil.label("„Die Familie vergisst nicht.“", 30, Color(0.95, 0.9, 0.85), 6, Stil.schreibmaschine()))
 	var abstand := Control.new()
@@ -87,7 +87,7 @@ func _ready() -> void:
 	links.add_child(_hilfe)
 	_meldung = Stil.label("", 20, Color(1, 0.45, 0.35))
 	links.add_child(_meldung)
-	var fuss := Stil.label("Lernspiel für Mechatroniker/-innen · 10. Jahrgangsstufe · Prototyp v0.1  ·  Alle Figuren und Ereignisse sind frei erfunden.", 16, Color(1, 1, 1, 0.45))
+	var fuss := Stil.label("Lernspiel für Mechatroniker/-innen · 10. Jahrgangsstufe · Prototyp v0.2  ·  Alle Figuren und Ereignisse sind frei erfunden.", 16, Color(1, 1, 1, 0.45))
 	add_child(fuss)
 	Stil.setze(fuss, Control.PRESET_BOTTOM_WIDE, 110, -40, -40, -12)
 	if Spielstand.lehrer:
@@ -159,14 +159,25 @@ func _ladebildschirm() -> void:
 	ebene.add_child(v)
 	Stil.setze(v, Control.PRESET_CENTER_RIGHT, -820, -200, -120, 220)
 	v.add_child(Stil.label("AKT 1", 30, Color(0.9, 0.85, 0.75), 0, Stil.schreibmaschine()))
-	v.add_child(Stil.label("SELTSAME\nVORFÄLLE", 96, Stil.GOLD_HELL, 18, Stil.fett()))
+	v.add_child(Stil.label("SELTSAME\nVORFÄLLE", 110, Color(0.96, 0.8, 0.45), 18, Stil.titel_schrift()))
 	var tipp := Stil.label(TIPPS[randi() % TIPPS.size()], 22, Color(0.9, 0.9, 0.9))
 	tipp.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	tipp.custom_minimum_size.x = 660
 	v.add_child(tipp)
-	var laedt := Stil.label("Lädt …", 26, Color(1, 1, 1, 0.7), 0, Stil.fett())
+	var laedt := Stil.label("LÄDT", 26, Color(1, 1, 1, 0.7), 0, Stil.hud_schrift())
 	ebene.add_child(laedt)
-	Stil.setze(laedt, Control.PRESET_BOTTOM_RIGHT, -220, -70, -40, -30)
+	Stil.setze(laedt, Control.PRESET_BOTTOM_RIGHT, -480, -96, -40, -64)
+	# Ladebalken wie bei GTA III
+	var rahmen := ColorRect.new()
+	rahmen.color = Color(0.25, 0.25, 0.27)
+	ebene.add_child(rahmen)
+	Stil.setze(rahmen, Control.PRESET_BOTTOM_RIGHT, -480, -56, -40, -40)
+	var balken := ColorRect.new()
+	balken.color = Color(0.85, 0.65, 0.25)
+	rahmen.add_child(balken)
+	balken.position = Vector2(2, 2)
+	balken.size = Vector2(0, 12)
+	create_tween().tween_property(balken, "size:x", 436.0, 2.0)
 	await get_tree().create_timer(2.2 if not Spielstand.autotest else 1.0).timeout
 	if Spielstand.autotest:
 		await RenderingServer.frame_post_draw

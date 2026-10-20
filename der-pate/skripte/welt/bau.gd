@@ -5,6 +5,8 @@ class_name Bau
 const KONTUR_SHADER := preload("res://shader/kontur.gdshader")
 const KEGEL_SHADER := preload("res://shader/lichtkegel.gdshader")
 
+## Konturen an Gegenständen im Raum (Comic-Look). Im GTA-3-Look aus.
+static var konturen := false
 static var _texturen := {}
 static var _konturen := {}
 
@@ -13,7 +15,7 @@ static var _konturen := {}
 
 ## Comic-Material: Toon-Licht, satte Farbe, optional Textur (triplanar) und Kontur.
 static func mat(farbe: Color, textur: String = "", skala: float = 1.0, kontur: float = 0.0,
-		toon: bool = true, rauheit: float = 0.8) -> StandardMaterial3D:
+		toon: bool = false, rauheit: float = 0.8) -> StandardMaterial3D:
 	var m := StandardMaterial3D.new()
 	m.albedo_color = farbe
 	m.roughness = rauheit
@@ -29,7 +31,7 @@ static func mat(farbe: Color, textur: String = "", skala: float = 1.0, kontur: f
 		m.uv1_world_triplanar = true
 		m.uv1_scale = Vector3.ONE * skala
 		m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
-	if kontur > 0.0:
+	if kontur > 0.0 and konturen:
 		m.next_pass = kontur_mat(kontur, false)
 	return m
 
@@ -240,12 +242,16 @@ static func tex(name: String) -> Texture2D:
 		return _texturen[name]
 	var img: Image
 	match name:
-		"beton": img = _beton(Color(0.55, 0.55, 0.53), 0.18, 3.0)
-		"beton_dunkel": img = _beton(Color(0.36, 0.36, 0.37), 0.14, 5.0)
-		"ziegel": img = _ziegel()
+		"beton": img = _schmutz(_beton(Color(0.55, 0.54, 0.5), 0.2, 3.0), 0.35, 4, true)
+		"beton_dunkel": img = _schmutz(_beton(Color(0.36, 0.36, 0.37), 0.14, 5.0), 0.25, 5, false)
+		"ziegel": img = _schmutz(_ziegel(), 0.3, 6, false)
+		"nadelstreifen": img = _streifen()
+		"jeans": img = _jeans()
+		"strick": img = _beton(Color(0.85, 0.85, 0.85), 0.25, 60.0)
+		"fleck": img = _fleck()
 		"holz": img = _holz()
 		"teppich": img = _beton(Color(0.42, 0.08, 0.09), 0.1, 18.0)
-		"metall": img = _metall()
+		"metall": img = _schmutz(_metall(), 0.2, 8, false)
 		"karton": img = _beton(Color(0.66, 0.5, 0.32), 0.12, 9.0)
 		"kork": img = _beton(Color(0.62, 0.45, 0.27), 0.3, 22.0)
 		_: img = _beton(Color(0.6, 0.6, 0.6), 0.1, 3.0)
@@ -319,4 +325,65 @@ static func _metall() -> Image:
 			var streifen := sin(y * 2.7 + v * 4.0) * 0.02
 			var g := 0.62 + (v - 0.5) * 0.12 + streifen
 			img.set_pixel(x, y, Color(g, g, g * 1.02))
+	return img
+
+
+## Schmutz, Flecken und (optional) Risse über eine Textur legen – für den abgenutzten Look
+static func _schmutz(img: Image, staerke: float, saat: int, risse: bool) -> Image:
+	var flecken := _rauschen(5.0, saat).get_seamless_image(256, 256)
+	var fein := _rauschen(40.0, saat + 1).get_seamless_image(256, 256)
+	for y in 256:
+		for x in 256:
+			var f := flecken.get_pixel(x, y).r
+			var dunkel := clampf((f - 0.55) * 3.0, 0.0, 1.0) * staerke
+			dunkel += (fein.get_pixel(x, y).r - 0.5) * staerke * 0.3
+			var c := img.get_pixel(x, y)
+			img.set_pixel(x, y, Color(c.r * (1.0 - dunkel), c.g * (1.0 - dunkel * 0.95), c.b * (1.0 - dunkel * 0.85)))
+	if risse:
+		var rng := RandomNumberGenerator.new()
+		rng.seed = saat
+		for r in 6:
+			var p := Vector2(rng.randf_range(0, 256), rng.randf_range(0, 256))
+			var w := rng.randf_range(0, TAU)
+			for i in 90:
+				w += rng.randf_range(-0.5, 0.5)
+				p += Vector2(cos(w), sin(w))
+				var px := int(posmod(int(p.x), 256))
+				var py := int(posmod(int(p.y), 256))
+				img.set_pixel(px, py, img.get_pixel(px, py).darkened(0.45))
+	return img
+
+
+static func _streifen() -> Image:
+	var rausch := _rauschen(60.0, 31).get_seamless_image(128, 128)
+	var img := Image.create(128, 128, false, Image.FORMAT_RGB8)
+	for y in 128:
+		for x in 128:
+			var v := 0.45 + (rausch.get_pixel(x, y).r - 0.5) * 0.08
+			if x % 16 == 0:
+				v = 0.95
+			img.set_pixel(x, y, Color(v, v, v))
+	return img
+
+
+static func _jeans() -> Image:
+	var rausch := _rauschen(30.0, 41).get_seamless_image(128, 128)
+	var img := Image.create(128, 128, false, Image.FORMAT_RGB8)
+	for y in 128:
+		for x in 128:
+			var koeper := 0.08 if (x + y) % 4 < 2 else 0.0
+			var v := 0.8 + (rausch.get_pixel(x, y).r - 0.5) * 0.3 + koeper
+			img.set_pixel(x, y, Color(v * 0.95, v * 0.97, v))
+	return img
+
+
+## Ölfleck / Schmutzfleck mit Transparenz (für Bodendekore)
+static func _fleck() -> Image:
+	var rausch := _rauschen(14.0, 51).get_seamless_image(128, 128)
+	var img := Image.create(128, 128, false, Image.FORMAT_RGBA8)
+	for y in 128:
+		for x in 128:
+			var d := Vector2(x - 64, y - 64).length() / 64.0
+			var a := clampf((1.0 - d) * 1.6 + (rausch.get_pixel(x, y).r - 0.5) * 1.2, 0.0, 1.0)
+			img.set_pixel(x, y, Color(0.05, 0.04, 0.03, a * 0.75))
 	return img

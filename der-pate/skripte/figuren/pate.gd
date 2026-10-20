@@ -1,23 +1,27 @@
 class_name Pate
 extends Node3D
 ## Der Pate (Lehrer Josef): stilisierte Figur nach Foto – kurze braune Haare mit Tolle,
-## freundliches Lächeln, dunkler Anzug, weinrote Krawatte.
+## freundliches Lächeln, dunkler Nadelstreifenanzug, weinrote Krawatte.
 
 var figur: Figur
 var _ruhe_blick := 0.0
 var _ziel: Node3D = null
+## true: Comic-Porträt mit Konturen (Menü, Ladebildschirm)
+var comic := false
 
 
 func _ready() -> void:
 	figur = Figur.new({
-		"haut": Color(0.95, 0.77, 0.64),
+		"haut": Color(0.93, 0.75, 0.62),
 		"haare": Color(0.27, 0.16, 0.08),
 		"frisur": "tolle",
-		"oberteil": Color(0.16, 0.17, 0.2),
-		"hose": Color(0.14, 0.15, 0.18),
+		"jacke": Color(0.42, 0.44, 0.5),
+		"jacke_textur": "nadelstreifen",
+		"hose": Color(0.42, 0.44, 0.5),
+		"hose_textur": "nadelstreifen",
 		"anzug": true,
-		"kopf_skala": 1.2,
-		"breite": 0.98,
+		"breite": 1.02,
+		"comic": comic,
 	})
 	add_child(figur)
 	_ruhe_blick = rotation.y

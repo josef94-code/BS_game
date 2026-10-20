@@ -13,6 +13,8 @@ const BLAU := Color(0.5, 0.78, 1.0)
 static var _theme: Theme
 static var _fett: FontVariation
 static var _schreibmaschine: FontFile
+static var _titel: FontFile
+static var _hud: FontFile
 
 
 static func fett() -> Font:
@@ -28,6 +30,20 @@ static func schreibmaschine() -> Font:
 	if _schreibmaschine == null:
 		_schreibmaschine = load("res://fonts/SpecialElite-latin.woff2")
 	return _schreibmaschine
+
+
+## Kräftige, schmale Titelschrift (Missionstitel, MISSION PASSED)
+static func titel_schrift() -> Font:
+	if _titel == null:
+		_titel = load("res://fonts/Anton-latin.woff2")
+	return _titel
+
+
+## Schrift für HUD-Zahlen, Uhr und Hilfetexte
+static func hud_schrift() -> Font:
+	if _hud == null:
+		_hud = load("res://fonts/Oswald-SemiBold-latin.woff2")
+	return _hud
 
 
 static func theme() -> Theme:

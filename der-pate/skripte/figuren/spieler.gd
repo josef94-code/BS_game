@@ -1,6 +1,6 @@
 class_name Spieler
 extends CharacterBody3D
-## Spielfigur mit Third-Person-Kamera (WASD + Maus, Shift = rennen, Mausrad = Zoom)
+## Spielfigur mit Verfolgerkamera hinter der Figur (WASD + Maus, Shift = rennen, Mausrad = Zoom)
 
 const TEMPO := 3.3
 const RENNTEMPO := 6.2
@@ -25,35 +25,39 @@ func _ready() -> void:
 	form.position.y = 0.9
 	add_child(form)
 	figur = Figur.new({
-		"haut": Color(0.88, 0.68, 0.52),
-		"haare": Color(0.1, 0.08, 0.07),
+		"haut": Color(0.86, 0.66, 0.5),
+		"haare": Color(0.08, 0.06, 0.05),
 		"frisur": "kurz",
-		"oberteil": Color(0.48, 0.07, 0.12),
-		"hose": Color(0.2, 0.3, 0.55),
+		"jacke": Color(0.5, 0.1, 0.14),
+		"jacke_textur": "strick",
+		"hose": Color(0.32, 0.42, 0.62),
+		"hose_textur": "jeans",
 		"schuhe": Color(0.92, 0.92, 0.9),
+		"sohle": Color(0.75, 0.2, 0.15),
 		"anzug": false,
-		"aufdruck": "LH",
-		"kopf_skala": 1.2,
-		"breite": 0.95,
+		"kapuze": true,
+		"aufdruck_vorne": "LH",
+		"aufdruck_hinten": "LINCOLN\nLIONS",
+		"breite": 0.94,
 	})
 	add_child(figur)
 	# Kamera-Aufhängung
 	_gieren = Node3D.new()
-	_gieren.position.y = 1.55
+	_gieren.position.y = 1.6
 	add_child(_gieren)
 	_nicken = Node3D.new()
-	_nicken.rotation.x = -0.25
+	_nicken.rotation.x = -0.2
 	_gieren.add_child(_nicken)
 	arm = SpringArm3D.new()
-	arm.spring_length = 3.4
+	arm.spring_length = 4.0
 	var kugel := SphereShape3D.new()
 	kugel.radius = 0.25
 	arm.shape = kugel
-	arm.position.x = 0.45
+	arm.position.x = 0.0
 	arm.add_excluded_object(get_rid())
 	_nicken.add_child(arm)
 	kamera = Camera3D.new()
-	kamera.fov = 62
+	kamera.fov = 70
 	kamera.near = 0.05
 	arm.add_child(kamera)
 	kamera.current = true

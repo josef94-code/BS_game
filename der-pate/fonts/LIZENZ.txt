@@ -1,3 +1,8 @@
 Special Elite – Copyright (c) 2010 by Brian J. Bonislawsky DBA Astigmatic (AOETI)
 Lizenz: SIL Open Font License, Version 1.1 – https://openfontlicense.org
 (Lateinisch-Untermenge, unverändert von Google Fonts)
+
+Anton – Copyright 2020 The Anton Project Authors (https://github.com/googlefonts/AntonFont.git)
+Oswald – Copyright 2016 The Oswald Project Authors (https://github.com/googlefonts/OswaldFont)
+Lizenz: SIL Open Font License, Version 1.1 – https://openfontlicense.org
+(Lateinisch-Untermenge, unverändert aus den Fontsource-Paketen)

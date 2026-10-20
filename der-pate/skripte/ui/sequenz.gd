@@ -30,10 +30,10 @@ func _ready() -> void:
 	v.alignment = BoxContainer.ALIGNMENT_CENTER
 	_unten.add_child(v)
 	Stil.setze(v, Control.PRESET_FULL_RECT, 200, 6, -200, -6)
-	_name = Stil.label("", 22, Stil.GOLD_HELL, 0, Stil.fett())
+	_name = Stil.label("", 22, Stil.GOLD_HELL, 4, Stil.hud_schrift())
 	_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(_name)
-	_text = Stil.label("", 28, Color.WHITE, 0)
+	_text = Stil.label("", 30, Color.WHITE, 6, Stil.hud_schrift())
 	_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	v.add_child(_text)

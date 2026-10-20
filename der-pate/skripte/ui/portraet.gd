@@ -29,6 +29,7 @@ func _init(groesse: Vector2i = Vector2i(640, 800)) -> void:
 	we.environment = env
 	welt.add_child(we)
 	var p := Pate.new()
+	p.comic = true
 	welt.add_child(p)
 	_figur = p.figur
 	p.rotation.y = PI + 0.35

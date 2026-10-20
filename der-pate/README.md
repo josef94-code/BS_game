@@ -7,7 +7,12 @@ Godot 4.5 (GDScript), Export als portable Windows-Anwendung (eine `.exe`, keine 
 > und die Schulglocke läutet, wann sie will. Alle reden von Kinderkrankheiten. Nur einer glaubt nicht an Zufälle:
 > **der Pate** – Elektrotechnik-Lehrer Mr. Josef. Er gibt dem Neuen erste Aufträge …
 
-**Stand: Prototyp v0.1** – ein Raum (Hausmeisterkeller mit Büro des Paten) und drei Missionen aus Akt 1.
+**Grafikstil:** an GTA III angelehnt – Low-Poly-Figuren mit realistischen Proportionen, schmuddelige Texturen,
+Nebel, Lichtinseln aus Glühbirnen und Leuchtstoffröhren, weicher PS2-Filter mit Filmkorn, HUD mit Uhr und grünen
+Ruf-Ziffern, Hilfe-Box oben links, Untertitel, Missionstitel unten rechts. Menü und Ladebildschirm zeigen den Paten
+als Porträt mit kräftigen Konturen.
+
+**Stand: Prototyp v0.2** – ein Raum (Hausmeisterkeller mit Büro des Paten) und drei Missionen aus Akt 1.
 Der Gesamtplan (drei Akte, 24 Missionen) steht in [`PLAN.md`](PLAN.md).
 
 ## Starten
@@ -109,8 +114,8 @@ der-pate/
 │  │  └─ aufgaben/   Multiple Choice, Berechnung, Sortieren, Fehlersuche, Schützschaltung, Stromlaufplan-Zeichner
 │  ├─ spiel.gd       Spielablauf (Missionen)
 │  └─ autotest.gd    automatischer Durchlauf mit Bildschirmfotos (--autotest)
-├─ shader/           Comic-Kontur, Lichtkegel, Missionsmarker, Minimap-Maske
-├─ fonts/            Special Elite (SIL OFL)
+├─ shader/           PS2-Filter, Kontur, Lichtkegel, Missionsmarker, Minimap-Maske
+├─ fonts/            Special Elite, Anton, Oswald (SIL OFL)
 └─ tests/            Datenprüfung
 ```
 

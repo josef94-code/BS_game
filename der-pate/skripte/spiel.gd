@@ -41,6 +41,7 @@ func _ready() -> void:
 	seq_kamera.fov = 50
 	add_child(seq_kamera)
 
+	_nachbearbeitung()
 	hud = Hud.new()
 	add_child(hud)
 	hud.minimap.welt = keller
@@ -68,6 +69,20 @@ func _ready() -> void:
 		return
 	if not Spielstand.d["intro_gesehen"]:
 		await intro()
+
+
+## PS2-Look (GTA III): Filter über dem 3D-Bild, unter der Oberfläche
+func _nachbearbeitung() -> void:
+	var ebene := CanvasLayer.new()
+	ebene.layer = 1
+	add_child(ebene)
+	var r := ColorRect.new()
+	r.set_anchors_preset(Control.PRESET_FULL_RECT)
+	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var m := ShaderMaterial.new()
+	m.shader = preload("res://shader/ps2_look.gdshader")
+	r.material = m
+	ebene.add_child(r)
 
 
 # ---------------------------------------------------------------- Zustand

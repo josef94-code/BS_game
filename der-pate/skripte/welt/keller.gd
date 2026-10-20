@@ -87,20 +87,20 @@ func _umgebung() -> void:
 	env.background_mode = Environment.BG_COLOR
 	env.background_color = Color(0.02, 0.02, 0.04)
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	env.ambient_light_color = Color(0.32, 0.36, 0.55)
-	env.ambient_light_energy = 0.55
+	env.ambient_light_color = Color(0.42, 0.36, 0.3)
+	env.ambient_light_energy = 0.42
 	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
-	env.tonemap_exposure = 1.1
+	env.tonemap_exposure = 1.15
 	env.glow_enabled = true
-	env.glow_intensity = 0.7
-	env.glow_bloom = 0.05
-	env.glow_hdr_threshold = 1.0
+	env.glow_intensity = 0.9
+	env.glow_bloom = 0.12
+	env.glow_hdr_threshold = 0.9
 	env.fog_enabled = true
-	env.fog_light_color = Color(0.08, 0.09, 0.15)
-	env.fog_density = 0.018
+	env.fog_light_color = Color(0.13, 0.1, 0.08)
+	env.fog_density = 0.03
 	env.adjustment_enabled = true
-	env.adjustment_saturation = 1.2
-	env.adjustment_contrast = 1.08
+	env.adjustment_saturation = 1.05
+	env.adjustment_contrast = 1.1
 	var we := WorldEnvironment.new()
 	we.environment = env
 	add_child(we)
@@ -108,8 +108,10 @@ func _umgebung() -> void:
 	# Deckenlampen (warmes Licht, Lichtkegel)
 	_lampe(Vector3(-6.0, H, 5.5), Color(1.0, 0.78, 0.5), 1.4, 7.5, false)
 	_lampe(Vector3(5.0, H, -4.5), Color(0.85, 0.92, 1.0), 1.7, 9.0, true)
-	_lampe(Vector3(-1.5, H, -6.0), Color(0.9, 0.85, 0.7), 0.9, 6.5, false)
-	_lampe(Vector3(0.5, H, 3.5), Color(1.0, 0.8, 0.55), 1.1, 7.0, false)
+	# Leuchtstoffröhren (grünlich-kaltes Licht wie in alten Kellern)
+	_roehre(Vector3(-2.0, H, -6.2))
+	_roehre(Vector3(1.0, H, 3.8))
+	_roehre(Vector3(-8.0, H, -2.5))
 	# Büro: warmes Spotlicht von oben
 	var spot := SpotLight3D.new()
 	spot.position = Vector3(8.8, H - 0.1, 5.4)
@@ -121,6 +123,21 @@ func _umgebung() -> void:
 	spot.shadow_enabled = true
 	add_child(spot)
 	Bau.lichtkegel(self, Vector3(8.8, H - 0.1, 5.4), H - 0.1, 2.6, Color(1.0, 0.75, 0.45), 0.08)
+
+
+func _roehre(pos: Vector3) -> void:
+	var gehaeuse := Bau.mat(Color(0.75, 0.75, 0.72), "metall", 1.0, 0.0)
+	Bau.box(self, Vector3(1.4, 0.07, 0.22), pos - Vector3(0, 0.05, 0), gehaeuse)
+	for dz in [-0.05, 0.05]:
+		Bau.zylinder(self, 0.018, 1.3, pos - Vector3(0, 0.1, dz), Bau.leucht(Color(0.85, 1.0, 0.9), 3.0), Vector3(0, 0, PI / 2))
+	var l := OmniLight3D.new()
+	l.position = pos - Vector3(0, 0.35, 0)
+	l.light_color = Color(0.72, 0.95, 0.82)
+	l.light_energy = 1.1
+	l.omni_range = 7.0
+	l.omni_attenuation = 1.4
+	add_child(l)
+	Bau.lichtkegel(self, pos - Vector3(0, 0.12, 0), pos.y - 0.12, 2.3, Color(0.7, 1.0, 0.85), 0.035)
 
 
 func _lampe(pos: Vector3, farbe: Color, energie: float, reichweite: float, schatten: bool) -> OmniLight3D:
@@ -138,7 +155,7 @@ func _lampe(pos: Vector3, farbe: Color, energie: float, reichweite: float, schat
 	l.omni_attenuation = 1.2
 	l.shadow_enabled = schatten
 	add_child(l)
-	var kegel := Bau.lichtkegel(self, pos - Vector3(0, kabel_laenge + 0.26, 0), pos.y - kabel_laenge - 0.26, 1.9, farbe, 0.11)
+	var kegel := Bau.lichtkegel(self, pos - Vector3(0, kabel_laenge + 0.26, 0), pos.y - kabel_laenge - 0.26, 1.9, farbe, 0.065)
 	l.set_meta("kegel", kegel)
 	l.set_meta("birne", birne)
 	return l
@@ -721,10 +738,64 @@ func _deko() -> void:
 	Bau.schild(stapel, "STERLING BAU\nSanierung Lincoln High", Vector3(0, 0.6, 0.41), 22, Color(0.15, 0.1, 0.4))
 	Bau.kollisionsbox(stapel, Vector3(1.2, 1.2, 1.0), Vector3(0, 0.6, 0))
 	_form(-7.0, 2.4, 1.2, 1.0, Color(0.65, 0.5, 0.3))
+	# Abnutzung: Ölflecken, Pfütze, Graffiti, Plakate
+	for f in [[Vector3(-0.2, 0, -3.9), 1.3], [Vector3(4.5, 0, -4.5), 1.8], [Vector3(-8.6, 0, -5.0), 1.6],
+			[Vector3(2.5, 0, 6.5), 1.0], [Vector3(-10.0, 0, 3.0), 1.4], [Vector3(6.5, 0, -7.6), 1.1]]:
+		_fleck(f[0], f[1])
+	var pfuetze := MeshInstance3D.new()
+	var pm := PlaneMesh.new()
+	pm.size = Vector2(1.6, 1.1)
+	pfuetze.mesh = pm
+	var wasser := StandardMaterial3D.new()
+	wasser.albedo_color = Color(0.05, 0.06, 0.07, 0.7)
+	wasser.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	wasser.roughness = 0.02
+	wasser.metallic = 0.6
+	wasser.metallic_specular = 1.0
+	pfuetze.material_override = wasser
+	pfuetze.position = Vector3(-8.2, 0.012, -4.6)
+	pfuetze.rotation.y = 0.4
+	add_child(pfuetze)
+	var tag := Bau.schild(self, "B.R.", Vector3(-6.6, 1.15, T - 0.535), 90, Color(0.05, 0.03, 0.04), PI)
+	tag.font = Stil.titel_schrift()
+	tag.rotation.z = 0.15
+	tag.shaded = true
+	_plakat(Vector3(-B + 0.03, 2.0, -5.2), PI / 2, "LINCOLN LIONS\nSTATE CHAMPS '98", Color(0.55, 0.08, 0.12))
+	_plakat(Vector3(-B + 0.03, 1.9, 2.0), PI / 2, "SCHÜLERRAT\nWÄHLT HAYES!", Color(0.12, 0.25, 0.5))
+	_plakat(Vector3(3.5, 2.1, -T + 0.03), 0.0, "SICHERHEIT\nGEHT VOR", Color(0.85, 0.65, 0.05))
 	# Putzeimer
 	Bau.zylinder(self, 0.2, 0.35, Vector3(-3.0, 0.18, T - 1.0), Bau.mat(Color(0.95, 0.8, 0.1)), Vector3.ZERO, false, 0.23)
 	var stiel := Bau.zylinder(self, 0.02, 1.4, Vector3(-2.85, 0.75, T - 1.0), m_holz)
 	stiel.rotation.z = -0.25
+
+
+func _fleck(pos: Vector3, groesse: float) -> void:
+	var mi := MeshInstance3D.new()
+	var pm := PlaneMesh.new()
+	pm.size = Vector2(groesse, groesse * 0.8)
+	mi.mesh = pm
+	var m := StandardMaterial3D.new()
+	m.albedo_texture = Bau.tex("fleck")
+	m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	m.roughness = 0.3
+	mi.material_override = m
+	mi.position = pos + Vector3(0, 0.008, 0)
+	mi.rotation.y = pos.x * 1.7
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(mi)
+
+
+func _plakat(pos: Vector3, rot_y: float, text: String, farbe: Color) -> void:
+	var p := Node3D.new()
+	p.position = pos
+	p.rotation.y = rot_y
+	p.rotation.z = randf_range(-0.04, 0.04)
+	add_child(p)
+	Bau.box(p, Vector3(0.9, 1.25, 0.01), Vector3.ZERO, Bau.mat(Color(0.92, 0.88, 0.78), "karton", 3.0))
+	Bau.box(p, Vector3(0.8, 0.75, 0.012), Vector3(0, 0.16, 0), Bau.mat(farbe, "beton", 2.0))
+	var l := Bau.schild(p, text, Vector3(0, -0.4, 0.012), 34, Color(0.1, 0.08, 0.06))
+	l.font = Stil.titel_schrift()
+	l.shaded = true
 
 
 # ---------------------------------------------------------------- Sammelobjekte
