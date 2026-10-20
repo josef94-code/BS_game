@@ -2,55 +2,35 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Nachtschicht – Ein Mechatroniker-Survival-Rätselspiel</title>
-<link rel="stylesheet" href="css/style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lernspiele</title>
+<style>
+  :root { --bg: #f4f2ee; --fg: #1d1d1b; --muted: #5f5d58; --card: #fff; --line: #d9d5cc; --accent: #9b2c1f; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #151514; --fg: #ecebe7; --muted: #a6a39c; --card: #1f1f1d; --line: #34332f; --accent: #e07a5f; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.5 system-ui, sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 40px 16px; }
+  h1 { margin: 0 0 4px; font-size: 1.8rem; }
+  .lead { margin: 0 0 32px; color: var(--muted); }
+  .games { display: grid; gap: 16px; }
+  a.game { display: block; padding: 20px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; color: inherit; text-decoration: none; }
+  a.game:hover { border-color: var(--accent); }
+  .game h2 { margin: 0 0 4px; font-size: 1.2rem; color: var(--accent); }
+  .game .meta { font-size: .85rem; color: var(--muted); }
+  .game p { margin: 8px 0 0; }
+</style>
 </head>
 <body>
-<div id="wrap">
-  <canvas id="screen" width="480" height="270"></canvas>
-  <div id="scanlines"></div>
-  <div id="hud"><div id="roomname"></div><div id="prompt"></div></div>
-  <div id="toast"></div>
-  <div id="dialog" class="hidden"><div class="who"></div><div class="text"></div><div class="next">▼</div></div>
-  <div id="choices" class="hidden"></div>
-  <div id="inventory" class="hidden"></div>
-  <div id="modal" class="hidden"><div class="panel"></div></div>
-  <div id="title">
-    <div class="tbox">
-      <div class="pre">WERK KESSLER · HALLE 3</div>
-      <h1>NACHTSCHICHT</h1>
-      <div class="sub">Ein Azubi. Eine verrottete Halle. Bis Montag, 6 Uhr früh.</div>
-      <div class="menu">
-        <button class="btn new">Neues Spiel</button>
-        <button class="btn cont hidden">Fortsetzen</button>
-        <button class="btn help">Steuerung</button>
-      </div>
-      <div id="helpbox" class="hidden">
-        <p><b>Pfeiltasten / WASD</b> – gehen &nbsp;·&nbsp; <b>Shift</b> – rennen</p>
-        <p><b>E / Leertaste / Enter</b> – untersuchen, reden, weiter</p>
-        <p><b>I / Tab</b> – Inventar, Dokumente, Karte &nbsp;·&nbsp; <b>M</b> – Ton an/aus</p>
-        <p>Speichern an der <b>Stempeluhr</b> in der Umkleide.</p>
-        <p class="note">Rätsel zum 1. Ausbildungsjahr Mechatroniker/-in (Lernfelder 1–4). Taschenrechner und Tabellenbuch sind erlaubt!</p>
-      </div>
-    </div>
+<main>
+  <h1>Lernspiele</h1>
+  <p class="lead">Für die Berufsschule und zum Selbstlernen zu Hause.</p>
+  <div class="games">
+    <a class="game" href="nachtschicht/nachtschicht.html">
+      <h2>NACHTSCHICHT</h2>
+      <div class="meta">Mechatroniker/-in · 1. Ausbildungsjahr · Lernfelder 1–4 · ca. 1,5–2 Stunden</div>
+      <p>Survival-Rätselspiel ohne Monster: Bring eine verrottete Werkshalle bis Montag früh wieder zum Laufen – mit Elektrotechnik, Pneumatik, Mechanik und Arbeitssicherheit.</p>
+    </a>
   </div>
-</div>
-<div id="touch">
-  <div class="pad">
-    <button data-k="u" class="tu">▲</button>
-    <button data-k="l" class="tl">◀</button>
-    <button data-k="r" class="tr">▶</button>
-    <button data-k="dn" class="td">▼</button>
-  </div>
-  <div class="acts"><button class="ti">INV</button><button class="ta">E</button></div>
-</div>
-<script src="js/gfx.js"></script>
-<script src="js/audio.js"></script>
-<script src="js/data.js"></script>
-<script src="js/rooms.js"></script>
-<script src="js/npcs.js"></script>
-<script src="js/puzzles.js"></script>
-<script src="js/game.js"></script>
+</main>
 </body>
 </html>
