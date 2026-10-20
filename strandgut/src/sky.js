@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { Sky } from 'three/examples/jsm/objects/Sky.js';
 import { clamp, smoothstep, lerp, rng } from './noise.js';
 
 // Tageszeit, Sonne, Mond, Wolken, Regen, Blitze
@@ -13,18 +12,16 @@ export class Environment {
     this.lightning = 0;
     this.indoor = false;
 
-    this.sky = new Sky();
-    this.sky.scale.setScalar(4500);
-    const su = this.sky.material.uniforms;
-    su.turbidity.value = 3; su.rayleigh.value = 1.0; su.mieCoefficient.value = 0.005; su.mieDirectionalG.value = 0.8;
+    this.sky = makeSky(4500);
     scene.add(this.sky);
 
     this.sun = new THREE.DirectionalLight(0xffffff, 3);
     this.sun.castShadow = quality !== 'low';
-    const sm = quality === 'high' ? 2048 : 1024;
+    const sm = quality === 'high' ? 4096 : 2048;
     this.sun.shadow.mapSize.set(sm, sm);
-    const sc = this.sun.shadow.camera;
-    sc.left = -38; sc.right = 38; sc.top = 38; sc.bottom = -38; sc.near = 1; sc.far = 260;
+    const sc = this.sun.shadow.camera, ext = quality === 'high' ? 55 : 40;
+    sc.left = -ext; sc.right = ext; sc.top = ext; sc.bottom = -ext; sc.near = 1; sc.far = 300;
+    this.sun.shadow.radius = 3; this.sun.shadow.blurSamples = 12;
     this.sun.shadow.bias = -0.0004; this.sun.shadow.normalBias = 0.04;
     scene.add(this.sun, this.sun.target);
 
@@ -101,6 +98,18 @@ export class Environment {
     this.rainBase = rp.slice();
 
     this._c = { sky: new THREE.Color(), hor: new THREE.Color(), tmp: new THREE.Color() };
+    // Umgebungslicht (IBL) aus dem Himmel: eigene Mini-Szene, wird regelmäßig neu gefiltert
+    this.useIBL = quality !== 'low';
+    if (this.useIBL) {
+      this.pmrem = new THREE.PMREMGenerator(renderer);
+      this.envScene = new THREE.Scene();
+      this.envSky = new THREE.Mesh(new THREE.SphereGeometry(500, 32, 16), this.sky.material); // gleiche Uniforms
+      this.envScene.add(this.envSky);
+      this.envGround = new THREE.Mesh(new THREE.CircleGeometry(400, 24), new THREE.MeshBasicMaterial({ color: '#6f7d5a' }));
+      this.envGround.rotation.x = -Math.PI / 2; this.envGround.position.y = -8;
+      this.envScene.add(this.envGround);
+      this.envTimer = 0; this.envKey = '';
+    }
     this.sunDir = new THREE.Vector3();
     this.flashTimer = 5;
     this.onThunder = null;
@@ -118,13 +127,9 @@ export class Environment {
     this.storm = lerp(this.storm, this.stormTarget, Math.min(1, dt * 0.25));
     const st = this.storm;
 
-    const su = this.sky.material.uniforms;
-    su.sunPosition.value.copy(this.sunDir);
-    su.turbidity.value = 3 + st * 14 + (1 - this.dayLight) * 4;
-    su.rayleigh.value = lerp(1.0, 0.5, st) + smoothstep(0.3, 0.0, this.sunDir.y) * 1.5;
 
     const day = this.dayLight;
-    const golden = smoothstep(0.35, 0.02, this.sunDir.y) * smoothstep(-0.12, 0.05, this.sunDir.y);
+    const golden = smoothstep(0.42, 0.04, this.sunDir.y) * smoothstep(-0.14, 0.02, this.sunDir.y);
     const sunCol = this._c.tmp.setRGB(1, lerp(0.96, 0.62, golden), lerp(0.88, 0.38, golden));
     this.sun.color.copy(sunCol);
     this.sun.intensity = 3.2 * day * (1 - st * 0.75);
@@ -144,6 +149,14 @@ export class Environment {
     const grey = new THREE.Color(0.42, 0.46, 0.5).multiplyScalar(lerp(0.15, 1, day));
     skyC.lerp(grey, st * 0.85); horC.lerp(grey, st * 0.9);
     this.scene.fog.color.copy(horC);
+    // Himmelskuppel
+    const su = this.sky.material.uniforms;
+    su.uSun.value.copy(this.sunDir);
+    su.uZenith.value.setRGB(lerp(0.004, 0.09, day), lerp(0.008, 0.27, day), lerp(0.025, 0.78, day)).lerp(new THREE.Color(0.22, 0.24, 0.45), golden * 0.5);
+    su.uHorizon.value.setRGB(lerp(0.02, 0.66, day), lerp(0.03, 0.82, day), lerp(0.07, 1.0, day)).lerp(new THREE.Color(1.4, 0.58, 0.26), golden);
+    su.uSunCol.value.copy(sunCol).multiplyScalar(day);
+    su.uGolden.value = golden; su.uStorm.value = st;
+    su.uGrey.value.setRGB(0.4, 0.43, 0.48).multiplyScalar(lerp(0.08, 1, day));
     this.scene.fog.near = lerp(120, 25, st);
     this.scene.fog.far = lerp(1300, 260, st);
     this.renderer.toneMappingExposure = lerp(0.42, 0.62, day) * (1 - st * 0.2);
@@ -154,6 +167,22 @@ export class Environment {
     this.moon.position.copy(camera.position).addScaledVector(md, 1900);
     this.moon.material.opacity = smoothstep(0.1, -0.1, this.sunDir.y) * (1 - st * 0.9) * smoothstep(-0.05, 0.1, md.y);
     this.sky.visible = true;
+
+    // IBL neu berechnen, wenn sich Licht deutlich geändert hat
+    if (this.useIBL) {
+      this.envTimer -= dt;
+      const key = (this.sunDir.y * 20 | 0) + ':' + (this.sunDir.x * 10 | 0) + ':' + (st * 8 | 0);
+      if (this.envTimer <= 0 && key !== this.envKey) {
+        this.envTimer = 1.0; this.envKey = key;
+        this.envGround.material.color.setRGB(0.35 * day + 0.02, 0.38 * day + 0.02, 0.3 * day + 0.03);
+        const old = this.envRT;
+        this.envRT = this.pmrem.fromScene(this.envScene, 0, 1, 1000);
+        this.scene.environment = this.envRT.texture;
+        if (old) old.dispose();
+      }
+      this.scene.environmentIntensity = lerp(0.08, 0.9, day) * (1 - st * 0.4);
+      this.hemi.intensity *= 0.35;
+    }
 
     // Wolken
     this.clouds.position.copy(camera.position);
@@ -209,6 +238,36 @@ export class Environment {
     const a = ((this.time + 12 - 6) / 13) * Math.PI;
     return new THREE.Vector3(-Math.cos(a) * 0.6, Math.max(0.25, Math.sin(a)), 0.5).normalize();
   }
+}
+
+// Himmelskuppel mit Farbverlauf, Sonnenscheibe und Abendrot
+function makeSky(R) {
+  const mat = new THREE.ShaderMaterial({
+    side: THREE.BackSide, depthWrite: false, fog: false,
+    uniforms: { uSun: { value: new THREE.Vector3(0, 1, 0) }, uZenith: { value: new THREE.Color() }, uHorizon: { value: new THREE.Color() }, uSunCol: { value: new THREE.Color() }, uGrey: { value: new THREE.Color() }, uGolden: { value: 0 }, uStorm: { value: 0 } },
+    vertexShader: 'varying vec3 vDir; void main(){ vDir = normalize((modelMatrix * vec4(position, 0.0)).xyz); vec4 p = projectionMatrix * viewMatrix * vec4((modelMatrix * vec4(position,1.0)).xyz, 1.0); gl_Position = p.xyww; }',
+    fragmentShader: /* glsl */`
+      uniform vec3 uSun, uZenith, uHorizon, uSunCol, uGrey; uniform float uGolden, uStorm; varying vec3 vDir;
+      void main(){
+        vec3 d = normalize(vDir);
+        float h = d.y;
+        vec3 col = mix(uHorizon, uZenith, pow(clamp(h, 0.0, 1.0), 0.48));
+        if (h < 0.0) col = mix(uHorizon, uHorizon * 0.55, clamp(-h * 4.0, 0.0, 1.0));
+        float sd = max(dot(d, uSun), 0.0);
+        // Dunst um die Sonne, Abendrot in Sonnenrichtung
+        float horizonBand = exp(-abs(h) * 6.0);
+        col += uSunCol * (pow(sd, 5.0) * (0.25 + uGolden * 0.9) * (0.5 + horizonBand) + pow(sd, 90.0) * 0.9);
+        col += uSunCol * smoothstep(0.99955, 0.99985, sd) * 40.0 * (1.0 - uStorm);
+        col *= 1.35;
+        col = mix(col, uGrey, uStorm * 0.88);
+        gl_FragColor = vec4(col, 1.0);
+        #include <tonemapping_fragment>
+        #include <colorspace_fragment>
+      }`,
+  });
+  const m = new THREE.Mesh(new THREE.SphereGeometry(R, 48, 24), mat);
+  m.frustumCulled = false; m.renderOrder = -2;
+  return m;
 }
 
 export function makeGlowTexture(color) {

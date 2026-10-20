@@ -8,21 +8,25 @@ import { buildInterior } from './interior.js';
 import { UI } from './ui.js';
 import { Audio } from './audio.js';
 import { Game } from './game.js';
+import { Post } from './post.js';
+import { FX } from './fx.js';
+import { terrainUniforms } from './terrain.js';
+import { IX, IZ } from './interior.js';
 
 const params = new URLSearchParams(location.search);
 let quality = params.get('q');
 try { quality = quality || localStorage.getItem('strandgut_quality'); } catch (e) { }
-if (!['low', 'medium', 'high'].includes(quality)) quality = 'medium';
+if (!['low', 'medium', 'high'].includes(quality)) quality = 'high';
 
 const canvas = document.getElementById('game');
 let renderer;
 try {
-  renderer = new THREE.WebGLRenderer({ canvas, antialias: quality !== 'low', powerPreference: 'high-performance' });
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: quality === 'low' ? false : quality !== 'high', powerPreference: 'high-performance', stencil: false });
 } catch (e) {
   document.getElementById('ui').innerHTML = '<div class="nogl"><h1>STRANDGUT</h1><p>Dieser Browser oder Rechner unterstützt kein WebGL (3D-Grafik).</p><p>Bitte einen aktuellen Chrome, Edge oder Firefox verwenden und in den Einstellungen die Hardwarebeschleunigung aktivieren.</p></div>';
   throw e;
 }
-const pixelRatio = { low: 0.75, medium: 1, high: Math.min(devicePixelRatio, 2) }[quality];
+const pixelRatio = { low: 0.75, medium: 1, high: Math.min(devicePixelRatio, 1.5) }[quality];
 renderer.setPixelRatio(pixelRatio);
 renderer.setSize(innerWidth, innerHeight);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -38,6 +42,8 @@ const interior = buildInterior(scene);
 const player = new Player(scene, camera, canvas);
 const ui = new UI(document.getElementById('ui'));
 const audio = new Audio();
+const post = new Post(renderer, scene, camera, quality);
+const fx = new FX(scene, env, quality);
 const game = new Game({ scene, camera, renderer, env, W, player, ui, audio, interior, quality });
 env.onThunder = () => audio.sfx('thunder');
 ui.onLine = (l) => { if (l.radio) audio.sfx('radio'); };
@@ -168,14 +174,18 @@ function titleCam(t) {
 const clock = new THREE.Clock();
 let elapsed = 0, fpsAcc = 0, fpsN = 0;
 function loop() {
-  const dt = Math.min(clock.getDelta(), 0.05); elapsed += dt;
+  const dt = fixedDt || Math.min(clock.getDelta(), 0.05); elapsed += dt;
   windUniforms.uTime.value = elapsed;
   windUniforms.uWind.value = 0.25 + env.storm * 1.2;
   if (titleMode) { env.time = 16.4; titleCam(elapsed); }
   else game.update(dt);
   env.update(dt, player.pos, camera, W.water.uniforms, elapsed);
+  terrainUniforms.uTime.value = elapsed;
+  terrainUniforms.uCaustic.value = env.dayLight * (1 - env.storm * 0.8);
+  fx.update(dt, elapsed, { camera, fire: W.fire, fireLit: W.fire.userData.lit && W.fire.visible, indoor: player.zone === 'wrack', interiorOrigin: { x: IX, z: IZ } });
   if (player.zone === 'wrack') {
-    env.sun.intensity = 0; env.hemi.intensity = 0.7; env.hemi.color.set('#8fa6c0'); env.hemi.groundColor.set('#3a2a22'); env.ambient.intensity = 0.0;
+    scene.environmentIntensity = 0.12;
+    env.sun.intensity = 0; env.hemi.intensity = 1.1; env.hemi.color.set('#8fa6c0'); env.hemi.groundColor.set('#3a2a22'); env.ambient.intensity = 0.0;
     scene.fog.color.set('#0b0f12'); scene.fog.near = 6; scene.fog.far = 40;
     renderer.toneMappingExposure = 0.8;
   }
@@ -187,19 +197,39 @@ function loop() {
     motor: game.boatMode ? (game.audioState?.motor || 0) : 0,
     musicOn: titleMode || game.boatMode,
   });
-  renderer.render(scene, camera);
+  // Sonne auf dem Bildschirm (für Blendung), mit einfacher Verdeckung durch Gelände
+  if (post.enabled) {
+    const sp = sunScreen.copy(camera.position).addScaledVector(env.sunDir, 1000).project(camera);
+    let vis = 0;
+    if (player.zone !== 'wrack' && env.sunDir.y > 0 && sp.z < 1 && Math.abs(sp.x) < 1.3 && Math.abs(sp.y) < 1.3) {
+      vis = (1 - env.storm) * Math.min(1, env.sunDir.y * 6);
+      for (let k = 1; k < 12 && vis > 0; k++) { const d = k * k * 4, x = camera.position.x + env.sunDir.x * d, z = camera.position.z + env.sunDir.z * d; if (heightAt(x, z) > camera.position.y + env.sunDir.y * d) vis = 0; }
+    }
+    post.setSun(sp.x * 0.5 + 0.5, sp.y * 0.5 + 0.5, vis, camera.aspect);
+    post.grade.uniforms.uDamage.value = game.active ? Math.max(0, 1 - Math.min(game.G.stats.thirst, game.G.stats.hunger) / 15) * 0.8 : 0;
+  }
+  if (player.zone !== 'wrack') W.water.renderReflection(renderer, scene, camera, [W.veg.grass, env.rain, fx.spray, fx.flies, fx.sparks, fx.smoke, player.model.lamp]);
+  if (!post.render(dt)) renderer.render(scene, camera);
   fpsAcc += dt; fpsN++;
   if (fpsAcc > 3) {
     // Automatisch Schatten abschalten, wenn es ruckelt
     const fps = fpsN / fpsAcc; fpsAcc = 0; fpsN = 0;
-    if (fps < 22 && renderer.shadowMap.enabled && !titleMode) { renderer.shadowMap.enabled = false; env.sun.castShadow = false; scene.traverse(o => { if (o.material) o.material.needsUpdate = true; }); ui.toast('Grafik reduziert (Schatten aus), damit es flüssiger läuft.'); }
+    if (fps < 28 && !titleMode) {
+      if (post.degrade()) { /* zuerst Nachbearbeitung abspecken */ }
+      else if (fps < 22 && renderer.shadowMap.enabled) { renderer.shadowMap.enabled = false; env.sun.castShadow = false; scene.traverse(o => { if (o.material) o.material.needsUpdate = true; }); ui.toast('Grafik reduziert (Schatten aus), damit es flüssiger läuft.'); }
+    }
   }
-  requestAnimationFrame(loop);
+  if (!still) requestAnimationFrame(loop);
 }
-addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
+// Testmodus: ?still=1 rendert nur auf Anforderung (für automatische Screenshots)
+const still = !!params.get('still');
+window.__frames = (n = 1, dt = 1 / 30) => { for (let i = 0; i < n; i++) { clock.getDelta(); fixedDt = dt; loop(); } fixedDt = 0; };
+let fixedDt = 0;
+const sunScreen = new THREE.Vector3();
+addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); post.setSize(innerWidth, innerHeight); W.water.resize(innerWidth * renderer.getPixelRatio(), innerHeight * renderer.getPixelRatio()); });
 
 // Debug-/Testzugang (für Lehrkräfte: ?test=1 überspringt das Intro)
-window.__game = game;
+window.__game = game; window.__THREE = THREE; window.__post = post;
 showTitle();
 if (params.get('test')) { ui.screen(null); titleMode = false; game.start(false); }
 loop();

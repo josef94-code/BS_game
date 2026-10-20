@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { heightAt, normalAt, SPOTS } from './terrain.js';
 import { colliders } from './colliders.js';
 import { rng, noise2 } from './noise.js';
+import { corrugatedNormal, rustTextures } from './textures.js';
 
 const std = (color, o = {}) => new THREE.MeshStandardMaterial({ color, roughness: o.r ?? 0.7, metalness: o.m ?? 0, ...o.extra });
 function mesh(geo, mat, shadow = true) { const m = new THREE.Mesh(geo, mat); m.castShadow = shadow; m.receiveShadow = true; return m; }
@@ -38,8 +39,9 @@ function labelTexture(text, sub, bg = 'rgba(0,0,0,0)', fg = '#ffffff') {
 export function makeContainer(color, label, seed = 1) {
   const g = new THREE.Group();
   const L = 6.06, W = 2.44, H = 2.59;
-  const tex = grimeTexture(color, true, seed); tex.repeat.set(2, 1);
-  const mat = std('#ffffff', { r: 0.6, m: 0.3, extra: { map: tex } });
+  const tex = grimeTexture(color, false, seed);
+  const rust = rustTextures(256, 3);
+  const mat = std('#ffffff', { r: 0.7, m: 0.25, extra: { map: tex, normalMap: corrugatedNormal(), normalScale: new THREE.Vector2(0.9, 0.9), roughnessMap: rust.rough } });
   const body = mesh(new THREE.BoxGeometry(L, H, W), mat); body.position.y = H / 2; g.add(body);
   // Eckbeschläge
   const cm = std('#2f2f2f', { r: 0.5, m: 0.5 });
@@ -50,7 +52,7 @@ export function makeContainer(color, label, seed = 1) {
   lab.position.set(0, H - 0.6, W / 2 + 0.01); g.add(lab);
   const lab2 = lab.clone(); lab2.rotation.y = Math.PI; lab2.position.z = -W / 2 - 0.01; g.add(lab2);
   // Türflügel am Ende (+x)
-  const doorMat = std('#ffffff', { r: 0.6, m: 0.3, extra: { map: tex } });
+  const doorMat = mat;
   const doors = [];
   for (const s of [-1, 1]) {
     const pivot = new THREE.Group(); pivot.position.set(L / 2 + 0.02, 0, s * W / 2); g.add(pivot);
@@ -113,13 +115,16 @@ export function makeWreck() {
   }
   hull.setAttribute('color', new THREE.BufferAttribute(colors, 3));
   hull.computeVertexNormals();
-  const hullM = mesh(hull, std('#ffffff', { r: 0.65, m: 0.35, extra: { vertexColors: true, side: THREE.DoubleSide } }));
+  const rt = rustTextures(512, 1);
+  const rep = (t, r) => { const c = t.clone(); c.repeat.set(r, r); c.needsUpdate = true; return c; };
+  const hullM = mesh(hull, std('#ffffff', { r: 1, m: 0.5, extra: { vertexColors: true, side: THREE.DoubleSide, map: rep(rt.mask, 0.06), roughnessMap: rep(rt.rough, 0.06), normalMap: rep(rt.normal, 0.06) } }));
   g.add(hullM);
   // Deck
   const deck = mesh(new THREE.BoxGeometry(wid - 0.8, 0.3, len * 0.72), std('#3d3a35', { r: 0.9 }));
   deck.position.set(0, hgt - 0.6, -len * 0.14); g.add(deck);
   // Brückenaufbau am Heck
-  const white = std('#e7e4dc', { r: 0.6 });
+  const rt2 = rustTextures(512, 2);
+  const white = std('#e7e4dc', { r: 1, m: 0.2, extra: { map: rep(rt2.mask, 1), roughnessMap: rep(rt2.rough, 1), normalMap: rep(rt2.normal, 1) } });
   const sup = mesh(new THREE.BoxGeometry(wid - 1.5, 7, 7), white); sup.position.set(0, hgt + 3.2, -len / 2 + 4.5); g.add(sup);
   const bridge = mesh(new THREE.BoxGeometry(wid + 1, 2.2, 4.5), white); bridge.position.set(0, hgt + 7.6, -len / 2 + 4.8); g.add(bridge);
   const win = mesh(new THREE.BoxGeometry(wid + 1.02, 0.8, 0.1), std('#1a2630', { r: 0.1, m: 0.6 })); win.position.set(0, hgt + 7.9, -len / 2 + 7.06); g.add(win);

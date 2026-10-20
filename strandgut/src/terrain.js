@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { noise2, fbm, smoothstep, lerp, clamp } from './noise.js';
+import { sandTextures, grassGroundTextures, rockTextures } from './textures.js';
 
 // Wichtige Orte der Insel (x, z in Metern; Norden = -z)
 export const SPOTS = {
@@ -80,15 +81,15 @@ export function makeHeightTexture(size = 256, extent = 320) {
   return { tex, extent };
 }
 
+export const terrainUniforms = { uTime: { value: 0 }, uCaustic: { value: 1 } };
+
 export function buildTerrain(quality) {
-  const size = 300, seg = quality === 'low' ? 160 : 260;
+  const size = 300, seg = quality === 'low' ? 180 : quality === 'medium' ? 280 : 380;
   const geo = new THREE.PlaneGeometry(size, size, seg, seg);
   geo.rotateX(-Math.PI / 2);
   const pos = geo.attributes.position;
   const col = new Float32Array(pos.count * 3);
-  const c = new THREE.Color();
-  const sandDry = new THREE.Color('#e8d3a2'), sandWet = new THREE.Color('#b99d6b'), grass = new THREE.Color('#5d8f3a'),
-    grassDark = new THREE.Color('#3f6b2a'), rock = new THREE.Color('#7b766d'), seabed = new THREE.Color('#c8b98a'), dirt = new THREE.Color('#8a6d48');
+  const spl = new Float32Array(pos.count * 4);
   for (let i = 0; i < pos.count; i++) {
     const x = pos.getX(i), z = pos.getZ(i);
     const h = heightAt(x, z);
@@ -96,21 +97,77 @@ export function buildTerrain(quality) {
     const n = normalAt(x, z);
     const slope = 1 - n.y;
     const v = noise2(x * 0.15, z * 0.15) * 0.5 + 0.5;
-    if (h < -0.3) c.copy(seabed).lerp(sandWet, smoothstep(-3, -0.3, h));
-    else if (h < 0.5) c.copy(sandWet).lerp(sandDry, smoothstep(-0.3, 0.5, h));
-    else if (h < 1.9 + v * 0.8) c.copy(sandDry);
-    else c.copy(grass).lerp(grassDark, v);
-    if (h > 1.5 && h < 2.4 + v) c.lerp(sandDry, 0.35);
-    if (slope > 0.22) c.lerp(rock, smoothstep(0.22, 0.42, slope));
-    // Trampelpfade zum Lager
+    const v2 = noise2(x * 0.04 + 7, z * 0.04) * 0.5 + 0.5;
+    // Gewichte: Sand, Gras, Fels, Erde
+    let grass = smoothstep(1.7 + v * 0.9, 2.5 + v * 0.9, h);
+    let rock = smoothstep(0.2, 0.4, slope) * (h > -1 ? 1 : 0.5);
     const dc = Math.hypot(x - SPOTS.camp.x, z - SPOTS.camp.z);
-    if (dc < 11 && h > 1.5) c.lerp(dirt, 0.45 * smoothstep(11, 6, dc));
-    c.multiplyScalar(0.93 + v * 0.12);
-    col[i * 3] = c.r; col[i * 3 + 1] = c.g; col[i * 3 + 2] = c.b;
+    let dirt = (dc < 11 && h > 1.4 ? 0.7 * smoothstep(11, 5, dc) : 0) + grass * smoothstep(0.62, 0.8, v2) * 0.6;
+    dirt = Math.min(1, dirt);
+    let sand = 1 - grass;
+    grass *= 1 - dirt;
+    const tot = sand + grass + rock + dirt;
+    spl.set([sand / tot, grass / tot, rock / tot, dirt / tot], i * 4);
+    // Großflächige Farbvariation als Tönung
+    const t = 0.88 + v * 0.14 + (v2 - 0.5) * 0.12;
+    col.set([t * (1 + (v2 - 0.5) * 0.06), t, t * (1 - (v2 - 0.5) * 0.08)], i * 3);
   }
   geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  geo.setAttribute('splat', new THREE.BufferAttribute(spl, 4));
   geo.computeVertexNormals();
+  const S = quality === 'low' ? 256 : 512;
+  const sand = sandTextures(S), grass = grassGroundTextures(S), rock = rockTextures(S);
   const mat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.95, metalness: 0 });
+  mat.onBeforeCompile = (sh) => {
+    Object.assign(sh.uniforms, {
+      tSand: { value: sand.map }, nSand: { value: sand.normal }, tGrass: { value: grass.map }, nGrass: { value: grass.normal },
+      tRock: { value: rock.map }, nRock: { value: rock.normal }, uTime: terrainUniforms.uTime, uCaustic: terrainUniforms.uCaustic,
+    });
+    sh.vertexShader = sh.vertexShader
+      .replace('#include <common>', '#include <common>\nattribute vec4 splat; varying vec4 vSplat; varying vec3 vWPos; varying vec3 vWNormal;')
+      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvSplat = splat; vWPos = (modelMatrix * vec4(position,1.0)).xyz; vWNormal = normalize(mat3(modelMatrix) * normal);');
+    sh.fragmentShader = sh.fragmentShader
+      .replace('#include <common>', `#include <common>
+        uniform sampler2D tSand, nSand, tGrass, nGrass, tRock, nRock; uniform float uTime, uCaustic;
+        varying vec4 vSplat; varying vec3 vWPos; varying vec3 vWNormal;
+        float wet; vec3 detailN;
+        vec2 rot(vec2 p, float a){ float c=cos(a), s=sin(a); return vec2(c*p.x-s*p.y, s*p.x+c*p.y); }
+        vec3 tri(sampler2D t, vec2 uv){ return mix(texture2D(t, uv).rgb, texture2D(t, rot(uv, 1.3) * 0.43 + 0.17).rgb, 0.4); }
+        float caustic(vec2 p){
+          float c = 0.0;
+          for (int i = 0; i < 3; i++) {
+            vec2 q = p * (0.55 + float(i) * 0.31) + vec2(uTime * 0.11 * float(i + 1), -uTime * 0.07 * float(i + 2));
+            vec2 g = abs(fract(q + 0.5 * sin(q.yx * 2.1 + uTime * 0.6)) - 0.5);
+            c += pow(1.0 - min(g.x, g.y) * 2.0, 7.0);
+          }
+          return c;
+        }`)
+      .replace('#include <map_fragment>', `
+        vec4 w = vSplat;
+        vec2 uv = vWPos.xz;
+        vec3 cs = tri(tSand, uv * 0.22), cg = tri(tGrass, uv * 0.18), cr = tri(tRock, uv * 0.11), cd = cs * vec3(0.62, 0.5, 0.38);
+        wet = smoothstep(0.75, -0.05, vWPos.y) * w.x;
+        cs = mix(cs, cs * vec3(0.48, 0.45, 0.4), wet);
+        if (vWPos.y < -0.3) cs = mix(cs, cs * vec3(0.8, 0.86, 0.85), smoothstep(-0.3, -4.0, vWPos.y));
+        vec3 albedo = cs * w.x + cg * w.y + cr * w.z + cd * w.w;
+        diffuseColor.rgb *= albedo;
+        vec3 ns = texture2D(nSand, uv * 0.22).xyz * 2.0 - 1.0, ng = texture2D(nGrass, uv * 0.18).xyz * 2.0 - 1.0, nr = texture2D(nRock, uv * 0.11).xyz * 2.0 - 1.0;
+        detailN = normalize(ns * (w.x + w.w) + ng * w.y * 0.8 + nr * w.z * 1.4 + vec3(0.0, 0.0, 0.6));`)
+      .replace('#include <roughnessmap_fragment>', `float roughnessFactor = mix(roughness, 0.22, wet) - w.z * 0.08;`)
+      .replace('#include <normal_fragment_maps>', `
+        {
+          vec3 Nw = normalize(vWNormal);
+          vec3 T = normalize(vec3(1.0, 0.0, 0.0) - Nw * Nw.x);
+          vec3 B = normalize(cross(T, Nw));
+          vec3 nw = normalize(T * detailN.x + B * -detailN.y + Nw * detailN.z);
+          normal = normalize((viewMatrix * vec4(nw, 0.0)).xyz);
+        }`)
+      .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
+        if (vWPos.y < 0.05) {
+          float d = clamp(-vWPos.y, 0.0, 6.0);
+          totalEmissiveRadiance += vec3(0.75, 0.95, 1.0) * caustic(vWPos.xz) * 0.16 * uCaustic * smoothstep(0.0, 0.4, d) * (1.0 - d / 6.5) * diffuseColor.rgb;
+        }`);
+  };
   const mesh = new THREE.Mesh(geo, mat);
   mesh.receiveShadow = true;
   mesh.name = 'terrain';

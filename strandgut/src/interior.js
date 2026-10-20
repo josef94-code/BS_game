@@ -30,7 +30,7 @@ export function buildInterior(scene) {
   floor.rotation.x = -Math.PI / 2; floor.position.z = 8; g.add(floor);
   const wallT = plateTexture('#3b4e5c', 5); wallT.repeat.set(4, 2);
   const wallM = std('#ffffff', { r: 0.7, m: 0.3, extra: { map: wallT, side: THREE.DoubleSide } });
-  const ceil = mesh(new THREE.PlaneGeometry(W, D), std('#2a3238', { r: 0.9 }), false); ceil.rotation.x = Math.PI / 2; ceil.position.set(0, H, 8); g.add(ceil);
+  const ceil = mesh(new THREE.PlaneGeometry(W, D), std('#55606a', { r: 0.9, extra: { map: wallT } }), false); ceil.rotation.x = Math.PI / 2; ceil.position.set(0, H, 8); g.add(ceil);
   for (const s of [-1, 1]) { const w = mesh(new THREE.PlaneGeometry(D, H), wallM, false); w.rotation.y = -s * Math.PI / 2; w.position.set(s * W / 2, H / 2, 8); g.add(w); }
   const back = mesh(new THREE.PlaneGeometry(W, H), wallM, false); back.position.set(0, H / 2, 24); back.rotation.y = Math.PI; g.add(back);
   const front = mesh(new THREE.PlaneGeometry(W, H), wallM, false); front.position.set(0, H / 2, -8); g.add(front);
@@ -106,7 +106,7 @@ export function buildInterior(scene) {
   // Notbeleuchtung
   I.lamps = [];
   for (const [x, z, col] of [[-5.5, -2, 0xff3a2a], [5.5, 6, 0xff3a2a], [0, 10.6, 0xffa040], [-5, 14, 0xff3a2a], [4, 23, 0xff5a3a], [3, 15, 0xffe0b0], [-3, 21, 0xffe0b0]]) {
-    const l = new THREE.PointLight(col, 5, 11, 1.4); l.position.set(x, 4.2, z); g.add(l);
+    const l = new THREE.PointLight(col, 6, 22, 1.2); l.position.set(x, 4.2, z); g.add(l);
     const b = new THREE.Mesh(new THREE.SphereGeometry(0.1, 8, 6), new THREE.MeshBasicMaterial({ color: col })); b.position.copy(l.position); g.add(b);
     I.lamps.push(l);
   }
@@ -114,7 +114,7 @@ export function buildInterior(scene) {
   const drops = [];
   for (let i = 0; i < 6; i++) { const d = new THREE.Mesh(new THREE.SphereGeometry(0.025, 5, 4), new THREE.MeshBasicMaterial({ color: '#9fd3ff' })); d.userData = { x: (r() - 0.5) * 9, z: -6 + r() * 26, y: H, v: 0, wait: r() * 3 }; g.add(d); drops.push(d); }
   I.update = (t, dt) => {
-    I.lamps.forEach((l, i) => { l.intensity = 5 + Math.sin(t * (2 + i) + i) * 0.6 + (Math.random() < 0.004 ? -4 : 0); });
+    I.lamps.forEach((l, i) => { l.intensity = 6 + Math.sin(t * (2 + i) + i) * 0.6 + (Math.random() < 0.004 ? -4 : 0); });
     if (I.doorOpen && door.position.y < 3.6) door.position.y = Math.min(3.6, door.position.y + dt * 0.8);
     for (const d of drops) {
       const u = d.userData;

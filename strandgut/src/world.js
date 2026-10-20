@@ -13,9 +13,9 @@ export function buildWorld(scene, quality) {
   W.terrain = buildTerrain(quality);
   scene.add(W.terrain);
   const ht = makeHeightTexture(256, 300);
-  W.water = buildWater(ht.tex, ht.extent);
+  W.water = buildWater(ht.tex, ht.extent, quality);
   scene.add(W.water.mesh);
-  buildVegetation(scene, quality);
+  W.veg = buildVegetation(scene, quality);
 
   // Strandgut-Container
   const cont = (key, color, label, rot, seed) => {
