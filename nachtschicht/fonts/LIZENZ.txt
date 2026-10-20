@@ -1,0 +1,7 @@
+Eingebettete Schriftarten (Lateinisch-Untermenge, unverändert von Google Fonts):
+
+VT323 – Copyright 2011, The VT323 Project Authors (peter.hull@oikoi.com)
+Special Elite – Copyright (c) 2010 by Brian J. Bonislawsky DBA Astigmatic (AOETI)
+
+Beide Schriften stehen unter der SIL Open Font License, Version 1.1:
+https://openfontlicense.org
