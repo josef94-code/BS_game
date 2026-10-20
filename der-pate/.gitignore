@@ -1,0 +1,7 @@
+# Godot
+.godot/
+/android/
+# Export
+/build/
+*.exe
+*.pck

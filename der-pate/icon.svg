@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+<rect width="128" height="128" rx="20" fill="#1a1012"/>
+<path d="M22 70 Q64 52 106 70 L98 76 Q64 64 30 76 Z" fill="#111"/>
+<path d="M36 72 Q38 34 64 32 Q90 34 92 72 Z" fill="#222" stroke="#d4a017" stroke-width="3"/>
+<rect x="36" y="60" width="56" height="8" fill="#8b1a1a"/>
+<path d="M18 74 Q64 58 110 74 Q64 90 18 74 Z" fill="#2a2a2a" stroke="#d4a017" stroke-width="3"/>
+<text x="64" y="114" font-family="sans-serif" font-size="20" font-weight="bold" fill="#d4a017" text-anchor="middle">PATE</text>
+</svg>

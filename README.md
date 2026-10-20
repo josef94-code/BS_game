@@ -6,6 +6,7 @@ Sammlung von Lernspielen. Jedes Spiel liegt in einem eigenen Ordner und hat dort
 |---|---|---|
 | **NACHTSCHICHT** – Survival-Rätselspiel in einer verrotteten Werkshalle | Mechatroniker/-in, 1. Ausbildungsjahr (LF 1–4) | [`nachtschicht/`](nachtschicht/) |
 | **STRANDGUT** – 3D-Survival-Spiel: gestrandet auf einer Insel, Flucht mit einem selbstgebauten Solarboot | Mechatroniker/-in, 10. Jahrgangsstufe (LF 1–5) | [`strandgut/`](strandgut/) |
+| **DER PATE** – 3D-Lernspiel (Godot, Windows-.exe) im GTA-Stil an einer amerikanischen Highschool, ohne Gewalt *(Prototyp)* | Mechatroniker/-in, 10. Jahrgangsstufe | [`der-pate/`](der-pate/) |
 
 `index.html` im Hauptordner ist eine kleine Startseite mit Links zu allen Spielen.
 

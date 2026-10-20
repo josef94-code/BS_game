@@ -1,0 +1,60 @@
+{
+  "_info": "Missionen in Spielreihenfolge. 'station' ist die ID eines interaktiven Objekts in der Welt. 'ruf' = Grundbelohnung, je Aufgabe beim ersten Versuch gibt es zusätzlich 'bonus_pro_aufgabe'.",
+  "bonus_pro_aufgabe": 2,
+  "raenge": [
+    { "name": "Laufbursche", "ab": 0 },
+    { "name": "Lehrling", "ab": 100 },
+    { "name": "Capo", "ab": 250 },
+    { "name": "Consigliere", "ab": 450 }
+  ],
+  "quests": [
+    {
+      "id": "q01_licht",
+      "nr": 1,
+      "titel": "Flackerndes Licht",
+      "akt": "Akt 1 – Seltsame Vorfälle",
+      "auftraggeber": "pate",
+      "ruf": 30,
+      "dialog_start": "q01_start",
+      "dialog_ende": "q01_ende",
+      "station": "verteiler_licht",
+      "ziel_hin": "Untersuche die Abzweigdose der flackernden Leuchte an der Westwand.",
+      "aufgaben": ["et_led_strom", "et_uebergang_r", "et_klemme_waerme", "sr_5regeln", "sr_pruefer"],
+      "beweis": "b_schraubendreher",
+      "fund": ["Die Leuchte brennt wieder ruhig.", "Oben auf dem Kabelkanal liegt ein Schraubendreher. Nicht aus der Schulwerkstatt."],
+      "ziel_zurueck": "Bring den fremden Schraubendreher zum Paten."
+    },
+    {
+      "id": "q02_glocke",
+      "nr": 2,
+      "titel": "Die Glocke lügt",
+      "akt": "Akt 1 – Seltsame Vorfälle",
+      "auftraggeber": "pate",
+      "ruf": 35,
+      "dialog_start": "q02_start",
+      "dialog_ende": "q02_ende",
+      "station": "klingel",
+      "ziel_hin": "Untersuche die Klingelsteuerung an der Nordwand.",
+      "aufgaben": ["st_schliesser", "st_ziffern", "st_glocke_fehler", "st_glocke_fix"],
+      "beweis": "b_schaltplan",
+      "fund": ["Die Glocke schweigt – bis zur nächsten Pause.", "Hinter der Zeitschaltuhr klemmt ein zusammengefalteter Schaltplan. Jemand hat darauf herumgekritzelt."],
+      "ziel_zurueck": "Zeig dem Paten den durchgestrichenen Schaltplan."
+    },
+    {
+      "id": "q03_band",
+      "nr": 3,
+      "titel": "Stillstand",
+      "akt": "Akt 1 – Seltsame Vorfälle",
+      "auftraggeber": "pate",
+      "ruf": 40,
+      "dialog_start": "q03_start",
+      "dialog_ende": "q03_ende",
+      "station": "schaltschrank_band",
+      "ziel_hin": "Öffne den Schaltschrank des Förderbands und prüfe den Steuerstromkreis.",
+      "aufgaben": ["st_selbsthaltung_mc", "st_selbsthaltung", "st_bc_einstellen", "st_95_96"],
+      "beweis": "b_rose",
+      "fund": ["Das Band läuft wieder. Oben in der Cafeteria jubelt jemand.", "Und an der Hutschiene im Schaltschrank hängt … eine schwarze Rose."],
+      "ziel_zurueck": "Bring dem Paten, was du im Schaltschrank gefunden hast."
+    }
+  ]
+}
