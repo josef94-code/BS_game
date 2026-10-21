@@ -18,6 +18,7 @@ var pate_pos := Vector3(9.0, 0.0, 7.25)
 var licht_ok := false
 var glocke_ok := false
 var band_laeuft := false
+var netz_ok := false
 
 var _flacker_licht: OmniLight3D
 var _flacker_kegel: MeshInstance3D
@@ -41,6 +42,9 @@ var _schraubendreher: Node3D
 var _marker: Node3D
 var _sammel := {}
 var _zeit := 0.0
+var _led_mats: Array[StandardMaterial3D] = []
+var _nas_alarm: StandardMaterial3D
+var _led_takt := 0.0
 var _uhr_stunde: Node3D
 var _uhr_minute: Node3D
 
@@ -75,6 +79,7 @@ func _ready() -> void:
 	_schaltschrank()
 	_deko()
 	_details()
+	_netzwerkschrank()
 	_sammelobjekte()
 	_marker_bauen()
 
@@ -801,6 +806,77 @@ func _plakat(pos: Vector3, rot_y: float, text: String, farbe: Color) -> void:
 	l.shaded = true
 
 
+# ---------------------------------------------------------------- Auftrag 4: Netzwerkschrank +N1
+
+func _netzwerkschrank() -> void:
+	var r := Node3D.new()
+	r.position = Vector3(B - 0.42, 0, 1.4)
+	r.rotation.y = -PI / 2.0
+	add_child(r)
+	var schwarz := Bau.mat(Color(0.08, 0.08, 0.09), "metall", 1.0, 0.0, false, 0.5)
+	var grau := Bau.mat(Color(0.35, 0.36, 0.38), "metall", 1.0, 0.0, false, 0.45)
+	Bau.box(r, Vector3(0.62, 2.0, 0.8), Vector3(0, 1.0, 0), schwarz, true)
+	Bau.box(r, Vector3(0.56, 1.86, 0.01), Vector3(0, 1.02, 0.395), Bau.mat(Color(0.03, 0.03, 0.04), "", 1.0, 0.0))
+	# Patchfeld mit bunten Kabeln
+	Bau.box(r, Vector3(0.5, 0.08, 0.03), Vector3(0, 1.72, 0.39), grau)
+	var kabel := [Color(0.2, 0.45, 0.9), Color(0.95, 0.8, 0.1), Color(0.9, 0.2, 0.2), Color(0.2, 0.7, 0.3)]
+	for i in 12:
+		var x := -0.22 + i * 0.04
+		Bau.box(r, Vector3(0.018, 0.018, 0.03), Vector3(x, 1.72, 0.41), Bau.mat(kabel[i % 4], "", 1.0, 0.0))
+		var b := Bau.zylinder(r, 0.006, 0.17, Vector3(x, 1.64, 0.42), Bau.mat(kabel[i % 4], "", 1.0, 0.0), Vector3(0.2, 0, 0), false, -1.0, 5)
+		b.name = "Kabel%d" % i
+	# Switch, Router, Firewall mit LEDs
+	for g in [[1.56, Color(0.12, 0.12, 0.13), 16], [1.42, Color(0.22, 0.25, 0.3), 6], [1.28, Color(0.55, 0.08, 0.08), 6]]:
+		Bau.box(r, Vector3(0.52, 0.09, 0.03), Vector3(0, g[0], 0.39), Bau.mat(g[1], "metall", 1.0, 0.0, false, 0.5))
+		for i in int(g[2]):
+			var m := Bau.leucht(Color(0.2, 1.0, 0.3) if i % 5 else Color(1.0, 0.65, 0.1), 2.0)
+			Bau.box(r, Vector3(0.012, 0.012, 0.01), Vector3(-0.2 + i * 0.026, g[0] + 0.02, 0.41), m)
+			_led_mats.append(m)
+	# NAS mit vier Festplatten und Alarmleuchte
+	Bau.box(r, Vector3(0.5, 0.22, 0.03), Vector3(0, 1.02, 0.39), grau)
+	for i in 4:
+		Bau.box(r, Vector3(0.1, 0.17, 0.01), Vector3(-0.17 + i * 0.115, 1.02, 0.41), schwarz)
+	_nas_alarm = Bau.leucht(Color(1.0, 0.1, 0.05), 3.0)
+	Bau.box(r, Vector3(0.025, 0.025, 0.01), Vector3(0.22, 1.11, 0.41), _nas_alarm)
+	# USV unten
+	Bau.box(r, Vector3(0.52, 0.28, 0.03), Vector3(0, 0.3, 0.39), schwarz)
+	Bau.box(r, Vector3(0.1, 0.04, 0.01), Vector3(0.15, 0.36, 0.41), Bau.leucht(Color(0.3, 0.7, 1.0), 1.5))
+	# Glastür, Beschriftung
+	Bau.box(r, Vector3(0.6, 1.95, 0.01), Vector3(0, 1.0, 0.43), Bau.glas(Color(0.5, 0.6, 0.7, 0.12)))
+	Bau.schild(r, "+N1  NETZWERK", Vector3(0, 1.92, 0.44), 24, Color(0.95, 0.95, 0.9))
+	Bau.box(r, Vector3(0.2, 0.08, 0.005), Vector3(-0.15, 0.62, 0.44), Bau.mat(Color(0.95, 0.85, 0.2), "", 1.0, 0.0))
+	Bau.schild(r, "STERLING BAU\nFernwartung", Vector3(-0.15, 0.62, 0.445), 11, Color(0.15, 0.1, 0.35))
+	# Service-Notebook auf einem Rollwagen mit dem Anmeldeprotokoll
+	var w := Node3D.new()
+	w.position = Vector3(B - 0.75, 0, 0.45)
+	w.rotation.y = -PI / 2.0 + 0.3
+	add_child(w)
+	Bau.box(w, Vector3(0.5, 0.03, 0.4), Vector3(0, 0.8, 0), grau)
+	Bau.box(w, Vector3(0.5, 0.03, 0.4), Vector3(0, 0.25, 0), grau)
+	for dx in [-0.22, 0.22]:
+		for dz in [-0.17, 0.17]:
+			Bau.box(w, Vector3(0.025, 0.8, 0.025), Vector3(dx, 0.4, dz), grau)
+	Bau.box(w, Vector3(0.36, 0.02, 0.25), Vector3(0, 0.825, 0.02), schwarz)
+	var deckel := Node3D.new()
+	deckel.position = Vector3(0, 0.835, -0.105)
+	deckel.rotation.x = -0.25
+	w.add_child(deckel)
+	Bau.box(deckel, Vector3(0.36, 0.24, 0.012), Vector3(0, 0.12, 0), schwarz)
+	Bau.box(deckel, Vector3(0.33, 0.21, 0.002), Vector3(0, 0.12, 0.007), Bau.leucht(Color(0.02, 0.06, 0.03), 1.0))
+	var log := Bau.schild(deckel, "NAS-01  Anmeldungen\n22:47 sb-service  LOGIN\n22:49 v_band = 0,2 m/s\n22:51 DEL band_steuerung\n22:52 sb-service  LOGOUT", Vector3(0, 0.12, 0.009), 9, Color(0.3, 1.0, 0.45))
+	log.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	Bau.kollisionsbox(self, Vector3(0.8, 2.0, 0.62), Vector3(B - 0.42, 1.0, 1.4))
+	Bau.kollisionsbox(w, Vector3(0.5, 0.9, 0.4), Vector3(0, 0.45, 0))
+	_form(B - 0.42, 1.4, 0.8, 0.62, Color(0.2, 0.22, 0.25))
+	stationen["netzwerkschrank"] = Interaktiv.neu(self, "netzwerkschrank", Vector3(B - 1.35, 0, 1.4), "Netzwerkschrank +N1 untersuchen", 1.9)
+
+
+func netz_reparieren() -> void:
+	netz_ok = true
+	_nas_alarm.albedo_color = Color(0.1, 0.9, 0.3)
+	_nas_alarm.emission = Color(0.1, 0.9, 0.3)
+
+
 # ---------------------------------------------------------------- Kleinkram und Abnutzung
 
 func _details() -> void:
@@ -1115,6 +1191,16 @@ func _process(delta: float) -> void:
 			k.position.x += delta * 0.9
 			if k.position.x > B + 0.2:
 				k.position.x = 0.4
+	# Netzwerk-LEDs flackern, NAS-Alarm blinkt bis zur Reparatur
+	_led_takt -= delta
+	if _led_takt <= 0.0:
+		_led_takt = 0.08
+		for m in _led_mats:
+			m.emission_energy_multiplier = 2.5 if randf() > 0.35 else 0.2
+		if not netz_ok:
+			_nas_alarm.emission_energy_multiplier = 3.5 if fmod(_zeit, 1.0) < 0.5 else 0.1
+		else:
+			_nas_alarm.emission_energy_multiplier = 2.0
 	# Wanduhr
 	var minuten := float(Spielstand.d.get("uhrzeit", 1290.0))
 	_uhr_minute.rotation.z = -fmod(minuten, 60.0) / 60.0 * TAU

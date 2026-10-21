@@ -14,8 +14,8 @@ Nebel, Lichtinseln aus Glühbirnen und Leuchtstoffröhren, weicher PS2-Filter mi
 Ruf-Ziffern, Hilfe-Box oben links, Untertitel, Missionstitel unten rechts. Menü und Ladebildschirm zeigen den Paten
 als Porträt mit kräftigen Konturen.
 
-**Stand: Prototyp v0.3** – ein Raum (Hausmeisterkeller mit Büro des Paten) und drei Missionen aus Akt 1.
-Der Gesamtplan (drei Akte, 24 Missionen) steht in [`PLAN.md`](PLAN.md).
+**Stand: Prototyp v0.4** – ein Raum (Hausmeisterkeller mit Büro des Paten) und vier Missionen aus Akt 1.
+Seit v0.4 gibt es eine vierte Mission zu LtK (Lernfeld 5). Der Gesamtplan (drei Akte, 24 Missionen) steht in [`PLAN.md`](PLAN.md).
 
 ## Starten
 
@@ -63,12 +63,14 @@ Beweisen, Position und der Statistik je Aufgabe. Laden über das Hauptmenü oder
 | 1 | Flackerndes Licht | Leuchte, Abzweigdose -XD3 | I = P/U (Typenschild), Übergangswiderstand R = U/I, Verlustleistung P = U·I an der Klemme, fünf Sicherheitsregeln (Reihenfolge), zweipoliger Spannungsprüfer | LF 3 |
 | 2 | Die Glocke lügt | Klingelanlage: -FC2, -SF3, -KF1, -PB1 | Schließer/Öffner, Funktionsziffern (13–14, 11–12, 95–96, A1–A2), Fehlersuche am Stromlaufplan mit Messwerten, fachgerechtes Vorgehen | LF 3/4 |
 | 3 | Stillstand | Förderband, Schaltschrank +S1 | Selbsthaltung, Steuerstromkreis vervollständigen und im Probelauf testen, Motorschutzrelais -BC1 nach Typenschild einstellen, Hilfskontakt 95–96 | LF 4 |
+| 4 | Gelöschte Spuren | Netzwerkschrank +N1 (Switch, Router, Firewall, NAS) | Datenschutz vs. Datensicherheit, 3-2-1-1-0-Regel, RAID ist kein Backup, Schutzziele, Rechtekonzept für die Fernwartung | LF 5 (LtK) |
 
 Betriebsmittelkennzeichnung nach DIN EN 81346-2 (z. B. -FC Leitungsschutzschalter, -BC Motorschutzrelais, -QA Schütz,
 -SF Taster, -KF Zeitschaltuhr, -MA Motor), Schaltzeichen nach DIN EN 60617. Die Kennzeichnung der Glocke (-PB1) ist noch
 mit den Unterlagen abzugleichen.
-Die Inhalte orientieren sich am Lehrplan für Mechatroniker/-innen (10. Jahrgangsstufe, Lernfelder 3 und 4);
-Grundlage für die späteren Akte sind die Unterlagen im Ordner `/unterlagen`, sobald sie vorliegen.
+Grundlage sind die Lehrplanrichtlinien Mechatroniker/-in (Bayern, 2018) und die Didaktische Jahresplanung LtK 10
+(Lernfeld 5, Logistik und technische Kommunikation). Die Zuordnung jeder Aufgabe zu Fach und Lehrplaninhalt steht in
+[`unterlagen/QUELLEN.md`](unterlagen/QUELLEN.md).
 
 ### Lösungen (für die Lehrkraft)
 
@@ -89,6 +91,11 @@ Rechenaufgaben haben Zufallswerte (je Spielstand andere Zahlen, Toleranz 2 %):
 | Steuerstromkreis | Lücke 1: -SF1 Öffner, Lücken 2/3: -SF2 Schließer und -QA1 Schließer (13–14), Reihenfolge der Parallelzweige egal |
 | Motorschutz | Bemessungsstrom vom Typenschild (1,5 A / 1,9 A / 2,6 A) |
 | 95–96 | Öffner, öffnet bei Überlast → -QA1 fällt ab |
+| Datenschutz oder Datensicherheit? | Schutz der personenbezogenen Daten (Namen der Schüler) |
+| 3-2-1-1-0-Regel | 3 Kopien, 2 Medien, 1 außer Haus, 1 offline/unveränderbar, 0 Fehler bei der Wiederherstellungsprüfung |
+| RAID ist kein Backup | RAID 1 spiegelt auch das Löschen sofort mit |
+| Schutzziele | Integrität |
+| Wer darf was? | Fernwartung nur bei Bedarf, minimale Rechte, sicheres Passwort |
 
 ## Für die Lehrkraft
 

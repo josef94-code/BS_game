@@ -64,6 +64,22 @@
     { "s": "pate", "t": "Ab heute bist du kein Laufbursche mehr. Willkommen in der Familie, Lehrling." }
   ],
 
+  "q04_start": [
+    { "s": "pate", "t": "Noch nicht nach Hause, Lehrling. Ich habe eine Frage an dich: Wo liegt das Programm für das Förderband?" },
+    { "s": "spieler", "t": "In der Steuerung. Und eine Kopie auf der NAS im Netzwerkschrank, oder?" },
+    { "s": "pate", "t": "Lag. Kowalski wollte heute Abend die Sicherung einspielen. Die Datei ist weg. Gelöscht. Um 22:47 Uhr." },
+    { "s": "pate", "t": "Den Netzwerkschrank hat die Baufirma eingebaut. Förderband, Kasse, Klingel – alles hängt jetzt am Netz. Modern, sagen sie." },
+    { "s": "pate", "t": "Bring Ordnung in die Datensicherung. Und finde heraus, wer um 22:47 Uhr am Schrank war. Die Familie mag keine Geister." },
+    { "wahl": [ { "t": "Ich sehe mir den Schrank an.", "ok": true }, { "t": "Später.", "ok": false } ] }
+  ],
+  "q04_ende": [
+    { "s": "spieler", "t": "Die Datensicherung läuft jetzt nach der 3-2-1-1-0-Regel. Und das Fernwartungskonto ist gesperrt." },
+    { "s": "spieler", "t": "Um 22:47 Uhr hat sich „sb-service“ angemeldet. Das Konto gehört Sterling Bau – der Firma, die die Schule saniert hat." },
+    { "s": "pate", "t": "Sterling Bau. Die bauen uns neue Leitungen ein … und behalten den Schlüssel zum Keller." },
+    { "s": "pate", "t": "Ein Konto ist noch kein Täter, Lehrling. Jeder, der das Passwort kennt, kann es benutzen. Und „lincoln123“ errät sogar Kowalski." },
+    { "s": "pate", "t": "Aber jetzt wissen wir, wo wir suchen müssen. Die Familie vergisst nicht." }
+  ],
+
   "pate_abgelehnt": [ { "s": "pate", "t": "Die Familie wartet. Aber nicht ewig." } ],
   "pate_aktiv": [ { "s": "pate", "t": "Du hast einen Auftrag, Kleiner. Dein Ziel steht oben. Und auf der Karte ist es gelb markiert." } ],
   "pate_leerlauf": [

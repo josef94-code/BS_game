@@ -119,6 +119,8 @@ func _aufbauen() -> void:
 	var verdaechtige := "???"
 	if Spielstand.hat_beweis("b_rose"):
 		verdaechtige = "Eine rivalisierende „Familie“? Ihr Zeichen: die schwarze Rose."
+	if Spielstand.hat_beweis("b_protokoll"):
+		verdaechtige += "\nSterling Bau? Ihr Fernwartungskonto war um 22:47 Uhr aktiv."
 	_rechts.add_child(_zettel("VERDÄCHTIGE", verdaechtige, Color(0.75, 0.88, 1.0)))
 	var teile := []
 	for id in Daten.beweise.get("sammel", {}):

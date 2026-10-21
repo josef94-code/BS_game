@@ -104,6 +104,8 @@ func _anlage_reparieren(quest_id: String) -> void:
 			keller.glocke_reparieren()
 		"q03_band":
 			keller.band_starten()
+		"q04_netz":
+			keller.netz_reparieren()
 
 
 func _zustand_sichern() -> void:
@@ -255,12 +257,15 @@ func _station(id: String) -> void:
 			"Die Glocke schweigt – bis zur nächsten Pause. So soll es sein."],
 		"schaltschrank_band": ["Schaltschrank +S1 für das Förderband. Die Störungsleuchte brennt.",
 			"Schaltschrank +S1: Betriebsleuchte an, das Band läuft."],
+		"netzwerkschrank": ["Netzwerkschrank +N1 von Sterling Bau: Switch, Router, Firewall, NAS. An der NAS blinkt eine rote Leuchte.",
+			"Netzwerkschrank +N1: Die Sicherung läuft, das Fernwartungskonto ist gesperrt."],
 	}
 	var fertig := false
 	match id:
 		"verteiler_licht": fertig = keller.licht_ok
 		"klingel": fertig = keller.glocke_ok
 		"schaltschrank_band": fertig = keller.band_laeuft
+		"netzwerkschrank": fertig = keller.netz_ok
 	if texte.has(id):
 		hud.toast("Untersucht", texte[id][1 if fertig else 0])
 
@@ -298,8 +303,18 @@ func _fund_sequenz(q: Dictionary) -> void:
 				{"von": Vector3(8.4, 1.7, -6.6), "nach": Vector3(8.2, 1.5, -7.5), "blick_von": Vector3(8.05, 1.3, -8.45),
 					"dauer": 5.0, "t": fund[1], "aktion": func(): keller.schrank_oeffnen(true); Audio.spiele("beweis", -2.0)},
 			]
+		"q04_netz":
+			var b := Keller.B
+			shots = [
+				{"von": Vector3(b - 3.2, 1.8, 2.4), "nach": Vector3(b - 2.6, 1.6, 1.9), "blick_von": Vector3(b - 0.4, 1.2, 1.4),
+					"dauer": 4.0, "t": fund[0], "aktion": func(): keller.netz_reparieren(); Audio.spiele("richtig", -6.0)},
+				{"von": Vector3(b - 1.6, 1.35, 0.7), "nach": Vector3(b - 1.35, 1.2, 0.55), "blick_von": Vector3(b - 0.8, 0.95, 0.45),
+					"dauer": 5.0, "t": fund[1], "aktion": func(): Audio.spiele("beweis", -2.0)},
+			]
 	if not shots.is_empty():
+		spieler.visible = false
 		await sequenz.spiele(shots)
+		spieler.visible = true
 	_anlage_reparieren(q["id"])
 	if q["id"] == "q03_band":
 		keller.rose_entfernen()

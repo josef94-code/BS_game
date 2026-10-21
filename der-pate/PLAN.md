@@ -4,10 +4,9 @@
 portable Windows-`.exe` (PCK eingebettet, keine Installation, keine Admin-Rechte).
 Gesamtspielzeit ca. 3–4 h, 24 Hauptaufträge à ca. 6–10 min, dazu freies Erkunden und Sammelobjekte.
 
-> **Offener Punkt:** Der Ordner `/unterlagen` ist im Repository noch nicht vorhanden.
-> Die Quest-Liste unten ist deshalb **vorläufig** (Themen nach Lehrplan LF 1–5).
-> Sobald die Unterlagen hochgeladen sind, gleiche ich jede Aufgabe damit ab: nur Inhalte,
-> die dort erklärt werden, mit deren Begriffen und Kennzeichnungen (z. B. -BC, -FC, -QA).
+> **Unterlagen:** Lehrplanrichtlinien Mechatroniker/-in (Bayern 2018) und Didaktische Jahresplanung LtK 10
+> (LtK = Logistik und technische Kommunikation, LF 5). Zuordnung siehe [`unterlagen/QUELLEN.md`](unterlagen/QUELLEN.md).
+> Für Elektrotechnik und Automatisierungstechnik fehlen noch die eigenen Unterrichtsunterlagen.
 
 ---
 

@@ -55,6 +55,22 @@
       "beweis": "b_rose",
       "fund": ["Das Band läuft wieder. Oben in der Cafeteria jubelt jemand.", "Und an der Hutschiene im Schaltschrank hängt … eine schwarze Rose."],
       "ziel_zurueck": "Bring dem Paten, was du im Schaltschrank gefunden hast."
+    },
+    {
+      "id": "q04_netz",
+      "nr": 4,
+      "titel": "Gelöschte Spuren",
+      "akt": "Akt 1 – Seltsame Vorfälle",
+      "auftraggeber": "pate",
+      "ruf": 40,
+      "dialog_start": "q04_start",
+      "dialog_ende": "q04_ende",
+      "station": "netzwerkschrank",
+      "ziel_hin": "Untersuche den Netzwerkschrank an der Ostwand.",
+      "aufgaben": ["dv_datenschutz", "dv_32110", "dv_raid", "dv_schutzziel", "dv_rechte"],
+      "beweis": "b_protokoll",
+      "fund": ["Die Sicherung ist eingerichtet: drei Kopien, zwei Medien, eine außer Haus, eine offline.", "Und im Anmeldeprotokoll der NAS steht ein Name, der hier nichts verloren hat."],
+      "ziel_zurueck": "Zeig dem Paten das Anmeldeprotokoll."
     }
   ]
 }

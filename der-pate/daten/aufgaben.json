@@ -5,7 +5,7 @@
     "typ": "berechnung",
     "titel": "Typenschild der Leuchte",
     "thema": "Elektrotechnik",
-    "lehrplan": "LF 3 – Elektrische Größen, Leistung",
+    "lehrplan": "LF 3 – Elektrische Größen, deren Zusammenhänge und Berechnungen",
     "schwierigkeit": 1,
     "frage": "Auf dem Typenschild der LED-Hallenleuchte steht: P = {P} W, U = {U} V. Berechne die Stromstärke I, die im Betrieb fließt. (Rechne wie bei einem ohmschen Verbraucher.)",
     "variablen": { "P": [36, 46, 58, 69], "U": [230] },
@@ -24,7 +24,7 @@
     "typ": "berechnung",
     "titel": "Das Messprotokoll",
     "thema": "Elektrotechnik",
-    "lehrplan": "LF 3 – Ohmsches Gesetz",
+    "lehrplan": "LF 3 – Elektrische Größen, deren Zusammenhänge und Berechnungen",
     "schwierigkeit": 1,
     "frage": "Im Messprotokoll der Elektrofachkraft steht: Über der gelockerten Klemme in der Abzweigdose fällt eine Spannung von U = {U} V ab, durch die Klemme fließt I = {I} A. Wie groß ist der Übergangswiderstand R der Klemme?",
     "variablen": { "U": [2.3, 3.45, 4.6], "I": [0.16, 0.2, 0.25] },
@@ -43,7 +43,7 @@
     "typ": "berechnung",
     "titel": "Heiße Klemme",
     "thema": "Elektrotechnik",
-    "lehrplan": "LF 3 – Elektrische Leistung",
+    "lehrplan": "LF 3 – Elektrische Größen und Berechnungen; Gefahren durch Überlastung",
     "schwierigkeit": 1,
     "variablen_von": "et_uebergang_r",
     "frage": "Gleiches Protokoll: U = {U} V über der Klemme, I = {I} A. Welche Leistung wird an der Klemme in Wärme umgesetzt?",
@@ -61,8 +61,8 @@
   "sr_5regeln": {
     "typ": "sortieren",
     "titel": "Die fünf Sicherheitsregeln",
-    "thema": "Arbeitssicherheit",
-    "lehrplan": "LF 3 – Schutzmaßnahmen, sicheres Arbeiten (DIN VDE 0105-100)",
+    "thema": "Elektrotechnik",
+    "lehrplan": "LF 3 – Stromwirkung auf den Organismus, Sicherheitsregeln",
     "schwierigkeit": 1,
     "frage": "Bevor du die Abzweigdose öffnest: Bring die fünf Sicherheitsregeln in die richtige Reihenfolge (oben = zuerst).",
     "elemente": [
@@ -82,8 +82,8 @@
   "sr_pruefer": {
     "typ": "mc",
     "titel": "Das richtige Werkzeug",
-    "thema": "Arbeitssicherheit",
-    "lehrplan": "LF 3 – Schutzmaßnahmen, sicheres Arbeiten",
+    "thema": "Elektrotechnik",
+    "lehrplan": "LF 3 – Sicherheitsregeln, elektrische Messverfahren",
     "schwierigkeit": 1,
     "frage": "Womit stellst du die Spannungsfreiheit fest?",
     "optionen": [
@@ -104,7 +104,7 @@
     "typ": "mc",
     "titel": "Schließer oder Öffner?",
     "thema": "Automatisierungstechnik",
-    "lehrplan": "LF 4 – Schaltgeräte, Kontaktarten",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik",
     "schwierigkeit": 1,
     "frage": "Die Glocke soll nur läuten, solange der Kontakt der Zeitschaltuhr betätigt (eingeschaltet) ist. Dafür braucht man einen Schließer. Wie verhält sich ein Schließer?",
     "optionen": [
@@ -125,7 +125,7 @@
     "typ": "mc",
     "titel": "Klemmenbezeichnungen",
     "thema": "Automatisierungstechnik",
-    "lehrplan": "LF 4 – Schaltgeräte, Anschlussbezeichnungen",
+    "lehrplan": "LF 4 – Technische Unterlagen, Grundschaltungen der Steuerungstechnik",
     "schwierigkeit": 1,
     "frage": "Welche Anschlussbezeichnungen hat der Schließer am Taster -SF3?",
     "optionen": ["13 – 14", "11 – 12", "95 – 96", "A1 – A2"],
@@ -141,7 +141,7 @@
     "typ": "fehlersuche",
     "titel": "Die Glocke lügt",
     "thema": "Automatisierungstechnik",
-    "lehrplan": "LF 4 – Stromlaufpläne lesen, systematische Fehlersuche",
+    "lehrplan": "LF 4 – Technische Unterlagen, Signale und Messwerte in Steuerungssystemen",
     "schwierigkeit": 2,
     "frage": "Die Glocke läutet im Unterricht und schweigt in den Pausen. Die Zeitschaltuhr -KF1 steht gerade auf „Unterricht“, ihr Programm ist also AUS. Klicke die Betriebsmittel an, um die Messergebnisse zu sehen. Wähle dann das fehlerhafte Betriebsmittel.",
     "schaltplan": {
@@ -176,7 +176,7 @@
     "typ": "mc",
     "titel": "Fachgerecht beheben",
     "thema": "Automatisierungstechnik",
-    "lehrplan": "LF 3/4 – Sicheres Arbeiten, Inbetriebnahme",
+    "lehrplan": "LF 4 – Gefahren beim Umgang mit elektrischen Baugruppen; LF 3 – Sicherheitsregeln",
     "schwierigkeit": 2,
     "frage": "Die Leitung zur Glocke ist am Öffnerkontakt der Zeitschaltuhr -KF1 angeklemmt statt am Schließer. Wie gehst du vor?",
     "optionen": [
@@ -197,7 +197,7 @@
     "typ": "mc",
     "titel": "Was fehlt?",
     "thema": "Automatisierungstechnik",
-    "lehrplan": "LF 4 – Schützschaltungen, Selbsthaltung",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik (Selbsthaltung)",
     "schwierigkeit": 2,
     "frage": "Das Förderband läuft nur, solange jemand den Ein-Taster -SF2 gedrückt hält. Welche Funktion fehlt im Steuerstromkreis?",
     "optionen": [
@@ -218,7 +218,7 @@
     "typ": "schaltung",
     "titel": "Steuerstromkreis Förderband",
     "thema": "Automatisierungstechnik",
-    "lehrplan": "LF 4 – Schützschaltungen, Selbsthaltung, Stromlaufplan in aufgelöster Darstellung",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik, Schaltpläne lesen und ändern",
     "schwierigkeit": 2,
     "frage": "Jemand hat die Kontakte im Steuerstromkreis abgeklemmt. Setze die richtigen Betriebsmittel in die drei Lücken: Klicke eine Lücke an und wähle dann ein Betriebsmittel. Teste im Probelauf und prüfe dann.",
     "schaltplan": {
@@ -265,7 +265,7 @@
     "typ": "berechnung",
     "titel": "Motorschutz einstellen",
     "thema": "Automatisierungstechnik",
-    "lehrplan": "LF 4 – Motorschutzrelais, Typenschild",
+    "lehrplan": "LF 4 – Technische Unterlagen (Typenschild); LF 3 – Schutz bei Überlastung",
     "schwierigkeit": 2,
     "frage": "Typenschild des Bandmotors -MA1: 3~ Motor, 400 V Y, P = {P} kW, I = {I} A, cos φ = 0,78, n = 1400 1/min. Auf welchen Strom stellst du das Motorschutzrelais -BC1 ein?",
     "varianten": [ { "P": 0.55, "I": 1.5 }, { "P": 0.75, "I": 1.9 }, { "P": 1.1, "I": 2.6 } ],
@@ -284,7 +284,7 @@
     "typ": "mc",
     "titel": "Der Hilfskontakt 95–96",
     "thema": "Automatisierungstechnik",
-    "lehrplan": "LF 4 – Motorschutzrelais im Steuerstromkreis",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik; LF 3 – Schutz bei Überlastung",
     "schwierigkeit": 2,
     "frage": "Welche Aufgabe hat der Hilfskontakt 95–96 des Motorschutzrelais -BC1 im Steuerstromkreis?",
     "optionen": [
@@ -299,5 +299,108 @@
       "Vor Kurzschluss schützt der Leitungsschutzschalter -FC1. Das Motorschutzrelais überwacht die Überlast des Motors."
     ],
     "erklaerung": "95–96 ist ein Öffner. Bei Überlast löst das Motorschutzrelais aus, der Kontakt öffnet, -QA1 fällt ab und der Motor steht. Wegen der Selbsthaltung läuft der Motor danach nicht von allein wieder an."
+  },
+
+  "dv_datenschutz": {
+    "typ": "mc",
+    "titel": "Datenschutz oder Datensicherheit?",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Datenschutz und Datensicherheit",
+    "schwierigkeit": 2,
+    "frage": "Auf der NAS im Netzwerkschrank liegen die Programme der Förderbandsteuerung, die Betriebsdaten des Bandes und die Namen der Schüler, die in der Cafeteria mit Karte bezahlt haben. Was gehört zum Datenschutz?",
+    "optionen": [
+      "Die Namen der Schüler vor unbefugtem Zugriff zu schützen, weil es personenbezogene Daten sind",
+      "Die Programme der Bandsteuerung regelmäßig zu sichern, damit sie nicht verloren gehen",
+      "Die NAS mit einer USV gegen Stromausfall abzusichern",
+      "Die Betriebsdaten des Bandes auf zwei Festplatten zu spiegeln"
+    ],
+    "richtig": [0],
+    "tipps": [
+      "Datenschutz schützt Menschen, Datensicherheit schützt Daten.",
+      "Beim Datenschutz geht es um personenbezogene Daten und das Recht jedes Einzelnen auf seine Daten (DSGVO)."
+    ],
+    "erklaerung": "Datenschutz = Schutz personenbezogener Daten vor Missbrauch (DSGVO). Datensicherheit = Schutz aller Daten – auch Programme und Betriebsdaten – vor Verlust, Manipulation und unbefugtem Zugriff. Sichern, USV und Spiegeln sind Maßnahmen der Datensicherheit."
+  },
+
+  "dv_32110": {
+    "typ": "mc",
+    "titel": "Die 3-2-1-1-0-Regel",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Datenschutz und Datensicherheit (Datensicherung)",
+    "schwierigkeit": 2,
+    "frage": "Die einzige Sicherung des Bandprogramms lag auf derselben NAS – und ist jetzt weg. Der Pate will ein Sicherungskonzept nach der 3-2-1-1-0-Regel. Welche Aussagen gehören zu dieser Regel?",
+    "optionen": [
+      "3 Kopien der Daten (Original und zwei Sicherungen)",
+      "2 verschiedene Speichermedien",
+      "1 Kopie an einem anderen Ort (außer Haus)",
+      "1 Kopie offline bzw. unveränderbar",
+      "0 Fehler: Die Wiederherstellung wird geprüft",
+      "3 Passwörter für jeden Benutzer",
+      "2 Jahre Aufbewahrungspflicht für alle Daten"
+    ],
+    "richtig": [0, 1, 2, 3, 4],
+    "tipps": [
+      "Jede Ziffer steht für eine Anforderung an die Sicherung – Passwörter und Fristen gehören nicht dazu.",
+      "3 Kopien, 2 Medien, 1 außer Haus, 1 offline, 0 Fehler."
+    ],
+    "erklaerung": "3-2-1-1-0: drei Kopien, zwei verschiedene Medien, eine Kopie außer Haus, eine Kopie offline bzw. unveränderbar (gegen Schadsoftware und Sabotage) und null Fehler beim Prüfen der Wiederherstellung."
+  },
+
+  "dv_raid": {
+    "typ": "mc",
+    "titel": "RAID ist kein Backup",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Datenschutz und Datensicherheit (Datensicherung)",
+    "schwierigkeit": 2,
+    "frage": "Hausmeister Kowalski brummt: „Die NAS hat doch RAID 1 – die Daten sind doppelt da!“ Warum hat das RAID 1 das gelöschte Programm trotzdem nicht gerettet?",
+    "optionen": [
+      "RAID 1 spiegelt jede Änderung sofort auf die zweite Festplatte – auch das Löschen",
+      "RAID 1 speichert die Daten nur, solange die NAS eingeschaltet ist",
+      "RAID 1 funktioniert nur mit SSDs, nicht mit Festplatten",
+      "RAID 1 sichert nur Bilder und Dokumente, keine Programme"
+    ],
+    "richtig": [0],
+    "tipps": [
+      "Was passiert auf der zweiten Platte, wenn auf der ersten etwas gelöscht wird?",
+      "RAID schützt vor dem Ausfall einer Festplatte – nicht vor Fehlbedienung, Schadsoftware oder Sabotage."
+    ],
+    "erklaerung": "RAID 1 (Spiegelung) erhöht die Verfügbarkeit bei einem Plattendefekt. Löschungen und Manipulationen werden aber sofort mitgespiegelt. Ein RAID ersetzt deshalb keine Datensicherung."
+  },
+
+  "dv_schutzziel": {
+    "typ": "mc",
+    "titel": "Schutzziele",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Datenschutz und Datensicherheit (Schutzziele)",
+    "schwierigkeit": 2,
+    "frage": "Im Protokoll siehst du: Bevor das Programm gelöscht wurde, hat jemand die Bandgeschwindigkeit darin verändert. Welches Schutzziel wurde damit verletzt?",
+    "optionen": ["Integrität", "Vertraulichkeit", "Verfügbarkeit", "Ergonomie"],
+    "richtig": [0],
+    "tipps": [
+      "Die drei Schutzziele der Informationssicherheit: Vertraulichkeit, Integrität, Verfügbarkeit.",
+      "Hier wurden Daten nicht gelesen, sondern unbemerkt verändert."
+    ],
+    "erklaerung": "Integrität = Daten sind vollständig und unverändert. Vertraulichkeit = nur Berechtigte können Daten lesen. Verfügbarkeit = Daten und Systeme stehen bereit, wenn man sie braucht – die wurde durch das Löschen verletzt."
+  },
+
+  "dv_rechte": {
+    "typ": "mc",
+    "titel": "Wer darf was?",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Zugriffsrechte, Netzwerk- und Kommunikationssicherheit",
+    "schwierigkeit": 2,
+    "frage": "Im Rechtekonzept der Anlage steht: Das Fernwartungskonto „sb-service“ der Baufirma hat Administratorrechte, ist rund um die Uhr freigeschaltet und hat das Passwort „lincoln123“. Welche Maßnahme ist richtig?",
+    "optionen": [
+      "Fernwartung nur bei Bedarf freischalten, nur die nötigen Rechte vergeben und ein sicheres Passwort setzen",
+      "Das Passwort auf einen Zettel am Schaltschrank schreiben, damit es nicht vergessen wird",
+      "Allen Schülern ebenfalls Administratorrechte geben, damit sie Fehler beheben können",
+      "Nichts ändern – die Baufirma hat die Anlage ja eingebaut"
+    ],
+    "richtig": [0],
+    "tipps": [
+      "Jeder bekommt nur die Rechte, die er für seine Aufgabe braucht.",
+      "Denk an technische und organisatorische Maßnahmen: Wer, wann, mit welchen Rechten – und mit welchem Passwort?"
+    ],
+    "erklaerung": "Prinzip der minimalen Rechte: Ein Fernwartungszugang wird nur für die Dauer der Wartung freigeschaltet, bekommt nur die nötigen Rechte und ein sicheres, nicht geteiltes Passwort. Anmeldungen werden protokolliert."
   }
 }
