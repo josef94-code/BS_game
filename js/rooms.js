@@ -117,7 +117,7 @@ ROOMS.umkleide = {
       Game.ask(`Die alte Stempeluhr tickt. Stempelkarte: ${p ? p.klasse + ' – ' + p.name : '?'}. Auf welchen Platz speichern?`, [
         ...Array.from({ length: Saves.SLOTS }, (_, i) => ({ t: `Platz ${i + 1}: ${Saves.info(Saves.get(i))}`, f: () => {
           Snd.play('clank');
-          Game.say(Game.save(i) ? `KA-CHUNK. Die Uhr stanzt die Zeit in deine Stempelkarte. Gespeichert auf Platz ${i + 1}.` : 'Die Uhr klemmt. (Speichern im Browser nicht möglich – nutze im Titelmenü „Spielstand als Datei speichern“.)');
+          Game.say(Game.save(i) ? `KA-CHUNK. Die Uhr stanzt die Zeit in deine Stempelkarte. Gespeichert auf Platz ${i + 1}${Saves.mode === 'file' ? ' (Datei „' + FileLink.name + '“)' : ''}.` : 'Die Uhr klemmt. (Speichern im Browser nicht möglich – nutze im Titelmenü „Spielstand als Datei speichern“.)');
         } })),
         { t: 'Ausstempeln (zum Titelmenü – vorher speichern!)', f: () => Game.ask('Wirklich zum Titelmenü? Nicht gespeicherter Fortschritt seit dem letzten Speichern geht verloren.', [{ t: 'Ja, zum Titelmenü', f: () => Game.toTitle() }, { t: 'Nein', f: () => {} }]) },
         { t: 'Abbrechen', f: () => {} },

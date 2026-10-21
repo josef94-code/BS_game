@@ -251,3 +251,8 @@ svg.vs .hz { fill: #6a2a1a; stroke: #f84; stroke-width: 1.5; }
 .newp { display: flex; gap: 0.4em; margin: 0.6em 0; }
 .newp .inp { flex: 1; min-width: 0; }
 #title .menu .btn.small { min-width: 0; }
+
+.ort { margin-top: 0.8em; }
+.ort p { margin: 0.3em 0; }
+.flstat { font-size: 0.6em; color: #9a9480; margin: 0.4em 0 0; }
+.warn { color: #f88; }

@@ -22,6 +22,8 @@ python3 tools/build.py
 
 Spielstände werden im Browser gespeichert: Jedes **Profil (Klasse + Name)** hat **5 Speicherplätze** (Stempeluhren in Umkleide und Kellergang) plus einen **Autosave** nach jeder Reparatur. Über „Spielstand als Datei speichern“ / „Spielstand-Datei laden …“ im Titelmenü lassen sich Profile auf andere Rechner mitnehmen oder bei der Lehrkraft abgeben. Ein Spielstand der ersten Version wird beim ersten Start automatisch als Profil „Bisheriger Spielstand“ übernommen.
 
+**Spielstände in der Cloud (Chrome/Edge am PC):** Unter *Spielen → Profil wechseln → Speicherort* lässt sich eine **Spielstand-Datei** verbinden („Spielstand-Datei öffnen …“ bzw. „Neue Spielstand-Datei anlegen …“). Liegt sie in einem synchronisierten Cloud-Ordner (OneDrive, Google Drive, Nextcloud …), schreibt das Spiel jeden Speichervorgang direkt hinein – auf jedem Rechner, auf dem dieselbe Datei verbunden wird, geht es mit demselben Stand weiter. Der Browser merkt sich die Verbindung; nach einem Neustart genügt ein Klick zur Freigabe. Solange eine Datei verbunden ist, werden nur die Profile aus dieser Datei angezeigt (wichtig an geteilten Schulrechnern). Hinweise: Firefox, Safari, iPad und Handy unterstützen das nicht (dort Export/Import nutzen); nicht gleichzeitig auf zwei Rechnern mit derselben Datei spielen.
+
 ## Steuerung
 
 | Taste | Funktion |

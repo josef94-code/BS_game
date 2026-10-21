@@ -687,6 +687,7 @@ window.addEventListener('load', () => {
   // Titel
   Saves.read();
   TitleMenu.show('main');
+  FileLink.restore().then(() => { if (Game.mode === 'title' && TitleMenu.screen === 'main') TitleMenu.show('main'); });
   // Touch
   document.querySelectorAll('#touch [data-k]').forEach(b => {
     const k = b.dataset.k;

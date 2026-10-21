@@ -259,6 +259,11 @@ svg.vs .hz { fill: #6a2a1a; stroke: #f84; stroke-width: 1.5; }
 .newp .inp { flex: 1; min-width: 0; }
 #title .menu .btn.small { min-width: 0; }
 
+.ort { margin-top: 0.8em; }
+.ort p { margin: 0.3em 0; }
+.flstat { font-size: 0.6em; color: #9a9480; margin: 0.4em 0 0; }
+.warn { color: #f88; }
+
 </style>
 </head>
 <body>
@@ -1184,7 +1189,7 @@ ROOMS.umkleide = {
       Game.ask(`Die alte Stempeluhr tickt. Stempelkarte: ${p ? p.klasse + ' – ' + p.name : '?'}. Auf welchen Platz speichern?`, [
         ...Array.from({ length: Saves.SLOTS }, (_, i) => ({ t: `Platz ${i + 1}: ${Saves.info(Saves.get(i))}`, f: () => {
           Snd.play('clank');
-          Game.say(Game.save(i) ? `KA-CHUNK. Die Uhr stanzt die Zeit in deine Stempelkarte. Gespeichert auf Platz ${i + 1}.` : 'Die Uhr klemmt. (Speichern im Browser nicht möglich – nutze im Titelmenü „Spielstand als Datei speichern“.)');
+          Game.say(Game.save(i) ? `KA-CHUNK. Die Uhr stanzt die Zeit in deine Stempelkarte. Gespeichert auf Platz ${i + 1}${Saves.mode === 'file' ? ' (Datei „' + FileLink.name + '“)' : ''}.` : 'Die Uhr klemmt. (Speichern im Browser nicht möglich – nutze im Titelmenü „Spielstand als Datei speichern“.)');
         } })),
         { t: 'Ausstempeln (zum Titelmenü – vorher speichern!)', f: () => Game.ask('Wirklich zum Titelmenü? Nicht gespeicherter Fortschritt seit dem letzten Speichern geht verloren.', [{ t: 'Ja, zum Titelmenü', f: () => Game.toTitle() }, { t: 'Nein', f: () => {} }]) },
         { t: 'Abbrechen', f: () => {} },
@@ -3396,26 +3401,41 @@ Object.assign(PUZZLES, {
 'use strict';
 // ------------------------------------------------------------
 //  Spielstände: Profile (Klasse + Name), je 5 Speicherplätze + Autosave,
-//  Export/Import als Datei, Übernahme des alten Einzel-Spielstands
+//  Export/Import als Datei, Übernahme des alten Einzel-Spielstands,
+//  optional: verbundene Spielstand-Datei (z. B. im Cloud-Ordner)
 // ------------------------------------------------------------
 const Saves = {
   KEY: 'nachtschicht_profiles_v2',
   OLD: 'nachtschicht_save_v1',
   SLOTS: 5,
   db: null,
+  localDb: null,
+  mode: 'local', // 'local' = nur im Browser, 'file' = verbundene Spielstand-Datei
   cur: null,
   ok: true,
 
   read() {
     let db = null;
     try { db = JSON.parse(localStorage.getItem(this.KEY)); } catch (e) { this.ok = false; }
-    this.db = db && db.profiles ? db : { profiles: {}, last: null };
+    this.localDb = this.db = db && db.profiles ? db : { profiles: {}, last: null };
     this.migrate();
-    if (this.db.last && this.db.profiles[this.db.last]) this.cur = this.db.last;
+    this.pickLast();
   },
+  pickLast() { this.cur = this.db.last && this.db.profiles[this.db.last] ? this.db.last : null; },
   write() {
+    if (this.mode === 'file') { FileLink.push(this.fileData()); return true; }
     try { localStorage.setItem(this.KEY, JSON.stringify(this.db)); return true; } catch (e) { this.ok = false; return false; }
   },
+  fileData() { return { type: 'nachtschicht-spielstaende', version: 2, profiles: this.db.profiles, last: this.db.last }; },
+  // Inhalt einer Spielstand-Datei in eine Profil-Datenbank umwandeln
+  normalize(d) {
+    if (!d) return { profiles: {}, last: null };
+    if (d.type === 'nachtschicht-profil' && d.profile) { const id = this.pid(d.profile.klasse || 'Ohne Klasse', d.profile.name); return { profiles: { [id]: d.profile }, last: id }; }
+    if (d.type === 'nachtschicht-spielstaende' && d.profiles) return { profiles: d.profiles, last: d.last || null };
+    return null;
+  },
+  useFile(db) { this.mode = 'file'; this.db = db; this.pickLast(); },
+  useLocal() { this.mode = 'local'; this.db = this.localDb; this.pickLast(); },
   // Alten Spielstand (Version mit nur einem Speicherplatz) einmalig übernehmen
   migrate() {
     if (this.db.migrated) return;
@@ -3505,6 +3525,112 @@ const Saves = {
 };
 
 // ------------------------------------------------------------
+//  Verbundene Spielstand-Datei (File System Access API, Chrome/Edge am PC).
+//  Liegt die Datei in einem synchronisierten Cloud-Ordner (OneDrive, Google
+//  Drive, Nextcloud …), sind die Spielstände auf jedem Rechner verfügbar.
+// ------------------------------------------------------------
+const FileLink = {
+  supported: typeof window.showOpenFilePicker === 'function' && typeof window.showSaveFilePicker === 'function' && 'indexedDB' in window,
+  handle: null,
+  name: null,
+  status: 'none', // 'none' | 'needs-permission' | 'ok' | 'error'
+  queue: Promise.resolve(),
+  TYPES: [{ description: 'Nachtschicht-Spielstände', accept: { 'application/json': ['.json'] } }],
+
+  idb(op, val) {
+    return new Promise(res => {
+      try {
+        const rq = indexedDB.open('nachtschicht', 1);
+        rq.onupgradeneeded = () => rq.result.createObjectStore('kv');
+        rq.onerror = () => res(null);
+        rq.onsuccess = () => {
+          try {
+            const tx = rq.result.transaction('kv', op === 'get' ? 'readonly' : 'readwrite'), st = tx.objectStore('kv');
+            const r = op === 'get' ? st.get('fileHandle') : op === 'set' ? st.put(val, 'fileHandle') : st.delete('fileHandle');
+            r.onsuccess = () => res(op === 'get' ? r.result : true); r.onerror = () => res(null);
+          } catch (e) { res(null); }
+        };
+      } catch (e) { res(null); }
+    });
+  },
+  // Beim Start: gemerkte Datei wiederfinden
+  async restore() {
+    if (!this.supported) return;
+    const h = await this.idb('get');
+    if (!h) return;
+    this.handle = h; this.name = h.name;
+    let perm = 'prompt';
+    try { perm = await h.queryPermission({ mode: 'readwrite' }); } catch (e) { /* alter Browser */ }
+    if (perm === 'granted') await this.pull(); else this.status = 'needs-permission';
+  },
+  // Freigabe einholen (muss aus einem Klick heraus passieren)
+  async ensure() {
+    if (this.status !== 'needs-permission' || !this.handle) return this.status === 'ok';
+    let perm = 'denied';
+    try { perm = await this.handle.requestPermission({ mode: 'readwrite' }); } catch (e) { /* abgelehnt */ }
+    if (perm !== 'granted') return false;
+    return this.pull();
+  },
+  // Datei lesen und als aktive Spielstände übernehmen
+  async pull() {
+    try {
+      const f = await this.handle.getFile();
+      const txt = (await f.text()).trim();
+      const db = txt ? Saves.normalize(JSON.parse(txt)) : { profiles: {}, last: null };
+      if (!db) throw new Error('Keine Nachtschicht-Spielstanddatei');
+      this.status = 'ok';
+      Saves.useFile(db);
+      return true;
+    } catch (e) {
+      this.status = 'error'; this.error = e.message;
+      Saves.useLocal();
+      return false;
+    }
+  },
+  push(data) {
+    if (!this.handle) return;
+    const json = JSON.stringify(data, null, 1);
+    try { localStorage.setItem('nachtschicht_file_backup', json); } catch (e) { /* egal */ }
+    this.queue = this.queue.then(async () => {
+      const w = await this.handle.createWritable();
+      await w.write(json); await w.close();
+      if (this.status === 'error') this.status = 'ok';
+    }).catch(e => {
+      this.status = 'error'; this.error = e.message;
+      if (typeof Game !== 'undefined' && Game.toast) Game.toast('Achtung: Speichern in „' + this.name + '“ fehlgeschlagen! Spielstand bitte zusätzlich exportieren.', 6);
+    });
+    return this.queue;
+  },
+  async attach(h, takeOver) {
+    this.handle = h; this.name = h.name;
+    await this.idb('set', h);
+    if (takeOver) { this.status = 'ok'; Saves.useFile(takeOver); await this.push(Saves.fileData()); return true; }
+    return this.pull();
+  },
+  // Bestehende Datei öffnen
+  async openExisting() {
+    const [h] = await window.showOpenFilePicker({ types: this.TYPES, multiple: false });
+    let perm = 'granted';
+    try { perm = await h.requestPermission({ mode: 'readwrite' }); } catch (e) { /* ältere Version */ }
+    if (perm !== 'granted') throw new Error('Keine Schreibberechtigung für die Datei.');
+    return this.attach(h);
+  },
+  // Neue Datei anlegen; optional das aktuelle Profil mitnehmen
+  async createNew(profileId) {
+    const p = profileId ? Saves.db.profiles[profileId] : null;
+    const h = await window.showSaveFilePicker({ suggestedName: p ? ('nachtschicht_' + p.klasse + '_' + p.name).replace(/[^\wäöüÄÖÜß-]+/g, '_') + '.json' : 'nachtschicht_spielstaende.json', types: this.TYPES });
+    const db = p ? { profiles: { [profileId]: JSON.parse(JSON.stringify(p)) }, last: profileId } : { profiles: {}, last: null };
+    return this.attach(h, db);
+  },
+  async unlink() {
+    await this.queue;
+    await this.idb('del');
+    this.handle = null; this.name = null; this.status = 'none';
+    Saves.useLocal();
+  },
+};
+
+// ------------------------------------------------------------
 //  Titelmenü: Profilwahl und Speicherplätze
 // ------------------------------------------------------------
 const TitleMenu = {
@@ -3514,16 +3640,26 @@ const TitleMenu = {
     const el = $('#title .menu');
     const e = this.esc;
     if (this.screen === 'main') {
-      el.innerHTML = `<button class="btn play">Spielen</button><button class="btn help">Steuerung</button>`;
-      el.querySelector('.play').onclick = () => this.show(Saves.profile() ? 'profile' : 'profiles');
+      const fl = FileLink.status === 'ok' ? `Spielstand-Datei: <b>${e(FileLink.name)}</b> ✔` : FileLink.status === 'needs-permission' ? `Spielstand-Datei: <b>${e(FileLink.name)}</b> – beim Klick auf „Spielen“ freigeben` : FileLink.status === 'error' ? `<span class="warn">Spielstand-Datei „${e(FileLink.name || '')}“ nicht lesbar – es wird im Browser gespeichert.</span>` : '';
+      el.innerHTML = `<button class="btn play">Spielen</button><button class="btn help">Steuerung</button>${fl ? `<p class="flstat">${fl}</p>` : ''}`;
+      el.querySelector('.play').onclick = async () => {
+        if (FileLink.status === 'needs-permission' && !(await FileLink.ensure())) alert('Ohne Freigabe kann die Spielstand-Datei nicht benutzt werden. Es wird nur im Browser gespeichert.');
+        this.show(Saves.profile() ? 'profile' : 'profiles');
+      };
       el.querySelector('.help').onclick = () => $('#helpbox').classList.toggle('hidden');
     } else if (this.screen === 'profiles') {
       const groups = Saves.groups();
       el.innerHTML = `<div class="pbox"><h3>Wer spielt?</h3>
         ${groups.length ? groups.map(g => `<div class="kl"><div class="klh">${e(g.klasse)}</div>${g.list.map(p => `<div class="prow"><button class="btn pick" data-id="${e(p.id)}">${e(p.name)}</button><span class="pinfo">${e(Saves.info(Saves.latestOf(p)))}</span><button class="btn small del" data-id="${e(p.id)}" title="Profil löschen">🗑</button></div>`).join('')}</div>`).join('') : '<p class="note">Noch keine Profile. Leg unten eins an.</p>'}
         <div class="newp"><input class="inp" id="pk" placeholder="Klasse, z. B. MT10a" maxlength="20"><input class="inp" id="pn" placeholder="Name" maxlength="30"><button class="btn mk">Profil anlegen</button></div>
-        <div class="row"><button class="btn imp">Spielstand-Datei laden …</button><button class="btn back">Zurück</button></div>
+        <div class="row"><button class="btn imp">Export-Datei importieren …</button><button class="btn back">Zurück</button></div>
         <input type="file" id="impf" accept=".json,application/json" class="hidden">
+        <div class="ort"><div class="klh">SPEICHERORT</div>
+        ${Saves.mode === 'file' ? `<p>Spielstand-Datei: <b>${e(FileLink.name)}</b>${FileLink.status === 'error' ? ' <span class="warn">(Fehler beim Speichern!)</span>' : ' ✔'}<br><span class="note">Liegt sie in deinem Cloud-Ordner (OneDrive, Google Drive …), sind die Spielstände auf jedem Rechner verfügbar, auf dem du dieselbe Datei verbindest.</span></p>
+          <div class="row"><button class="btn unl">Verbindung trennen</button></div>`
+        : FileLink.supported ? `<p class="note">Zurzeit nur in diesem Browser. Verbinde eine Spielstand-Datei in deinem Cloud-Ordner, dann kannst du überall weiterspielen.</p>
+          <div class="row"><button class="btn fopen">Spielstand-Datei öffnen …</button><button class="btn fnew">Neue Spielstand-Datei anlegen …</button></div>`
+        : `<p class="note">Zurzeit nur in diesem Browser. Spielstand-Dateien im Cloud-Ordner gehen nur mit Chrome oder Edge am PC. Alternative: Export/Import.</p>`}</div>
         ${Saves.ok ? '' : '<p class="note">Achtung: Dieser Browser erlaubt kein Speichern. Spielstände gehen beim Schließen verloren – nutze den Export.</p>'}</div>`;
       el.querySelectorAll('.pick').forEach(b => b.onclick = () => { Saves.select(b.dataset.id); Snd.play && Snd.play('select'); this.show('profile'); });
       el.querySelectorAll('.del').forEach(b => b.onclick = () => {
@@ -3542,6 +3678,14 @@ const TitleMenu = {
         Saves.importFile(f, (id, err) => { if (err) alert(err); if (id) this.show('profile'); });
       };
       el.querySelector('.back').onclick = () => this.show('main');
+      const fail = err => { if (err && err.name !== 'AbortError') alert('Das hat nicht geklappt: ' + (err.message || err)); this.show('profiles'); };
+      const fo = el.querySelector('.fopen'); if (fo) fo.onclick = () => FileLink.openExisting().then(ok => { if (!ok) alert('Die Datei ist keine Nachtschicht-Spielstanddatei.'); this.show(Saves.profile() ? 'profile' : 'profiles'); }, fail);
+      const fn = el.querySelector('.fnew'); if (fn) fn.onclick = () => {
+        const p = Saves.profile();
+        const take = p && confirm(`Das Profil „${p.klasse} – ${p.name}“ mit seinen Spielständen in die neue Datei übernehmen?`);
+        FileLink.createNew(take ? Saves.cur : null).then(() => this.show(Saves.profile() ? 'profile' : 'profiles'), fail);
+      };
+      const un = el.querySelector('.unl'); if (un) un.onclick = () => { if (confirm('Verbindung zur Spielstand-Datei trennen? Die Datei bleibt erhalten, gespeichert wird dann nur noch im Browser.')) FileLink.unlink().then(() => this.show('profiles')); };
     } else if (this.screen === 'profile') {
       const p = Saves.profile();
       if (!p) { this.show('profiles'); return; }
@@ -3549,7 +3693,7 @@ const TitleMenu = {
       el.innerHTML = `<div class="pbox"><h3>${e(p.klasse)} – ${e(p.name)}</h3>
         <div class="row"><button class="btn nw">Neues Spiel</button></div>
         ${row('auto', 'Autosave')}${Array.from({ length: Saves.SLOTS }, (_, i) => row(i, 'Platz ' + (i + 1))).join('')}
-        <p class="note">Speichern im Spiel an den Stempeluhren (Umkleide, Kellergang). Nach jeder Reparatur wird automatisch gesichert.</p>
+        <p class="note">Speichern im Spiel an den Stempeluhren (Umkleide, Kellergang). Nach jeder Reparatur wird automatisch gesichert.<br>Gespeichert wird ${Saves.mode === 'file' ? `in der Datei <b>${e(FileLink.name)}</b>.` : 'nur in diesem Browser (unter „Profil wechseln“ kannst du eine Spielstand-Datei verbinden).'}</p>
         <div class="row"><button class="btn ex">Spielstand als Datei speichern</button><button class="btn sw">Profil wechseln</button></div></div>`;
       el.querySelector('.nw').onclick = () => Game.start(null);
       el.querySelectorAll('.ld').forEach(b => b.onclick = () => { const r = Saves.get(b.dataset.s === 'auto' ? 'auto' : +b.dataset.s); if (r) Game.start(r.state); });
@@ -4251,6 +4395,7 @@ window.addEventListener('load', () => {
   // Titel
   Saves.read();
   TitleMenu.show('main');
+  FileLink.restore().then(() => { if (Game.mode === 'title' && TitleMenu.screen === 'main') TitleMenu.show('main'); });
   // Touch
   document.querySelectorAll('#touch [data-k]').forEach(b => {
     const k = b.dataset.k;
