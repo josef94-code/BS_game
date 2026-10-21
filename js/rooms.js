@@ -113,9 +113,14 @@ ROOMS.umkleide = {
     } },
     { u: 0.62, v: 0.13, label: 'Spiegel', use() { Game.say(G.hp > 66 ? 'Du siehst müde aus. Aber entschlossen.' : 'Du siehst übel aus. Vielleicht solltest du dich verarzten.'); } },
     { u: 0.74, v: 0.13, label: 'Stempeluhr (Speichern)', use() {
-      Game.ask('Die alte Stempeluhr tickt. Willst du deinen Fortschritt festhalten?', [
-        { t: 'Einstempeln (Speichern)', f: () => { Snd.play('clank'); Game.say(Game.save() ? 'KA-CHUNK. Die Uhr stanzt die Zeit in deine Stempelkarte. Gespeichert.' : 'Die Uhr klemmt. (Speichern im Browser nicht möglich.)'); } },
-        { t: 'Lieber nicht', f: () => {} },
+      const p = Saves.profile();
+      Game.ask(`Die alte Stempeluhr tickt. Stempelkarte: ${p ? p.klasse + ' – ' + p.name : '?'}. Auf welchen Platz speichern?`, [
+        ...Array.from({ length: Saves.SLOTS }, (_, i) => ({ t: `Platz ${i + 1}: ${Saves.info(Saves.get(i))}`, f: () => {
+          Snd.play('clank');
+          Game.say(Game.save(i) ? `KA-CHUNK. Die Uhr stanzt die Zeit in deine Stempelkarte. Gespeichert auf Platz ${i + 1}.` : 'Die Uhr klemmt. (Speichern im Browser nicht möglich – nutze im Titelmenü „Spielstand als Datei speichern“.)');
+        } })),
+        { t: 'Ausstempeln (zum Titelmenü – vorher speichern!)', f: () => Game.ask('Wirklich zum Titelmenü? Nicht gespeicherter Fortschritt seit dem letzten Speichern geht verloren.', [{ t: 'Ja, zum Titelmenü', f: () => Game.toTitle() }, { t: 'Nein', f: () => {} }]) },
+        { t: 'Abbrechen', f: () => {} },
       ]);
     } },
     { u: 0.87, v: 0.13, label: 'Aushang', use() { Game.addFile('aushang'); } },
@@ -887,7 +892,7 @@ ROOMS.buero = {
     { u: 0.58, v: 0.18, label: 'Kalender', use() { Game.say('Oktober. Der Montag ist dick rot umkringelt: „LIEFERUNG 2000 STK – 6:00 !!!“'); } },
     { u: 0.3, v: 0.18, label: 'Fenster zur Halle', use() { Game.say(Game.hallLight() ? 'Von hier oben sieht man die ganze Halle. Das Licht brennt. Sieht fast wieder aus wie eine Fabrik.' : 'Unten ist alles schwarz. Nur das Mondlicht malt Streifen auf den Hallenboden. War da gerade eine Bewegung beim Rolltor?'); } },
     { u: 0.96, v: 0.52, label: 'Erste-Hilfe-Kasten', glint: () => !Game.flag('eh_buero'), gh: 50, use: firstAid('eh_buero', 1) },
-    { u: 0.03, v: 0.26, r: 30, label: 'Tür zur Halle', use() { Game.goto('halle', 0.93, 0.2, 'L'); } },
+    { u: 0.03, v: 0.26, r: 30, label: 'Tür zur Halle', use() { Game.goto('halle', 0.955, 0.2, 'L'); } },
   ],
 };
 

@@ -13,7 +13,6 @@ const FIXES = [
   { id: 'steuerung', name: 'Bandsteuerung' },
   { id: 'ofen', name: 'Trockenofen' },
 ];
-const SAVE_KEY = 'nachtschicht_save_v1';
 
 let G = null; // Spielzustand (wird gespeichert)
 
@@ -207,24 +206,31 @@ const Game = {
   enter(room, u, v, dir) {
     G.room = room; G.u = u; G.v = v; G.dir = dir || G.dir;
     const R = ROOMS[room];
+    this.unstick(R);
     $('#roomname').textContent = R.name;
     $('#roomname').classList.remove('show'); void $('#roomname').offsetWidth; $('#roomname').classList.add('show');
     if (R.onEnter) R.onEnter();
   },
 
   // ---------- Speichern ----------
-  save() {
-    try { localStorage.setItem(SAVE_KEY, JSON.stringify(G)); return true; } catch (e) { return false; }
-  },
-  hasSave() { try { return !!localStorage.getItem(SAVE_KEY); } catch (e) { return false; } },
-  load() {
-    try { const s = JSON.parse(localStorage.getItem(SAVE_KEY)); if (!s) return false; G = Object.assign(newState(), s); return true; } catch (e) { return false; }
+  save(slot) { return Saves.save(slot === undefined ? 'auto' : slot); },
+  toTitle() {
+    ['#dialog', '#choices', '#inventory', '#modal'].forEach(q => $(q).classList.add('hidden'));
+    G = null; this.mode = 'title'; this.shadow = null; this.keys = {};
+    $('#prompt').innerHTML = ''; $('#prompt').dataset.t = '';
+    $('#roomname').classList.remove('show'); $('#toast').innerHTML = '';
+    $('#title').classList.remove('hidden');
+    TitleMenu.show('profile');
   },
 
   // ---------- Start / Ende ----------
-  start(load) {
+  // state: geladener Spielstand oder null für ein neues Spiel
+  start(state) {
     Snd.init();
-    if (load && this.load()) { /* geladen */ } else { G = newState(); }
+    const load = !!state;
+    G = load ? Object.assign(newState(), JSON.parse(JSON.stringify(state))) : newState();
+    ['#dialog', '#choices', '#inventory', '#modal'].forEach(q => $(q).classList.add('hidden'));
+    this.shadow = null;
     $('#title').classList.add('hidden');
     this.bgCache = {};
     this.enter(G.room, G.u, G.v, G.dir);
@@ -244,9 +250,10 @@ const Game = {
     Snd.play('sting');
     const p = this.modal(`<div class="gameover"><h1>ARBEITSUNFALL</h1><p>${why || 'Du bist schwer verletzt.'}</p>
       <p class="note">Merke: Sicherheit geht vor. Jeder Unfall ist einer zu viel.</p>
-      <div class="row">${this.hasSave() ? '<button class="btn ld">Letzten Speicherstand laden</button>' : ''}<button class="btn nw">Neu beginnen</button></div></div>`, { noClose: true, cls: 'dark' });
-    const ld = p.querySelector('.ld'); if (ld) ld.onclick = () => { $('#modal').classList.add('hidden'); this.start(true); };
-    p.querySelector('.nw').onclick = () => { $('#modal').classList.add('hidden'); this.start(false); };
+      <div class="row">${Saves.latest() ? '<button class="btn ld">Letzten Spielstand laden</button>' : ''}<button class="btn nw">Neu beginnen</button><button class="btn tt">Titelmenü</button></div></div>`, { noClose: true, cls: 'dark' });
+    const ld = p.querySelector('.ld'); if (ld) ld.onclick = () => this.start(Saves.latest().state);
+    p.querySelector('.nw').onclick = () => this.start(null);
+    p.querySelector('.tt').onclick = () => this.toTitle();
   },
 
   // ---------- Inventar ----------
@@ -391,7 +398,7 @@ const Game = {
     const map ={ arrowleft: 'l', a: 'l', arrowright: 'r', d: 'r', arrowup: 'u', w: 'u', arrowdown: 'dn', s: 'dn', shift: 'run' };
     if (map[k]) { this.keys[map[k]] = down; if (this.mode !== 'play') e.preventDefault(); }
     if (!down) return;
-    if (this.mode === 'title') { if (k === 'enter' || k === ' ') { $('#title .btn').click(); } return; }
+    if (this.mode === 'title') { if ((k === 'enter' || k === ' ') && TitleMenu.screen === 'main') { $('#title .menu .btn').click(); } return; }
     if (k === 'm') { const mu = Snd.toggleMute(); this.toast(mu ? 'Ton aus' : 'Ton an'); return; }
     if (this.mode === 'choice') {
       if (map[k] === 'u') { this.choiceSel = (this.choiceSel + this.choiceOpts.length - 1) % this.choiceOpts.length; this.renderChoice(); Snd.play('select'); }
@@ -487,6 +494,16 @@ const Game = {
       const msg = e.lock && e.lock();
       if (msg) { G.v -= 0.04; this.keys = {}; this.say(msg); }
       else this.goto(e.room, e.u, e.v, e.dir);
+    }
+  },
+  // Falls die Figur in einem Hindernis steht: nächste freie Stelle suchen
+  unstick(R) {
+    if (this.free(R, G.u, G.v)) return;
+    for (let d = 0.01; d < 0.5; d += 0.01) {
+      for (let a = 0; a < 16; a++) {
+        const u = G.u + Math.cos(a / 16 * Math.PI * 2) * d, v = G.v + Math.sin(a / 16 * Math.PI * 2) * d;
+        if (this.free(R, u, v)) { G.u = u; G.v = v; return; }
+      }
     }
   },
   free(R, u, v) {
@@ -668,11 +685,8 @@ window.addEventListener('load', () => {
   window.addEventListener('blur', () => { Game.keys = {}; });
   $('#dialog').addEventListener('click', () => Game.action());
   // Titel
-  const cont = $('#title .cont');
-  if (Game.hasSave()) cont.classList.remove('hidden');
-  $('#title .new').onclick = () => Game.start(false);
-  cont.onclick = () => Game.start(true);
-  $('#title .help').onclick = () => $('#helpbox').classList.toggle('hidden');
+  Saves.read();
+  TitleMenu.show('main');
   // Touch
   document.querySelectorAll('#touch [data-k]').forEach(b => {
     const k = b.dataset.k;

@@ -245,6 +245,20 @@ svg.vs .hz { fill: #6a2a1a; stroke: #f84; stroke-width: 1.5; }
 #modal .panel.heft { background: #e8e4d4; }
 #modal .panel.heft h2 { color: #1a3a6a; }
 
+/* Profile & Speicherplätze */
+#title .tbox { max-height: 96%; overflow: auto; padding: 0 1em; }
+.pbox { background: rgba(0,0,0,0.75); border: 1px solid #4a4638; padding: 0.5em 1em; min-width: 30em; max-width: 44em; text-align: left; font-size: 0.85em; }
+.pbox h3 { margin: 0.2em 0 0.5em; font-weight: normal; color: #e8b84a; text-align: center; }
+.kl { margin-bottom: 0.5em; }
+.klh { color: #9a9480; border-bottom: 1px solid #3a3628; margin-bottom: 0.2em; letter-spacing: 0.1em; }
+.prow, .srow { display: flex; align-items: center; gap: 0.6em; margin: 0.2em 0; }
+.prow .pick { min-width: 8em; text-align: left; }
+.pinfo { flex: 1; color: #9a9480; font-size: 0.8em; }
+.srow .sl { min-width: 5.5em; color: #e8e0c8; }
+.newp { display: flex; gap: 0.4em; margin: 0.6em 0; }
+.newp .inp { flex: 1; min-width: 0; }
+#title .menu .btn.small { min-width: 0; }
+
 </style>
 </head>
 <body>
@@ -263,15 +277,12 @@ svg.vs .hz { fill: #6a2a1a; stroke: #f84; stroke-width: 1.5; }
       <h1>NACHTSCHICHT</h1>
       <div class="sub">Ein Azubi. Eine verrottete Halle. Bis Montag, 6 Uhr früh.</div>
       <div class="menu">
-        <button class="btn new">Neues Spiel</button>
-        <button class="btn cont hidden">Fortsetzen</button>
-        <button class="btn help">Steuerung</button>
       </div>
       <div id="helpbox" class="hidden">
         <p><b>Pfeiltasten / WASD</b> – gehen &nbsp;·&nbsp; <b>Shift</b> – rennen</p>
         <p><b>E / Leertaste / Enter</b> – untersuchen, reden, weiter</p>
         <p><b>I / Tab</b> – Inventar, Dokumente, Karte &nbsp;·&nbsp; <b>M</b> – Ton an/aus</p>
-        <p>Speichern an der <b>Stempeluhr</b> in der Umkleide.</p>
+        <p>Speichern an den <b>Stempeluhren</b> (Umkleide, Kellergang) und automatisch nach jeder Reparatur. Jedes Profil (Klasse + Name) hat 5 Speicherplätze.</p>
         <p class="note">Rätsel zum 1. Ausbildungsjahr Mechatroniker/-in (Lernfelder 1–4). Taschenrechner und Tabellenbuch sind erlaubt!</p>
       </div>
     </div>
@@ -1169,9 +1180,14 @@ ROOMS.umkleide = {
     } },
     { u: 0.62, v: 0.13, label: 'Spiegel', use() { Game.say(G.hp > 66 ? 'Du siehst müde aus. Aber entschlossen.' : 'Du siehst übel aus. Vielleicht solltest du dich verarzten.'); } },
     { u: 0.74, v: 0.13, label: 'Stempeluhr (Speichern)', use() {
-      Game.ask('Die alte Stempeluhr tickt. Willst du deinen Fortschritt festhalten?', [
-        { t: 'Einstempeln (Speichern)', f: () => { Snd.play('clank'); Game.say(Game.save() ? 'KA-CHUNK. Die Uhr stanzt die Zeit in deine Stempelkarte. Gespeichert.' : 'Die Uhr klemmt. (Speichern im Browser nicht möglich.)'); } },
-        { t: 'Lieber nicht', f: () => {} },
+      const p = Saves.profile();
+      Game.ask(`Die alte Stempeluhr tickt. Stempelkarte: ${p ? p.klasse + ' – ' + p.name : '?'}. Auf welchen Platz speichern?`, [
+        ...Array.from({ length: Saves.SLOTS }, (_, i) => ({ t: `Platz ${i + 1}: ${Saves.info(Saves.get(i))}`, f: () => {
+          Snd.play('clank');
+          Game.say(Game.save(i) ? `KA-CHUNK. Die Uhr stanzt die Zeit in deine Stempelkarte. Gespeichert auf Platz ${i + 1}.` : 'Die Uhr klemmt. (Speichern im Browser nicht möglich – nutze im Titelmenü „Spielstand als Datei speichern“.)');
+        } })),
+        { t: 'Ausstempeln (zum Titelmenü – vorher speichern!)', f: () => Game.ask('Wirklich zum Titelmenü? Nicht gespeicherter Fortschritt seit dem letzten Speichern geht verloren.', [{ t: 'Ja, zum Titelmenü', f: () => Game.toTitle() }, { t: 'Nein', f: () => {} }]) },
+        { t: 'Abbrechen', f: () => {} },
       ]);
     } },
     { u: 0.87, v: 0.13, label: 'Aushang', use() { Game.addFile('aushang'); } },
@@ -1943,7 +1959,7 @@ ROOMS.buero = {
     { u: 0.58, v: 0.18, label: 'Kalender', use() { Game.say('Oktober. Der Montag ist dick rot umkringelt: „LIEFERUNG 2000 STK – 6:00 !!!“'); } },
     { u: 0.3, v: 0.18, label: 'Fenster zur Halle', use() { Game.say(Game.hallLight() ? 'Von hier oben sieht man die ganze Halle. Das Licht brennt. Sieht fast wieder aus wie eine Fabrik.' : 'Unten ist alles schwarz. Nur das Mondlicht malt Streifen auf den Hallenboden. War da gerade eine Bewegung beim Rolltor?'); } },
     { u: 0.96, v: 0.52, label: 'Erste-Hilfe-Kasten', glint: () => !Game.flag('eh_buero'), gh: 50, use: firstAid('eh_buero', 1) },
-    { u: 0.03, v: 0.26, r: 30, label: 'Tür zur Halle', use() { Game.goto('halle', 0.93, 0.2, 'L'); } },
+    { u: 0.03, v: 0.26, r: 30, label: 'Tür zur Halle', use() { Game.goto('halle', 0.955, 0.2, 'L'); } },
   ],
 };
 
@@ -2586,7 +2602,7 @@ const ENDING = {
       <p class="note center">ENDE – Danke fürs Spielen!</p>
       <div class="row"><button class="btn stay">Durch die Halle laufen</button><button class="btn nw">Neues Spiel</button></div></div>`, { cls: 'paper', noClose: true });
     p.querySelector('.stay').onclick = () => Game.closeModal();
-    p.querySelector('.nw').onclick = () => { Game.closeModal(true); Game.start(false); };
+    p.querySelector('.nw').onclick = () => { Game.closeModal(true); Game.start(null); };
   },
 };
 
@@ -3379,6 +3395,175 @@ Object.assign(PUZZLES, {
 <script>
 'use strict';
 // ------------------------------------------------------------
+//  Spielstände: Profile (Klasse + Name), je 5 Speicherplätze + Autosave,
+//  Export/Import als Datei, Übernahme des alten Einzel-Spielstands
+// ------------------------------------------------------------
+const Saves = {
+  KEY: 'nachtschicht_profiles_v2',
+  OLD: 'nachtschicht_save_v1',
+  SLOTS: 5,
+  db: null,
+  cur: null,
+  ok: true,
+
+  read() {
+    let db = null;
+    try { db = JSON.parse(localStorage.getItem(this.KEY)); } catch (e) { this.ok = false; }
+    this.db = db && db.profiles ? db : { profiles: {}, last: null };
+    this.migrate();
+    if (this.db.last && this.db.profiles[this.db.last]) this.cur = this.db.last;
+  },
+  write() {
+    try { localStorage.setItem(this.KEY, JSON.stringify(this.db)); return true; } catch (e) { this.ok = false; return false; }
+  },
+  // Alten Spielstand (Version mit nur einem Speicherplatz) einmalig übernehmen
+  migrate() {
+    if (this.db.migrated) return;
+    let old = null;
+    try { old = JSON.parse(localStorage.getItem(this.OLD)); } catch (e) { /* nichts */ }
+    if (old && old.room) {
+      const id = this.create('Ohne Klasse', 'Bisheriger Spielstand', true);
+      const rec = this.record(old);
+      this.db.profiles[id].slots[0] = rec;
+      this.db.profiles[id].auto = rec;
+      this.db.last = id;
+    }
+    this.db.migrated = true;
+    this.write();
+  },
+
+  pid(klasse, name) { return klasse.trim().toLowerCase() + '|' + name.trim().toLowerCase(); },
+  create(klasse, name, silent) {
+    klasse = klasse.trim() || 'Ohne Klasse'; name = name.trim();
+    const id = this.pid(klasse, name);
+    if (!this.db.profiles[id]) this.db.profiles[id] = { klasse, name, slots: Array(this.SLOTS).fill(null), auto: null, created: Date.now() };
+    if (!silent) this.write();
+    return id;
+  },
+  remove(id) { delete this.db.profiles[id]; if (this.db.last === id) this.db.last = null; if (this.cur === id) this.cur = null; this.write(); },
+  select(id) { this.cur = id; this.db.last = id; this.write(); },
+  profile() { return this.cur ? this.db.profiles[this.cur] : null; },
+  // Profile nach Klasse gruppiert
+  groups() {
+    const g = {};
+    for (const [id, p] of Object.entries(this.db.profiles)) (g[p.klasse] = g[p.klasse] || []).push({ id, ...p });
+    return Object.keys(g).sort((a, b) => a.localeCompare(b, 'de')).map(k => ({ klasse: k, list: g[k].sort((a, b) => a.name.localeCompare(b.name, 'de')) }));
+  },
+
+  record(state) {
+    const fixes = FIXES.filter(f => state.flags && state.flags['fix_' + f.id]).length;
+    return { at: Date.now(), room: state.room, prod: Math.round(fixes / FIXES.length * 100), end: !!(state.flags && state.flags.ending), state: JSON.parse(JSON.stringify(state)) };
+  },
+  // slot: 0..4 oder 'auto'
+  save(slot) {
+    const p = this.profile();
+    if (!p || !G) return false;
+    const rec = this.record(G);
+    if (slot === 'auto') p.auto = rec; else p.slots[slot] = rec;
+    return this.write();
+  },
+  get(slot) { const p = this.profile(); if (!p) return null; return slot === 'auto' ? p.auto : p.slots[slot]; },
+  latest() {
+    const p = this.profile(); if (!p) return null;
+    return [p.auto, ...p.slots].filter(Boolean).sort((a, b) => b.at - a.at)[0] || null;
+  },
+  info(rec) {
+    if (!rec) return '— leer —';
+    const d = new Date(rec.at);
+    const when = d.toLocaleDateString('de-DE') + ' ' + d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+    return `${ROOMS[rec.room] ? ROOMS[rec.room].name : rec.room} · Produktion ${rec.prod} %${rec.end ? ' · geschafft ✔' : ''} · ${when}`;
+  },
+
+  // ---------- Datei-Export / -Import ----------
+  exportProfile(id) {
+    const p = this.db.profiles[id]; if (!p) return;
+    const data = JSON.stringify({ type: 'nachtschicht-profil', version: 2, profile: p }, null, 1);
+    const blob = new Blob([data], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = ('nachtschicht_' + p.klasse + '_' + p.name).replace(/[^\wäöüÄÖÜß-]+/g, '_') + '.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  },
+  importFile(file, done) {
+    const r = new FileReader();
+    r.onload = () => {
+      let d = null;
+      try { d = JSON.parse(r.result); } catch (e) { /* ungültig */ }
+      if (!d || d.type !== 'nachtschicht-profil' || !d.profile || !d.profile.name) { done(null, 'Das ist keine gültige Nachtschicht-Spielstanddatei.'); return; }
+      const p = d.profile;
+      const id = this.pid(p.klasse || 'Ohne Klasse', p.name);
+      if (this.db.profiles[id] && !confirm(`Das Profil „${p.klasse} – ${p.name}“ gibt es hier schon. Mit der Datei überschreiben?`)) { done(null, null); return; }
+      const slots = Array(this.SLOTS).fill(null);
+      (p.slots || []).slice(0, this.SLOTS).forEach((s, i) => slots[i] = s && s.state ? s : null);
+      this.db.profiles[id] = { klasse: p.klasse || 'Ohne Klasse', name: p.name, slots, auto: p.auto && p.auto.state ? p.auto : null, created: p.created || Date.now() };
+      this.select(id);
+      done(id, null);
+    };
+    r.readAsText(file);
+  },
+};
+
+// ------------------------------------------------------------
+//  Titelmenü: Profilwahl und Speicherplätze
+// ------------------------------------------------------------
+const TitleMenu = {
+  esc(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); },
+  show(screen) {
+    this.screen = screen || 'main';
+    const el = $('#title .menu');
+    const e = this.esc;
+    if (this.screen === 'main') {
+      el.innerHTML = `<button class="btn play">Spielen</button><button class="btn help">Steuerung</button>`;
+      el.querySelector('.play').onclick = () => this.show(Saves.profile() ? 'profile' : 'profiles');
+      el.querySelector('.help').onclick = () => $('#helpbox').classList.toggle('hidden');
+    } else if (this.screen === 'profiles') {
+      const groups = Saves.groups();
+      el.innerHTML = `<div class="pbox"><h3>Wer spielt?</h3>
+        ${groups.length ? groups.map(g => `<div class="kl"><div class="klh">${e(g.klasse)}</div>${g.list.map(p => `<div class="prow"><button class="btn pick" data-id="${e(p.id)}">${e(p.name)}</button><span class="pinfo">${e(Saves.info(Saves.latestOf(p)))}</span><button class="btn small del" data-id="${e(p.id)}" title="Profil löschen">🗑</button></div>`).join('')}</div>`).join('') : '<p class="note">Noch keine Profile. Leg unten eins an.</p>'}
+        <div class="newp"><input class="inp" id="pk" placeholder="Klasse, z. B. MT10a" maxlength="20"><input class="inp" id="pn" placeholder="Name" maxlength="30"><button class="btn mk">Profil anlegen</button></div>
+        <div class="row"><button class="btn imp">Spielstand-Datei laden …</button><button class="btn back">Zurück</button></div>
+        <input type="file" id="impf" accept=".json,application/json" class="hidden">
+        ${Saves.ok ? '' : '<p class="note">Achtung: Dieser Browser erlaubt kein Speichern. Spielstände gehen beim Schließen verloren – nutze den Export.</p>'}</div>`;
+      el.querySelectorAll('.pick').forEach(b => b.onclick = () => { Saves.select(b.dataset.id); Snd.play && Snd.play('select'); this.show('profile'); });
+      el.querySelectorAll('.del').forEach(b => b.onclick = () => {
+        const p = Saves.db.profiles[b.dataset.id];
+        if (confirm(`Profil „${p.klasse} – ${p.name}“ mit allen Spielständen löschen?`)) { Saves.remove(b.dataset.id); this.show('profiles'); }
+      });
+      el.querySelector('.mk').onclick = () => {
+        const k = el.querySelector('#pk').value, n = el.querySelector('#pn').value;
+        if (!n.trim()) { el.querySelector('#pn').focus(); el.querySelector('#pn').placeholder = 'Bitte Namen eingeben'; return; }
+        Saves.select(Saves.create(k, n)); this.show('profile');
+      };
+      el.querySelector('#pn').onkeydown = ev => { if (ev.key === 'Enter') el.querySelector('.mk').click(); };
+      el.querySelector('.imp').onclick = () => el.querySelector('#impf').click();
+      el.querySelector('#impf').onchange = ev => {
+        const f = ev.target.files[0]; if (!f) return;
+        Saves.importFile(f, (id, err) => { if (err) alert(err); if (id) this.show('profile'); });
+      };
+      el.querySelector('.back').onclick = () => this.show('main');
+    } else if (this.screen === 'profile') {
+      const p = Saves.profile();
+      if (!p) { this.show('profiles'); return; }
+      const row = (slot, label) => { const r = Saves.get(slot); return `<div class="srow"><span class="sl">${label}</span><span class="pinfo">${e(Saves.info(r))}</span><button class="btn small ld" data-s="${slot}" ${r ? '' : 'disabled'}>Laden</button></div>`; };
+      el.innerHTML = `<div class="pbox"><h3>${e(p.klasse)} – ${e(p.name)}</h3>
+        <div class="row"><button class="btn nw">Neues Spiel</button></div>
+        ${row('auto', 'Autosave')}${Array.from({ length: Saves.SLOTS }, (_, i) => row(i, 'Platz ' + (i + 1))).join('')}
+        <p class="note">Speichern im Spiel an den Stempeluhren (Umkleide, Kellergang). Nach jeder Reparatur wird automatisch gesichert.</p>
+        <div class="row"><button class="btn ex">Spielstand als Datei speichern</button><button class="btn sw">Profil wechseln</button></div></div>`;
+      el.querySelector('.nw').onclick = () => Game.start(null);
+      el.querySelectorAll('.ld').forEach(b => b.onclick = () => { const r = Saves.get(b.dataset.s === 'auto' ? 'auto' : +b.dataset.s); if (r) Game.start(r.state); });
+      el.querySelector('.ex').onclick = () => Saves.exportProfile(Saves.cur);
+      el.querySelector('.sw').onclick = () => this.show('profiles');
+    }
+  },
+};
+Saves.latestOf = p => [p.auto, ...(p.slots || [])].filter(Boolean).sort((a, b) => b.at - a.at)[0] || null;
+
+</script>
+<script>
+'use strict';
+// ------------------------------------------------------------
 //  Engine: Zustand, Spielschleife, Steuerung, UI
 // ------------------------------------------------------------
 const FIXES = [
@@ -3392,7 +3577,6 @@ const FIXES = [
   { id: 'steuerung', name: 'Bandsteuerung' },
   { id: 'ofen', name: 'Trockenofen' },
 ];
-const SAVE_KEY = 'nachtschicht_save_v1';
 
 let G = null; // Spielzustand (wird gespeichert)
 
@@ -3586,24 +3770,31 @@ const Game = {
   enter(room, u, v, dir) {
     G.room = room; G.u = u; G.v = v; G.dir = dir || G.dir;
     const R = ROOMS[room];
+    this.unstick(R);
     $('#roomname').textContent = R.name;
     $('#roomname').classList.remove('show'); void $('#roomname').offsetWidth; $('#roomname').classList.add('show');
     if (R.onEnter) R.onEnter();
   },
 
   // ---------- Speichern ----------
-  save() {
-    try { localStorage.setItem(SAVE_KEY, JSON.stringify(G)); return true; } catch (e) { return false; }
-  },
-  hasSave() { try { return !!localStorage.getItem(SAVE_KEY); } catch (e) { return false; } },
-  load() {
-    try { const s = JSON.parse(localStorage.getItem(SAVE_KEY)); if (!s) return false; G = Object.assign(newState(), s); return true; } catch (e) { return false; }
+  save(slot) { return Saves.save(slot === undefined ? 'auto' : slot); },
+  toTitle() {
+    ['#dialog', '#choices', '#inventory', '#modal'].forEach(q => $(q).classList.add('hidden'));
+    G = null; this.mode = 'title'; this.shadow = null; this.keys = {};
+    $('#prompt').innerHTML = ''; $('#prompt').dataset.t = '';
+    $('#roomname').classList.remove('show'); $('#toast').innerHTML = '';
+    $('#title').classList.remove('hidden');
+    TitleMenu.show('profile');
   },
 
   // ---------- Start / Ende ----------
-  start(load) {
+  // state: geladener Spielstand oder null für ein neues Spiel
+  start(state) {
     Snd.init();
-    if (load && this.load()) { /* geladen */ } else { G = newState(); }
+    const load = !!state;
+    G = load ? Object.assign(newState(), JSON.parse(JSON.stringify(state))) : newState();
+    ['#dialog', '#choices', '#inventory', '#modal'].forEach(q => $(q).classList.add('hidden'));
+    this.shadow = null;
     $('#title').classList.add('hidden');
     this.bgCache = {};
     this.enter(G.room, G.u, G.v, G.dir);
@@ -3623,9 +3814,10 @@ const Game = {
     Snd.play('sting');
     const p = this.modal(`<div class="gameover"><h1>ARBEITSUNFALL</h1><p>${why || 'Du bist schwer verletzt.'}</p>
       <p class="note">Merke: Sicherheit geht vor. Jeder Unfall ist einer zu viel.</p>
-      <div class="row">${this.hasSave() ? '<button class="btn ld">Letzten Speicherstand laden</button>' : ''}<button class="btn nw">Neu beginnen</button></div></div>`, { noClose: true, cls: 'dark' });
-    const ld = p.querySelector('.ld'); if (ld) ld.onclick = () => { $('#modal').classList.add('hidden'); this.start(true); };
-    p.querySelector('.nw').onclick = () => { $('#modal').classList.add('hidden'); this.start(false); };
+      <div class="row">${Saves.latest() ? '<button class="btn ld">Letzten Spielstand laden</button>' : ''}<button class="btn nw">Neu beginnen</button><button class="btn tt">Titelmenü</button></div></div>`, { noClose: true, cls: 'dark' });
+    const ld = p.querySelector('.ld'); if (ld) ld.onclick = () => this.start(Saves.latest().state);
+    p.querySelector('.nw').onclick = () => this.start(null);
+    p.querySelector('.tt').onclick = () => this.toTitle();
   },
 
   // ---------- Inventar ----------
@@ -3770,7 +3962,7 @@ const Game = {
     const map ={ arrowleft: 'l', a: 'l', arrowright: 'r', d: 'r', arrowup: 'u', w: 'u', arrowdown: 'dn', s: 'dn', shift: 'run' };
     if (map[k]) { this.keys[map[k]] = down; if (this.mode !== 'play') e.preventDefault(); }
     if (!down) return;
-    if (this.mode === 'title') { if (k === 'enter' || k === ' ') { $('#title .btn').click(); } return; }
+    if (this.mode === 'title') { if ((k === 'enter' || k === ' ') && TitleMenu.screen === 'main') { $('#title .menu .btn').click(); } return; }
     if (k === 'm') { const mu = Snd.toggleMute(); this.toast(mu ? 'Ton aus' : 'Ton an'); return; }
     if (this.mode === 'choice') {
       if (map[k] === 'u') { this.choiceSel = (this.choiceSel + this.choiceOpts.length - 1) % this.choiceOpts.length; this.renderChoice(); Snd.play('select'); }
@@ -3866,6 +4058,16 @@ const Game = {
       const msg = e.lock && e.lock();
       if (msg) { G.v -= 0.04; this.keys = {}; this.say(msg); }
       else this.goto(e.room, e.u, e.v, e.dir);
+    }
+  },
+  // Falls die Figur in einem Hindernis steht: nächste freie Stelle suchen
+  unstick(R) {
+    if (this.free(R, G.u, G.v)) return;
+    for (let d = 0.01; d < 0.5; d += 0.01) {
+      for (let a = 0; a < 16; a++) {
+        const u = G.u + Math.cos(a / 16 * Math.PI * 2) * d, v = G.v + Math.sin(a / 16 * Math.PI * 2) * d;
+        if (this.free(R, u, v)) { G.u = u; G.v = v; return; }
+      }
     }
   },
   free(R, u, v) {
@@ -4047,11 +4249,8 @@ window.addEventListener('load', () => {
   window.addEventListener('blur', () => { Game.keys = {}; });
   $('#dialog').addEventListener('click', () => Game.action());
   // Titel
-  const cont = $('#title .cont');
-  if (Game.hasSave()) cont.classList.remove('hidden');
-  $('#title .new').onclick = () => Game.start(false);
-  cont.onclick = () => Game.start(true);
-  $('#title .help').onclick = () => $('#helpbox').classList.toggle('hidden');
+  Saves.read();
+  TitleMenu.show('main');
   // Touch
   document.querySelectorAll('#touch [data-k]').forEach(b => {
     const k = b.dataset.k;

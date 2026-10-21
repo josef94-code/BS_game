@@ -20,7 +20,7 @@ Gedacht zum **Selbstlernen zu Hause**. Spieldauer etwa **1,5–2 Stunden**. Jede
 python3 tools/build.py
 ```
 
-Der Spielstand wird im Browser gespeichert (Stempeluhr in Umkleide und Kellergang, außerdem automatisch nach jeder Reparatur).
+Spielstände werden im Browser gespeichert: Jedes **Profil (Klasse + Name)** hat **5 Speicherplätze** (Stempeluhren in Umkleide und Kellergang) plus einen **Autosave** nach jeder Reparatur. Über „Spielstand als Datei speichern“ / „Spielstand-Datei laden …“ im Titelmenü lassen sich Profile auf andere Rechner mitnehmen oder bei der Lehrkraft abgeben. Ein Spielstand der ersten Version wird beim ersten Start automatisch als Profil „Bisheriger Spielstand“ übernommen.
 
 ## Steuerung
 
@@ -32,7 +32,7 @@ Der Spielstand wird im Browser gespeichert (Stempeluhr in Umkleide und Kellergan
 | M | Ton an/aus |
 | Esc | Fenster schließen |
 
-Gespeichert wird an den **Stempeluhren** (Umkleide, Kellergang) und automatisch nach jeder Reparatur.
+Gespeichert wird an den **Stempeluhren** (Umkleide, Kellergang; 5 Plätze pro Profil) und automatisch nach jeder Reparatur. Über die Stempeluhr kommt man auch zurück ins Titelmenü (Profil wechseln).
 
 ## Spielelemente
 
@@ -94,6 +94,7 @@ Ablauf grob: Spind → Halle (Schorsch) → Lager (Irmgard: Sicherheitsregeln �
 - `js/rooms.js` – Räume mit Licht, Hotspots und Interaktionen
 - `js/npcs.js` – Figuren, Dialoge, Tipp-System, Finale
 - `js/puzzles.js` – alle Fachrätsel
+- `js/saves.js` – Profile, Speicherplätze, Export/Import
 - `js/game.js` – Engine: Spielschleife, Steuerung, Dialoge, Inventar, Speichern
 
 Neue Rätsel lassen sich in `js/puzzles.js` als Funktion ergänzen und über einen Hotspot in `js/rooms.js` aufrufen.

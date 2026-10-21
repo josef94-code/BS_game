@@ -326,6 +326,6 @@ const ENDING = {
       <p class="note center">ENDE – Danke fürs Spielen!</p>
       <div class="row"><button class="btn stay">Durch die Halle laufen</button><button class="btn nw">Neues Spiel</button></div></div>`, { cls: 'paper', noClose: true });
     p.querySelector('.stay').onclick = () => Game.closeModal();
-    p.querySelector('.nw').onclick = () => { Game.closeModal(true); Game.start(false); };
+    p.querySelector('.nw').onclick = () => { Game.closeModal(true); Game.start(null); };
   },
 };

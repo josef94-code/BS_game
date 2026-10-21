@@ -237,3 +237,17 @@ svg.vs line { stroke: #9ab; stroke-width: 2; }
 svg.vs .hz { fill: #6a2a1a; stroke: #f84; stroke-width: 1.5; }
 #modal .panel.heft { background: #e8e4d4; }
 #modal .panel.heft h2 { color: #1a3a6a; }
+
+/* Profile & Speicherplätze */
+#title .tbox { max-height: 96%; overflow: auto; padding: 0 1em; }
+.pbox { background: rgba(0,0,0,0.75); border: 1px solid #4a4638; padding: 0.5em 1em; min-width: 30em; max-width: 44em; text-align: left; font-size: 0.85em; }
+.pbox h3 { margin: 0.2em 0 0.5em; font-weight: normal; color: #e8b84a; text-align: center; }
+.kl { margin-bottom: 0.5em; }
+.klh { color: #9a9480; border-bottom: 1px solid #3a3628; margin-bottom: 0.2em; letter-spacing: 0.1em; }
+.prow, .srow { display: flex; align-items: center; gap: 0.6em; margin: 0.2em 0; }
+.prow .pick { min-width: 8em; text-align: left; }
+.pinfo { flex: 1; color: #9a9480; font-size: 0.8em; }
+.srow .sl { min-width: 5.5em; color: #e8e0c8; }
+.newp { display: flex; gap: 0.4em; margin: 0.6em 0; }
+.newp .inp { flex: 1; min-width: 0; }
+#title .menu .btn.small { min-width: 0; }
