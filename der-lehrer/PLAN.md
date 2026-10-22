@@ -77,8 +77,8 @@ der-lehrer/
 | Laufbursche | 0–99 | Grundbegriffe, einfache Rechnungen | Flur, Büro des Lehrers, Cafeteria |
 | Klassensprecher | 100–159 | mehrstufige Rechnungen, einfache Schützschaltungen | Werkstatt |
 | Schülersprecher | 160–299 | Netzwerk, Datensicherheit, Schützschaltungen mit Motorschutz | Turnhalle |
-| Capo | 300–449 | Verriegelungen, Logik, Fehlersuche mit Messgerät | Hausmeisterkeller |
-| Consigliere | 450+ | Abschlussprüfung, kombinierte Aufgaben | Ende |
+| Capo | 300–699 | Verriegelungen, Logik, Fehlersuche mit Messgerät | Hausmeisterkeller |
+| Consigliere | 700+ | Abschlussprüfung, kombinierte Aufgaben | Ende |
 
 **HUD:** Minimap unten links (Auftraggeber-Icons, Marker, Ziel), Ruf-Anzeige mit Stufe, aktuelles Ziel oben,
 Interaktionshinweis "[E]". Taste `B` = Beweisbrett/Notizbuch, `Esc` = Pause/Speichern/Laden.
@@ -108,6 +108,11 @@ Interaktionshinweis "[E]". Taste `B` = Beweisbrett/Notizbuch, `Esc` = Pause/Spei
 > 7 *Zwei Bedienstellen* (Rosalita, Cafeteria, Schütztechnik Kap. 2.3–2.5). Neue Figuren: Hausmeister Kowalski,
 > Cafeteria-Chefin Rosalita; Vince Moretti taucht als Spur auf (Spind, Polaroid). Die Liste unten ist der
 > ursprüngliche Gesamtplan und wird beim weiteren Ausbau an die Unterlagen angepasst.
+>
+> **v0.8:** Akt 3 – Licht ins Dunkel, Teil 1: 8 *Halbzeit* und 9 *Der Vorhang fällt* (Coach Bradley, Turnhalle,
+> LtK 03 und Schütztechnik Kap. 5), 10 *Dicke Luft* und 11 *Der Lauscher* (Sparky Russo, Werkstatt,
+> Schütztechnik Kap. 4 und LtK 04). Coach Bradley ist entlastet, das Motiv (Wartungsvertrag von Sterling Bau)
+> liegt offen. Es fehlt das Finale (Abschlussprüfung).
 
 Fächer gemischt: **ET** Elektrotechnik, **AT-S** Automatisierung/Schütztechnik, **AT-D** Digitaltechnik, **LtK**.
 

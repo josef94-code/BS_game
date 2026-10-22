@@ -10,10 +10,11 @@ var _hilfe: Label
 const TIPPS := [
 	"Tipp: Mit B öffnest du das Beweisbrett. Dort stehen alle Hinweise und offenen Fragen.",
 	"Tipp: Wer beim ersten Versuch richtig liegt, bekommt Bonus-Ruf.",
-	"Tipp: Im Keller, im Flur und in der Cafeteria liegen verlorene Bauteile. Halte die Augen offen.",
+	"Tipp: In jedem Raum der Schule liegen verlorene Bauteile. Halte die Augen offen.",
 	"Tipp: Speichere über Esc → „Spiel speichern …“ auf deinem persönlichen Laufwerk.",
-	"Tipp: Der gelbe Punkt auf der Minimap zeigt dein Ziel. Der Hut zeigt den Lehrer, K und R zeigen Kowalski und Rosalita.",
-	"Tipp: Liegt dein Ziel in einem anderen Stockwerk, zeigt der Marker auf die Treppe.",
+	"Tipp: Der gelbe Punkt auf der Minimap zeigt dein Ziel. Der Hut zeigt den Lehrer, Buchstaben zeigen die anderen Auftraggeber.",
+	"Tipp: Liegt dein Ziel in einem anderen Raum, zeigt der Marker auf die Tür dorthin.",
+	"Tipp: Im Probelauf kannst du mit „Test -BC1“ eine Überlast simulieren.",
 ]
 
 
@@ -91,7 +92,7 @@ func _ready() -> void:
 	links.add_child(_hilfe)
 	_meldung = Stil.label("", 20, Color(1, 0.45, 0.35))
 	links.add_child(_meldung)
-	var fuss := Stil.label("Lernspiel für Mechatroniker/-innen · Klasse MT10 (10. Jahrgangsstufe) · Version 0.7 · Akt 1 und 2  ·  Alle Figuren und Ereignisse sind frei erfunden.", 16, Color(1, 1, 1, 0.45))
+	var fuss := Stil.label("Lernspiel für Mechatroniker/-innen · Klasse MT10 (10. Jahrgangsstufe) · Version 0.8 · Akt 1 bis 3  ·  Alle Figuren und Ereignisse sind frei erfunden.", 16, Color(1, 1, 1, 0.45))
 	add_child(fuss)
 	Stil.setze(fuss, Control.PRESET_BOTTOM_WIDE, 110, -40, -40, -12)
 	if Spielstand.lehrer:

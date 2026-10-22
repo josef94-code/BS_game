@@ -1883,7 +1883,7 @@
     "schwierigkeit": 3,
     "frage": "Jemand hat beide Verriegelungen ausgebaut. Setze in jeden Strompfad die Tasterverriegelung und die Schützverriegelung (je ein Öffner 21–22). -SJ2 = HOCH (-QA2), -SJ3 = RUNTER (-QA3), -SJ1 = AUS. Direktes Umschalten muss möglich sein. Teste im Probelauf.",
     "schaltplan": {
-      "breite": 9.5,
+      "breite": 10,
       "hoehe": 8,
       "schienen": [
         {
@@ -1931,7 +1931,7 @@
         {
           "id": "QA2_13",
           "typ": "schliesser",
-          "x": 3.3,
+          "x": 3.7,
           "y": 3.3,
           "bez": "-QA2",
           "kl": "13/14"
@@ -1947,7 +1947,7 @@
         {
           "id": "QA3_13",
           "typ": "schliesser",
-          "x": 8.3,
+          "x": 8.7,
           "y": 3.3,
           "bez": "-QA3",
           "kl": "13/14"
@@ -2040,7 +2040,7 @@
             3.3
           ],
           [
-            3.3,
+            3.7,
             3.3
           ]
         ],
@@ -2050,7 +2050,7 @@
             4.3
           ],
           [
-            3.3,
+            3.7,
             4.3
           ]
         ],
@@ -2080,7 +2080,7 @@
             3.3
           ],
           [
-            8.3,
+            8.7,
             3.3
           ]
         ],
@@ -2090,7 +2090,7 @@
             4.3
           ],
           [
-            8.3,
+            8.7,
             4.3
           ]
         ],
@@ -2314,7 +2314,7 @@
     "schwierigkeit": 3,
     "frage": "Nach der Reparatur durch einen Monteur von Sterling Bau: Drückt man -SJ2, zieht -QA2 an und fällt sofort wieder ab – immer wieder. Klicke die Betriebsmittel an, um die Messergebnisse zu sehen, und wähle das fehlerhafte.",
     "schaltplan": {
-      "breite": 9.5,
+      "breite": 10,
       "hoehe": 8,
       "schienen": [
         {
@@ -2362,7 +2362,7 @@
         {
           "id": "QA2_13",
           "typ": "schliesser",
-          "x": 3.3,
+          "x": 3.7,
           "y": 3.3,
           "bez": "-QA2",
           "kl": "13/14"
@@ -2378,7 +2378,7 @@
         {
           "id": "QA3_13",
           "typ": "schliesser",
-          "x": 8.3,
+          "x": 8.7,
           "y": 3.3,
           "bez": "-QA3",
           "kl": "13/14"
@@ -2479,7 +2479,7 @@
             3.3
           ],
           [
-            3.3,
+            3.7,
             3.3
           ]
         ],
@@ -2489,7 +2489,7 @@
             4.3
           ],
           [
-            3.3,
+            3.7,
             4.3
           ]
         ],
@@ -2519,7 +2519,7 @@
             3.3
           ],
           [
-            8.3,
+            8.7,
             3.3
           ]
         ],
@@ -2529,7 +2529,7 @@
             4.3
           ],
           [
-            8.3,
+            8.7,
             4.3
           ]
         ],
@@ -2758,7 +2758,7 @@
         {
           "id": "QA2_13",
           "typ": "schliesser",
-          "x": 3.3,
+          "x": 3.7,
           "y": 4.5,
           "bez": "-QA2",
           "kl": "13/14"
@@ -2879,7 +2879,7 @@
             4.5
           ],
           [
-            3.3,
+            3.7,
             4.5
           ]
         ],
@@ -2889,7 +2889,7 @@
             5.5
           ],
           [
-            3.3,
+            3.7,
             5.5
           ]
         ],

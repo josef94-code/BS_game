@@ -14,12 +14,16 @@ Nebel, Lichtinseln aus Glühbirnen und Leuchtstoffröhren, weicher PS2-Filter mi
 Ruf-Ziffern, Hilfe-Box oben links, Untertitel, Missionstitel unten rechts. Menü und Ladebildschirm zeigen den Lehrer
 als Porträt mit kräftigen Konturen.
 
-**Stand: v0.7** – drei Räume und sieben Missionen:
+**Stand: v0.8** – fünf Räume und elf Missionen:
 - **Akt 1 – Seltsame Vorfälle** im Hausmeisterkeller (Büro des Lehrers), vier Missionen beim Lehrer.
 - **Akt 2 – Die schwarzen Rosen** im Erdgeschoss: **Flur** mit Spinden, Pokalvitrine, Fensterband im Mondlicht,
   Unterverteilung und Infoscreen; **Cafeteria** mit Essensausgabe, Tischreihen, Getränkeautomaten und dem Ende
   von Band 1. Neue Auftraggeber: **Hausmeister Kowalski** (Flur) und **Rosalita** (Cafeteria). Die Kellertür
   öffnet sich nach Mission 4.
+- **Akt 3 – Licht ins Dunkel:** **Turnhalle** (Parkett mit Basketballfeld, Körbe, Tribüne, Anzeigetafel,
+  Trennvorhang, Sprossenwand) mit **Coach Bradley** und **Werkstatt** (Werkbänke, Werkzeugwand, Kreissäge mit
+  Absauganlage, Säulenbohrmaschine, Laborplätze mit Schützen, PC-Ecke) mit **Sparky Russo**. Die Turnhalle öffnet
+  sich nach Mission 7 (Doppeltür am Ostende des Flurs), die Werkstatt nach Mission 9 (Tür gegenüber).
 
 Die Aufgaben sind mit den Lernunterlagen (ET, Schütztechnik, LtK) abgeglichen. Der Gesamtplan (drei Akte, 24 Missionen) steht in [`PLAN.md`](PLAN.md).
 
@@ -58,7 +62,7 @@ etwa ein Fünftel der früheren Zeichenaufrufe.
 
 ## Spielablauf (GTA-Stil)
 
-1. Auf der Minimap zeigt der **Hut** den Lehrer, **K** und **R** zeigen Kowalski und Rosalita (groß und farbig,
+1. Auf der Minimap zeigt der **Hut** den Lehrer, **K**, **R**, **B** und **S** zeigen Kowalski, Rosalita, Bradley und Sparky (groß und farbig,
    wenn sie einen Auftrag haben). Der **gelbe Punkt** und der **gelbe Lichtkegel** am Boden zeigen das Ziel –
    liegt es in einem anderen Stockwerk, stehen sie an der Treppe.
 2. Beim Auftraggeber den Auftrag annehmen → **Missionstitel** wird groß eingeblendet.
@@ -68,14 +72,15 @@ etwa ein Fünftel der früheren Zeichenaufrufe.
 
 Beim Betreten eines Raums erscheint unten rechts sein Name (KELLER, FLUR, CAFETERIA).
 
-**Ruf statt Geld:** Laufbursche (0) → Klassensprecher (100) → Schülersprecher (160) → Capo (300) → Consigliere (450).
+**Ruf statt Geld:** Laufbursche (0) → Klassensprecher (100) → Schülersprecher (160) → Capo (300) → Consigliere (700).
 Die Schwellen sind so gewählt, dass die Beförderungen genau nach Mission 3, 4 und 7 kommen – egal wie viel Bonus jemand sammelt.
+Consigliere wird man erst im Finale (Abschlussprüfung), das noch folgt.
 Jede gelöste Aufgabe beim ersten Versuch gibt +2 Bonus-Ruf. Nach drei Fehlversuchen kann man sich die Lösung zeigen lassen
 (kein Bonus, wird in der Statistik vermerkt). Falsche Antworten kosten nichts – es gibt gestufte Tipps vom Lehrer.
 
-Außerdem: **Schulradio WLHS 88.3** mit Sprüchen und Durchsagen (je Akt eigene), **sechs versteckte Bauteile**
-(drei im Keller, drei im Erdgeschoss), verschlossene Klassenzimmer mit kleinen Hinweisen und am Ende von Akt 2
-eine **Bilanz** (gelöste Aufgaben, davon beim ersten Versuch, Spielzeit).
+Außerdem: **Schulradio WLHS 88.3** mit Sprüchen und Durchsagen (je Akt eigene), **neun versteckte Bauteile**
+(je drei im Keller, im Erdgeschoss und in Turnhalle/Werkstatt), verschlossene Türen mit kleinen Hinweisen und nach
+Mission 11 eine **Bilanz** (gelöste Aufgaben, davon beim ersten Versuch, Spielzeit).
 
 ## Speichern und Laden
 
@@ -93,6 +98,10 @@ Beweisen, Position und der Statistik je Aufgabe. Laden über das Hauptmenü oder
 | 4 | Gelöschte Spuren | Netzwerkschrank +N1 (Switch, Router, Firewall, NAS) | Datenschutz vs. Datensicherheit, 3-2-1-1-0-Regel, RAID ist kein Backup, Schutzziele, Prinzip der geringsten Rechte, TOM (Eingabekontrolle) | LF 5 (LtK) |
 | 5 | Leitungssalat (Kowalski, Flur) | Unterverteilung UV-EG, Snackautomat mit Fernmeldeleitung J-Y(ST)Y | Stromdichte J = I/A, Strombelastbarkeit nach Tabelle, NYM 3 × 2,5 mm² entschlüsseln, Aderfarben PE/N/L, Spannungsfall in % | LF 3 (ET) |
 | 6 | Funkstille (Kowalski, Flur) | Infoscreen, Access Point, Kabelpritsche neben Motorleitung, versteckter Router | Sender-Empfänger-Modell/Störquelle, U/UTP vs. S/FTP, Segmentlänge 100 m, PoE, WLAN-Generationen (Sortieren), Funknetz absichern (WPA3) | LF 5 (LtK) |
+| 8 | Halbzeit (Bradley, Turnhalle) | Hallentechnik in Linie: Anzeigetafel, Licht, Lüftung, Infoscreen | Netzwerkarten PAN bis GAN (Sortieren), Linie vs. Stern, Ebenenmodell (Sortieren), Bussysteme (AS-i, IO-Link, PROFINET) | LF 5 (LtK) |
+| 9 | Der Vorhang fällt (Bradley, Turnhalle) | Trennvorhang mit 24-V-Gleichstrommotor -MA2, -QA2/-QA3 | Drehrichtungsumkehr, Kurzschluss bei gleichzeitigem Anziehen, Schütz- und Tasterverriegelung, Wendeschützschaltung (zwei Schütze, Probelauf), Fehlersuche „Schütz flattert“ | LF 4 (Att) |
+| 10 | Dicke Luft (Sparky, Werkstatt) | Absauganlage -MA2 und Kreissäge -MA1, Schaltschrank +S3 | Folgekontakt -QA2 43–44, Lage von -BC1/-BC2, Sammelstörmeldung -PF2, Folgeschaltung mit Überlast-Test, Fehlerbilder | LF 4 (Att) |
+| 11 | Der Lauscher (Sparky, Werkstatt) | Werkstatt-PC, Hub, Mitschnitt-Gerät | Hub vs. Switch (MAC-Adresse), Router/Firewall/Medienkonverter, Knopfzelle, flüchtige Speicher, Bildschirmarbeitsplatz | LF 5 (LtK) |
 | 7 | Zwei Bedienstellen (Rosalita, Cafeteria) | Bedienstelle an der Bandübergabe: -SG0, -SJ3, -SJ4, -PF1 | Drahtbruchsicherheit, Not-Halt mit Zwangsöffnung, Steuerstromkreis mit zwei Bedienstellen (5 Lücken, Probelauf), -PF1 über 43–44, Fehlersuche „-PF1 leuchtet, obwohl das Band steht“ | LF 4 (Att) |
 
 Betriebsmittelkennzeichnung wie in den Lernunterlagen nach DIN EN 81346-2: -FC Leitungsschutzschalter, -SJ Drucktaster,
@@ -146,6 +155,26 @@ Rechenaufgaben haben Zufallswerte (je Spielstand andere Zahlen). Ergebnisse wie 
 | Zwei Bedienstellen | -SJ1 und -SJ3 (Öffner) in Reihe, -SJ2, -SJ4 und -QA1 13–14 (Schließer) parallel; Reihenfolge egal |
 | Die grüne Lampe | -PF1 nicht parallel zur Spule, sondern über Hilfskontakt 43–44 |
 | Die Leuchte lügt | Hilfskontakt für -PF1 an 21–22 (Öffner) statt 43–44 angeschlossen |
+| Vom Headset bis zum Satelliten | PAN – LAN – MAN – WAN – GAN |
+| Alles dunkel ab der Anzeigetafel | Linien-Topologie: Ausfall trennt den restlichen Strang ab |
+| Neu verkabeln | Stern: Fehler stört andere nicht, einfache Fehlersuche, Switch-Ausfall legt alles lahm |
+| Die Pyramide | Unternehmens-, Betriebsleit-, Prozessleit-, Steuerungs-, Feldebene |
+| Bus oder nicht Bus | AS-i: Daten und Strom; IO-Link: Punkt zu Punkt |
+| Hoch oder runter? | Ankerspannung umpolen (A1/A2 tauschen) |
+| Beide gleichzeitig | Kurzschluss, -FC2.1/-FC2.2 lösen aus, Kontakte können verschweißen |
+| Doppelt verriegelt | Schützverriegelung (Öffner des anderen Schützes), Tasterverriegelung für direktes Umschalten, beide nötig |
+| Wendeschützschaltung | Pfad -QA2: -SJ3 21–22 und -QA3 21–22; Pfad -QA3: -SJ2 21–22 und -QA2 21–22 (Reihenfolge egal) |
+| Das Schütz flattert | eigener Öffner von -QA2 statt Öffner von -QA3 im Strompfad von -QA2 |
+| Erst saugen, dann sägen | Folgekontakt -QA2 43–44 in Reihe im Strompfad von -QA1 |
+| Wer schützt wen? | -BC2 95–96 im gemeinsamen Strompfad, -BC1 95–96 nur im Pfad von -QA1 |
+| Eine Lampe für zwei | ODER: -BC1 97–98 und -BC2 97–98 parallel (Sammelstörmeldung) |
+| Folgeschaltung | -QA2 43–44, -SJ3 Öffner, -SJ4 Schließer ∥ -QA1 Schließer |
+| Fehlerbilder | Folgekontakt fehlt/überbrückt oder Öffner von -QA2 verwendet |
+| Hub statt Switch | Hub schickt an alle (Mitlesen, Kollisionen); Switch nutzt MAC-Adresse |
+| Wer macht was? | Router (IP), Firewall (Regeln), Medienkonverter (Kupfer ↔ LWL) |
+| 1. Januar 2000 | Knopfzelle leer (CR2032 tauschen) |
+| Stecker gezogen | flüchtig: DRAM, SRAM |
+| Rücken gerade! | 50–80 cm, oberste Zeile auf/unter Augenhöhe, Tisch 68–76 cm, 500 lx |
 
 ## Für die Lehrkraft
 
@@ -168,7 +197,7 @@ der-lehrer/
 ├─ skripte/
 │  ├─ autoload/      Daten, Spielstand (Speichern/Laden), Audio (Klangsynthese), AufgabenLogik
 │  ├─ welt/          Bau (Grundkörper, Materialien, prozedurale Texturen), Bereich (gemeinsame Grundlage),
-│  │                 Keller, Erdgeschoss (Flur + Cafeteria), Zielmarker
+│  │                 Keller, Erdgeschoss (Flur + Cafeteria), Turnhalle, Werkstatt, Zielmarker
 │  ├─ figuren/       Figur (Figur aus Grundkörpern), Person (ansprechbar), Lehrer, Nebenfiguren, Spieler
 │  ├─ ui/            HUD, Minimap, Dialoge, Aufgabenfenster, Beweisbrett, Pausenmenü, Zwischensequenzen
 │  │  └─ aufgaben/   Multiple Choice, Berechnung, Sortieren, Fehlersuche, Schützschaltung, Stromlaufplan-Zeichner
@@ -188,6 +217,6 @@ der-lehrer/
 
 ## Nächste Schritte
 
-1. Akt 2 fortsetzen: Turnhalle und Werkstatt, Folgeschaltung Band 1/Band 2 (Schütztechnik Kap. 4), Netzwerktopologien (LtK 03)
-2. Akt 3 mit Finale als Prüfung
-3. Weitere Figuren (Sekretärin, Vince Moretti und die „Black Roses“), Ladebildschirme je Akt
+1. Finale als Abschlussprüfung: Zeitgesteuerte Folgeschaltung (Schütztechnik Kap. 6), Adressierung im Netzwerk (LtK 05),
+   ET Kap. 5–7, sobald die Unterlagen vorliegen
+2. Vince Moretti und die „Black Roses“ als Figuren, Ladebildschirme je Akt

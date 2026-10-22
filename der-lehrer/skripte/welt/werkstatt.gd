@@ -63,7 +63,7 @@ func _umgebung() -> void:
 	env.background_color = Color(0.02, 0.025, 0.05)
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	env.ambient_light_color = Color(0.5, 0.52, 0.5)
-	env.ambient_light_energy = 0.4
+	env.ambient_light_energy = 0.62
 	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
 	env.tonemap_exposure = 1.1
 	env.glow_enabled = true
@@ -79,7 +79,7 @@ func _umgebung() -> void:
 	umwelt = env
 	for p in [Vector3(-6.0, H, -3.0), Vector3(6.0, H, -3.0), Vector3(6.0, H, 3.5)]:
 		_roehre(p, true, Color(0.82, 0.95, 0.88))
-	_roehre(Vector3(-6.0, H, 3.5), false)
+	_roehre(Vector3(-6.0, H, 3.5), true, Color(0.82, 0.95, 0.88))
 	var l := _lampe(Vector3(-2.0, H, 2.0), Color(1.0, 0.85, 0.6), 1.6, 7.0, true, Color(0.2, 0.22, 0.25), 0.6)
 	_schatten_lichter.append(l)
 	var l2 := _lampe(Vector3(8.5, H, 6.2), Color(1.0, 0.82, 0.55), 1.2, 5.0, true, Color(0.2, 0.22, 0.25), 0.8)
@@ -87,8 +87,8 @@ func _umgebung() -> void:
 
 
 func _raum() -> void:
-	Bau.box(self, Vector3(X * 2 + 0.6, 0.2, Z * 2 + 0.6), Vector3(0, -0.1, 0), Bau.mat(Color(0.7, 0.72, 0.7), "beton", 0.3, 0.0, false), true)
-	Bau.box(self, Vector3(X * 2, 0.2, Z * 2), Vector3(0, H + 0.1, 0), Bau.mat(Color(0.5, 0.5, 0.52), "beton_dunkel", 0.3, 0.0, false))
+	Bau.box(self, Vector3(X * 2 + 0.6, 0.2, Z * 2 + 0.6), Vector3(0, -0.1, 0), Bau.mat(Color(0.95, 0.96, 0.93), "beton", 0.3, 0.0, false), true)
+	Bau.box(self, Vector3(X * 2, 0.2, Z * 2), Vector3(0, H + 0.1, 0), Bau.mat(Color(1, 1, 1), "deckenplatten", 0.83, 0.0, false))
 	var wand := Bau.mat(Color(0.85, 0.88, 0.85), "bloecke", 0.625, 0.0, false)
 	var unten := Bau.mat(Color(0.3, 0.45, 0.4), "beton", 0.8, 0.0, false)
 	Bau.box(self, Vector3(X * 2 + 0.6, H, 0.3), Vector3(0, H * 0.5, -Z - 0.15), wand, true)

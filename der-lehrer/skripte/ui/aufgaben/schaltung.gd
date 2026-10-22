@@ -40,14 +40,15 @@ func _bauen() -> void:
 	rechts.add_child(_optionen_box)
 	# viele Betriebsmittel: kompaktere Knöpfe, damit der Probelauf sichtbar bleibt
 	var kompakt: bool = a["optionen"].size() > 5
+	var eng: bool = a["optionen"].size() > 6 or a["logik"].get("taster", {}).size() > 4
 	if kompakt:
 		_optionen_box.add_theme_constant_override("separation", 3)
 	for o in a["optionen"]:
 		var b := Stil.knopf(o["text"], _option_gewaehlt.bind(o["id"]))
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		b.add_theme_font_size_override("font_size", 17 if kompakt else 19)
+		b.add_theme_font_size_override("font_size", 15 if eng else (17 if kompakt else 19))
 		b.add_theme_font_override("font", ThemeDB.fallback_font)
-		b.custom_minimum_size.y = 32 if kompakt else 40
+		b.custom_minimum_size.y = 27 if eng else (32 if kompakt else 40)
 		b.set_meta("id", o["id"])
 		_optionen_box.add_child(b)
 	var leeren := Stil.knopf("Lücke leeren", _option_gewaehlt.bind(""))
@@ -72,7 +73,7 @@ func _bauen() -> void:
 		_gedrueckt[t] = false
 		var b := Button.new()
 		b.text = taster.get(t, t)
-		b.custom_minimum_size = Vector2(108, 44) if kompakt else Vector2(150, 48)
+		b.custom_minimum_size = Vector2(108, 38 if eng else 44) if kompakt else Vector2(150, 48)
 		var beschriftung := String(taster[t])
 		var farbe := Color(0.1, 0.55, 0.2)
 		if "AUS" in beschriftung:
