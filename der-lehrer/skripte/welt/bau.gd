@@ -8,6 +8,12 @@ const KEGEL_SHADER := preload("res://shader/lichtkegel.gdshader")
 ## Konturen an Gegenständen im Raum (Comic-Look). Im GTA-3-Look aus.
 static var konturen := false
 static var _texturen := {}
+static var _normalen := {}
+## Material-Cache: gleiche Parameter -> gleiches Material (Voraussetzung fürs Zusammenfassen)
+static var _materialien := {}
+static var _normalmaps_an := true
+## Texturen mit Normal-Map (Relief für Fugen, Poren, Maserung)
+const RELIEF := {"beton": 1.5, "beton_dunkel": 1.5, "ziegel": 5.0, "metall": 0.8, "holz": 1.2, "kork": 2.0, "karton": 0.8}
 static var _konturen := {}
 
 
@@ -16,7 +22,11 @@ static var _konturen := {}
 ## Comic-Material: Toon-Licht, satte Farbe, optional Textur (triplanar) und Kontur.
 static func mat(farbe: Color, textur: String = "", skala: float = 1.0, kontur: float = 0.0,
 		toon: bool = false, rauheit: float = 0.8) -> StandardMaterial3D:
+	var schluessel := str([farbe, textur, skala, kontur > 0.0 and konturen, toon, rauheit])
+	if _materialien.has(schluessel):
+		return _materialien[schluessel]
 	var m := StandardMaterial3D.new()
+	_materialien[schluessel] = m
 	m.albedo_color = farbe
 	m.roughness = rauheit
 	if toon:
@@ -30,10 +40,22 @@ static func mat(farbe: Color, textur: String = "", skala: float = 1.0, kontur: f
 		m.uv1_triplanar = true
 		m.uv1_world_triplanar = true
 		m.uv1_scale = Vector3.ONE * skala
-		m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+		m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+		if RELIEF.has(textur):
+			m.normal_texture = normal_tex(textur)
+			m.normal_scale = 1.0
+			m.normal_enabled = _normalmaps_an
 	if kontur > 0.0 and konturen:
 		m.next_pass = kontur_mat(kontur, false)
 	return m
+
+
+## Normal-Maps aller gecachten Materialien an- oder ausschalten (Grafikstufe)
+static func normalmaps_setzen(an: bool) -> void:
+	_normalmaps_an = an
+	for m in _materialien.values():
+		if m.normal_texture:
+			m.normal_enabled = an
 
 
 ## Leuchtendes Material (Lampen, Anzeigen, Notausgang-Schild)
@@ -184,6 +206,8 @@ static func schild(eltern: Node3D, text: String, pos: Vector3, groesse: int = 48
 	l.rotation.y = rot_y
 	l.double_sided = false
 	l.shaded = false
+	# kleine Schrift aus der Ferne nicht zeichnen (spart Zeichenaufrufe)
+	l.visibility_range_end = 5.0 + groesse * 0.18
 	l.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	eltern.add_child(l)
 	return l
@@ -235,6 +259,83 @@ static func kollisionsbox(eltern: Node3D, groesse: Vector3, pos: Vector3) -> Sta
 	return sb
 
 
+# ---------------------------------------------------------------- Zusammenfassen
+
+## Fasst alle unbeweglichen Körper unter "wurzel" pro Material und Raumzelle zu einem Mesh zusammen.
+## Spart hunderte Zeichenaufrufe. Knoten mit Meta "dynamisch" (und ihre Kinder) bleiben einzeln.
+static func zusammenfassen(wurzel: Node3D, zelle: float = 6.0) -> int:
+	var gruppen := {}
+	var basis := wurzel.global_transform.affine_inverse()
+	for n in wurzel.find_children("*", "MeshInstance3D", true, false):
+		var mi := n as MeshInstance3D
+		if mi.mesh == null or mi.material_override == null or not mi.is_visible_in_tree():
+			continue
+		if not (mi.mesh is PrimitiveMesh):
+			continue
+		if _ist_dynamisch(mi, wurzel):
+			continue
+		var t := basis * mi.global_transform
+		var z := Vector3i(floori(t.origin.x / zelle), 0, floori(t.origin.z / zelle))
+		var schluessel := "%d_%d_%d_%d" % [mi.material_override.get_instance_id(), z.x, z.z, mi.cast_shadow]
+		if not gruppen.has(schluessel):
+			gruppen[schluessel] = {"mat": mi.material_override, "schatten": mi.cast_shadow, "teile": []}
+		gruppen[schluessel]["teile"].append([mi, t])
+	var anzahl := 0
+	for g in gruppen.values():
+		if g["teile"].size() < 2:
+			continue
+		var st := SurfaceTool.new()
+		st.begin(Mesh.PRIMITIVE_TRIANGLES)
+		for teil in g["teile"]:
+			var mi: MeshInstance3D = teil[0]
+			st.append_from(mi.mesh, 0, teil[1])
+			mi.mesh = null
+		var neu := MeshInstance3D.new()
+		neu.mesh = st.commit()
+		neu.material_override = g["mat"]
+		neu.cast_shadow = g["schatten"]
+		neu.name = "Zusammengefasst"
+		wurzel.add_child(neu)
+		anzahl += g["teile"].size()
+	return anzahl
+
+
+## Fasst die direkten Mesh-Kinder eines Knotens pro Material zusammen (für bewegte Teile wie Gliedmaßen)
+static func zusammenfassen_flach(knoten: Node3D) -> void:
+	var gruppen := {}
+	for c in knoten.get_children():
+		var mi := c as MeshInstance3D
+		if mi == null or mi.mesh == null or mi.material_override == null or not (mi.mesh is PrimitiveMesh):
+			continue
+		if mi.get_child_count() > 0:
+			continue
+		var k := mi.material_override.get_instance_id()
+		if not gruppen.has(k):
+			gruppen[k] = []
+		gruppen[k].append(mi)
+	for liste in gruppen.values():
+		if liste.size() < 2:
+			continue
+		var st := SurfaceTool.new()
+		st.begin(Mesh.PRIMITIVE_TRIANGLES)
+		for mi in liste:
+			st.append_from(mi.mesh, 0, mi.transform)
+		var neu := MeshInstance3D.new()
+		neu.mesh = st.commit()
+		neu.material_override = liste[0].material_override
+		knoten.add_child(neu)
+		for mi in liste:
+			mi.queue_free()
+
+
+static func _ist_dynamisch(n: Node, wurzel: Node) -> bool:
+	while n and n != wurzel:
+		if n.has_meta("dynamisch"):
+			return true
+		n = n.get_parent()
+	return false
+
+
 # ---------------------------------------------------------------- Texturen
 
 static func tex(name: String) -> Texture2D:
@@ -260,6 +361,67 @@ static func tex(name: String) -> Texture2D:
 	var t := ImageTexture.create_from_image(img)
 	_texturen[name] = t
 	return t
+
+
+## Normal-Map aus der Helligkeit der Textur (dunkle Fugen = vertieft)
+static func normal_tex(name: String) -> Texture2D:
+	if _normalen.has(name):
+		return _normalen[name]
+	var bild := (tex(name) as ImageTexture).get_image()
+	var hoehe := bild.duplicate() as Image
+	hoehe.clear_mipmaps()
+	hoehe.convert(Image.FORMAT_RGB8)
+	hoehe.bump_map_to_normal_map(RELIEF.get(name, 1.0))
+	hoehe.generate_mipmaps()
+	var t := ImageTexture.create_from_image(hoehe)
+	_normalen[name] = t
+	return t
+
+
+## Weicher Verlauf (oben durchsichtig, unten dunkel) für Schattenkanten an Wänden und Möbeln
+static func verlauf_tex() -> Texture2D:
+	if _texturen.has("_verlauf"):
+		return _texturen["_verlauf"]
+	var img := Image.create(8, 64, false, Image.FORMAT_RGBA8)
+	for y in 64:
+		var a := pow(float(y) / 63.0, 2.2)
+		for x in 8:
+			img.set_pixel(x, y, Color(0, 0, 0, a))
+	img.generate_mipmaps()
+	var t := ImageTexture.create_from_image(img)
+	_texturen["_verlauf"] = t
+	return t
+
+
+## Runder, weicher Schattenfleck (Kontaktschatten unter Figuren und Möbeln)
+static func fleck_rund_tex() -> Texture2D:
+	if _texturen.has("_rund"):
+		return _texturen["_rund"]
+	var img := Image.create(64, 64, false, Image.FORMAT_RGBA8)
+	for y in 64:
+		for x in 64:
+			var d := Vector2(x - 31.5, y - 31.5).length() / 32.0
+			img.set_pixel(x, y, Color(0, 0, 0, clampf(1.0 - d, 0.0, 1.0) ** 1.5))
+	img.generate_mipmaps()
+	var t := ImageTexture.create_from_image(img)
+	_texturen["_rund"] = t
+	return t
+
+
+## Material für Schattenflecken und Kanten (durchsichtig, unbeleuchtet)
+static func schatten_mat(textur: Texture2D, staerke: float) -> StandardMaterial3D:
+	var schluessel := "schatten_%d_%s" % [textur.get_instance_id(), staerke]
+	if _materialien.has(schluessel):
+		return _materialien[schluessel]
+	var m := StandardMaterial3D.new()
+	m.albedo_texture = textur
+	m.albedo_color = Color(1, 1, 1, staerke)
+	m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	m.cull_mode = BaseMaterial3D.CULL_DISABLED
+	m.depth_draw_mode = BaseMaterial3D.DEPTH_DRAW_DISABLED
+	_materialien[schluessel] = m
+	return m
 
 
 static func _rauschen(frequenz: float, saat: int) -> FastNoiseLite:

@@ -20,7 +20,7 @@ var glocke_ok := false
 var band_laeuft := false
 var netz_ok := false
 
-var _flacker_licht: OmniLight3D
+var _flacker_licht: SpotLight3D
 var _flacker_kegel: MeshInstance3D
 var _flacker_birne: StandardMaterial3D
 var _flacker_takt := 0.0
@@ -43,6 +43,10 @@ var _marker: Node3D
 var _sammel := {}
 var _zeit := 0.0
 var _led_mats: Array[StandardMaterial3D] = []
+## Lichter, die je nach Grafikstufe Schatten werfen (wichtigste zuerst)
+var _schatten_lichter: Array[Light3D] = []
+var _staub: Array[CPUParticles3D] = []
+var _umwelt: Environment
 var _nas_alarm: StandardMaterial3D
 var _led_takt := 0.0
 var _uhr_stunde: Node3D
@@ -82,6 +86,11 @@ func _ready() -> void:
 	_netzwerkschrank()
 	_sammelobjekte()
 	_marker_bauen()
+	_schattenkanten()
+	var n := Bau.zusammenfassen(self, 12.0)
+	print("Keller: %d Teile zusammengefasst" % n)
+	Grafik.geaendert.connect(_grafik_anwenden)
+	_grafik_anwenden()
 
 
 func _form(mitte_x: float, mitte_z: float, breite: float, tiefe: float, farbe: Color) -> void:
@@ -109,13 +118,16 @@ func _umgebung() -> void:
 	env.adjustment_enabled = true
 	env.adjustment_saturation = 1.05
 	env.adjustment_contrast = 1.1
+	_umwelt = env
 	var we := WorldEnvironment.new()
 	we.environment = env
 	add_child(we)
 
 	# Deckenlampen (warmes Licht, Lichtkegel)
-	_lampe(Vector3(-6.0, H, 5.5), Color(1.0, 0.78, 0.5), 1.4, 7.5, false)
-	_lampe(Vector3(5.0, H, -4.5), Color(0.85, 0.92, 1.0), 1.7, 9.0, true)
+	var l1 := _lampe(Vector3(-6.0, H, 5.5), Color(1.0, 0.78, 0.5), 1.4, 7.5, false)
+	var l2 := _lampe(Vector3(5.0, H, -4.5), Color(0.85, 0.92, 1.0), 1.7, 9.0, true)
+	_schatten_lichter.append(l2)
+	_schatten_lichter.append(l1)
 	# Leuchtstoffröhren (grünlich-kaltes Licht wie in alten Kellern)
 	_roehre(Vector3(-2.0, H, -6.2))
 	_roehre(Vector3(1.0, H, 3.8))
@@ -130,6 +142,7 @@ func _umgebung() -> void:
 	spot.spot_angle = 48.0
 	spot.shadow_enabled = true
 	add_child(spot)
+	_schatten_lichter.append(spot)
 	Bau.lichtkegel(self, Vector3(8.8, H - 0.1, 5.4), H - 0.1, 2.6, Color(1.0, 0.75, 0.45), 0.08)
 
 
@@ -148,25 +161,131 @@ func _roehre(pos: Vector3) -> void:
 	Bau.lichtkegel(self, pos - Vector3(0, 0.12, 0), pos.y - 0.12, 2.3, Color(0.7, 1.0, 0.85), 0.035)
 
 
-func _lampe(pos: Vector3, farbe: Color, energie: float, reichweite: float, schatten: bool) -> OmniLight3D:
+## Hängelampe mit Schirm: Spotlicht nach unten (Schatten kosten nur einen Durchgang)
+func _lampe(pos: Vector3, farbe: Color, energie: float, reichweite: float, schatten: bool) -> SpotLight3D:
 	var kabel_laenge := 0.55
 	Bau.zylinder(self, 0.012, kabel_laenge, pos - Vector3(0, kabel_laenge * 0.5, 0), m_dunkel)
 	var schirm_m := Bau.mat(Color(0.12, 0.3, 0.2), "", 1.0, 0.012)
 	Bau.zylinder(self, 0.38, 0.28, pos - Vector3(0, kabel_laenge + 0.12, 0), schirm_m, Vector3.ZERO, false, 0.1)
 	var birne := Bau.leucht(farbe, 4.0)
 	Bau.kugel(self, 0.09, pos - Vector3(0, kabel_laenge + 0.27, 0), birne)
-	var l := OmniLight3D.new()
-	l.position = pos - Vector3(0, kabel_laenge + 0.4, 0)
+	var l := SpotLight3D.new()
+	l.position = pos - Vector3(0, kabel_laenge + 0.3, 0)
+	l.rotation.x = -PI / 2
 	l.light_color = farbe
-	l.light_energy = energie
-	l.omni_range = reichweite
-	l.omni_attenuation = 1.2
+	l.light_energy = energie * 1.8
+	l.spot_range = reichweite
+	l.spot_angle = 70.0
+	l.spot_angle_attenuation = 0.6
+	l.spot_attenuation = 0.9
 	l.shadow_enabled = schatten
+	l.shadow_bias = 0.04
 	add_child(l)
 	var kegel := Bau.lichtkegel(self, pos - Vector3(0, kabel_laenge + 0.26, 0), pos.y - kabel_laenge - 0.26, 1.9, farbe, 0.065)
 	l.set_meta("kegel", kegel)
 	l.set_meta("birne", birne)
+	_staub_neu(pos - Vector3(0, kabel_laenge + 1.6, 0), farbe)
 	return l
+
+
+## Schwebender Staub im Lichtkegel (nur Mittel/Hoch)
+func _staub_neu(pos: Vector3, farbe: Color) -> void:
+	var p := CPUParticles3D.new()
+	p.position = pos
+	p.amount = 60
+	p.lifetime = 9.0
+	p.preprocess = 9.0
+	p.emission_shape = CPUParticles3D.EMISSION_SHAPE_BOX
+	p.emission_box_extents = Vector3(1.0, 1.4, 1.0)
+	p.gravity = Vector3(0, -0.006, 0)
+	p.direction = Vector3(0, 1, 0)
+	p.spread = 180.0
+	p.initial_velocity_min = 0.01
+	p.initial_velocity_max = 0.05
+	p.scale_amount_min = 0.5
+	p.scale_amount_max = 1.2
+	var q := QuadMesh.new()
+	q.size = Vector2(0.012, 0.012)
+	var m := StandardMaterial3D.new()
+	m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	m.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
+	m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	m.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+	m.albedo_texture = Bau.fleck_rund_tex()
+	m.albedo_color = Color(farbe.r, farbe.g, farbe.b, 0.55)
+	q.material = m
+	p.mesh = q
+	p.set_meta("dynamisch", true)
+	add_child(p)
+	_staub.append(p)
+
+
+## Weiche Schattenkanten: dunkle Verläufe am Wandfuß und Schattenflecken unter großen Möbeln
+func _schattenkanten() -> void:
+	var kante := Bau.schatten_mat(Bau.verlauf_tex(), 0.55)
+	var rund := Bau.schatten_mat(Bau.fleck_rund_tex(), 0.6)
+	var waende := [
+		[Vector3(0, 0, -T), Vector3(0, 0, -1), B * 2], [Vector3(0, 0, T), Vector3(0, 0, 1), B * 2],
+		[Vector3(-B, 0, 0), Vector3(-1, 0, 0), T * 2], [Vector3(B, 0, 0), Vector3(1, 0, 0), T * 2]]
+	for w in waende:
+		var pos: Vector3 = w[0]
+		var richtung: Vector3 = w[1]
+		var laenge: float = w[2]
+		var drehung := atan2(richtung.x, richtung.z)
+		# am Boden: zur Wand hin dunkler
+		var boden := Node3D.new()
+		boden.position = pos - richtung * 0.45 + Vector3(0, 0.006, 0)
+		boden.rotation.y = drehung
+		add_child(boden)
+		var q := MeshInstance3D.new()
+		var qm := QuadMesh.new()
+		qm.size = Vector2(laenge, 0.9)
+		q.mesh = qm
+		q.rotation.x = -PI / 2
+		q.material_override = kante
+		q.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		boden.add_child(q)
+		# an der Wand: nach unten dunkler
+		var wand := MeshInstance3D.new()
+		var wm := QuadMesh.new()
+		wm.size = Vector2(laenge, 0.8)
+		wand.mesh = wm
+		wand.material_override = kante
+		wand.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		wand.position = pos - richtung * 0.06 + Vector3(0, 0.4, 0)
+		wand.rotation.y = drehung + PI
+		add_child(wand)
+	# Schattenflecken unter großen Möbeln und Anlagen
+	for f in [[Vector3(9.0, 0, 6.3), Vector2(3.4, 1.9)], [Vector3(-9.6, 0, -6.6), Vector2(3.2, 3.2)],
+			[Vector3(6.0, 0, -4.5), Vector2(13.0, 1.8)], [Vector3(8.0, 0, -8.6), Vector2(1.8, 1.0)],
+			[Vector3(B - 0.4, 0, -1.0), Vector2(1.2, 3.2)], [Vector3(-7.1, 0, T - 0.3), Vector2(5.2, 1.2)],
+			[Vector3(0.5, 0, T - 0.45), Vector2(3.2, 1.3)], [Vector3(B - 0.45, 0, 1.4), Vector2(1.3, 1.1)],
+			[Vector3(-7.0, 0, 2.4), Vector2(1.8, 1.6)], [Vector3(B - 0.3, 0, 6.0), Vector2(1.0, 3.0)],
+			[Vector3(-1.5, 0, 1.0), Vector2(1.3, 1.3)], [Vector3(-10.4, 0, -3.4), Vector2(1.4, 1.6)]]:
+		var mi := MeshInstance3D.new()
+		var pm := QuadMesh.new()
+		pm.size = f[1]
+		mi.mesh = pm
+		mi.material_override = rund
+		mi.rotation.x = -PI / 2
+		mi.position = f[0] + Vector3(0, 0.008, 0)
+		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		add_child(mi)
+
+
+## Grafikstufe: Schatten, Staub und Leuchten anpassen
+func _grafik_anwenden() -> void:
+	var schatten := 0
+	match Grafik.stufe:
+		"mittel": schatten = 2
+		"hoch": schatten = _schatten_lichter.size()
+	for i in _schatten_lichter.size():
+		_schatten_lichter[i].shadow_enabled = i < schatten
+	for p in _staub:
+		p.visible = Grafik.ist("mittel")
+		p.amount = 90 if Grafik.stufe == "hoch" else 45
+	if _umwelt:
+		_umwelt.glow_enabled = Grafik.ist("mittel")
 
 
 # ---------------------------------------------------------------- Raum
@@ -372,6 +491,7 @@ func _bild(pos: Vector3, groesse: Vector2, text: String, farbe: Color) -> void:
 
 func _lichtstation() -> void:
 	_flacker_licht = _lampe(Vector3(-5.5, H, -1.0), Color(1.0, 0.82, 0.55), 1.6, 8.0, true)
+	_schatten_lichter.insert(2, _flacker_licht)
 	_flacker_kegel = _flacker_licht.get_meta("kegel")
 	_flacker_birne = _flacker_licht.get_meta("birne")
 	# Abzweigdose an der Westwand, Installationsrohr zur Decke und zur Leuchte
@@ -385,6 +505,7 @@ func _lichtstation() -> void:
 	# Kabelkanal mit fremdem Schraubendreher
 	Bau.box(self, Vector3(0.1, 0.08, 4.0), Vector3(-B + 0.05, 2.7, -1.0), Bau.mat(Color(0.92, 0.92, 0.9), "", 1.0, 0.0))
 	_schraubendreher = Node3D.new()
+	_schraubendreher.set_meta("dynamisch", true)
 	_schraubendreher.position = Vector3(-B + 0.08, 2.76, -0.3)
 	_schraubendreher.rotation.y = 0.3
 	add_child(_schraubendreher)
@@ -430,6 +551,7 @@ func _klingelanlage() -> void:
 	var wand := -T
 	# Glocke
 	_glocke = Node3D.new()
+	_glocke.set_meta("dynamisch", true)
 	_glocke.position = Vector3(x, 3.1, wand + 0.12)
 	add_child(_glocke)
 	var rot := Bau.mat(Color(0.85, 0.1, 0.08), "", 1.0, 0.012, true, 0.3)
@@ -510,6 +632,7 @@ func _foerderband() -> void:
 	Bau.box(self, Vector3(laenge, 0.04, 0.8), Vector3(mx, 0.87, z), _band_mat)
 	for x in [x0 + 0.1, x1 - 0.2]:
 		var rolle := Bau.zylinder(self, 0.07, 0.82, Vector3(x, 0.84, z), m_metall, Vector3(PI / 2, 0, 0))
+		rolle.set_meta("dynamisch", true)
 		_rollen.append(rolle)
 	Bau.kollisionsbox(self, Vector3(laenge, 1.0, 0.95), Vector3(mx, 0.5, z))
 	_form(mx, z, laenge, 0.9, Color(0.35, 0.5, 0.7))
@@ -539,6 +662,7 @@ func _foerderband() -> void:
 		Bau.box(kiste, Vector3(0.5, 0.38, 0.5), Vector3.ZERO, m_karton)
 		Bau.box(kiste, Vector3(0.51, 0.06, 0.12), Vector3(0, 0.17, 0), Bau.mat(Color(0.85, 0.75, 0.55), "", 1.0, 0.0))
 		Bau.schild(kiste, "PUDDING" if i % 2 == 0 else "LUNCH", Vector3(0, 0, 0.255), 22, Color(0.4, 0.1, 0.05))
+		kiste.set_meta("dynamisch", true)
 		_kisten.append(kiste)
 	# Bedienpult
 	Bau.zylinder(self, 0.035, 1.1, Vector3(1.6, 0.55, -3.6), m_dunkel)
@@ -601,6 +725,7 @@ func _schaltschrank() -> void:
 			Bau.box(s, Vector3(0.1, 0.22, 0.12), Vector3(-0.4 + i * 0.16, y, 0.25), Bau.mat(farbe, "", 1.0, 0.006))
 	# schwarze Rose (zunächst unsichtbar)
 	_rose = Node3D.new()
+	_rose.set_meta("dynamisch", true)
 	_rose.position = Vector3(0.05, 1.22, 0.3)
 	_rose.visible = false
 	s.add_child(_rose)
@@ -614,6 +739,7 @@ func _schaltschrank() -> void:
 	Bau.box(_rose, Vector3(0.05, 0.012, 0.03), Vector3(-0.05, -0.03, 0), Bau.mat(Color(0.1, 0.35, 0.12)))
 	# Tür (Scharnier links)
 	_schranktuer = Node3D.new()
+	_schranktuer.set_meta("dynamisch", true)
 	_schranktuer.position = Vector3(-0.6, 1.2, 0.235)
 	s.add_child(_schranktuer)
 	Bau.box(_schranktuer, Vector3(1.2, 2.0, 0.03), Vector3(0.6, 0, 0), m_ral)
@@ -829,9 +955,11 @@ func _netzwerkschrank() -> void:
 	for g in [[1.56, Color(0.12, 0.12, 0.13), 16], [1.42, Color(0.22, 0.25, 0.3), 6], [1.28, Color(0.55, 0.08, 0.08), 6]]:
 		Bau.box(r, Vector3(0.52, 0.09, 0.03), Vector3(0, g[0], 0.39), Bau.mat(g[1], "metall", 1.0, 0.0, false, 0.5))
 		for i in int(g[2]):
-			var m := Bau.leucht(Color(0.2, 1.0, 0.3) if i % 5 else Color(1.0, 0.65, 0.1), 2.0)
+			# vier gemeinsame LED-Materialien, die unabhängig flackern
+			while _led_mats.size() < 4:
+				_led_mats.append(Bau.leucht(Color(0.2, 1.0, 0.3) if _led_mats.size() < 3 else Color(1.0, 0.65, 0.1), 2.0))
+			var m: StandardMaterial3D = _led_mats[(i * 7 + int(g[0] * 10.0)) % 4]
 			Bau.box(r, Vector3(0.012, 0.012, 0.01), Vector3(-0.2 + i * 0.026, g[0] + 0.02, 0.41), m)
-			_led_mats.append(m)
 	# NAS mit vier Festplatten und Alarmleuchte
 	Bau.box(r, Vector3(0.5, 0.22, 0.03), Vector3(0, 1.02, 0.39), grau)
 	for i in 4:
@@ -1106,6 +1234,7 @@ func _sammel_neu(id: String, pos: Vector3) -> void:
 	funkeln.name = "Funkeln"
 	(funkeln.material_override as StandardMaterial3D).transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	(funkeln.material_override as StandardMaterial3D).albedo_color.a = 0.35
+	k.set_meta("dynamisch", true)
 	_sammel[id] = k
 	stationen["sammel:" + id] = Interaktiv.neu(self, "sammel:" + id, Vector3(pos.x, 0, pos.z), "Etwas glitzert hier …", 1.4)
 
@@ -1123,6 +1252,7 @@ func sammel_entfernen(id: String) -> void:
 
 func _marker_bauen() -> void:
 	_marker = Node3D.new()
+	_marker.set_meta("dynamisch", true)
 	_marker.visible = false
 	add_child(_marker)
 	var s := ShaderMaterial.new()

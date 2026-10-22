@@ -52,8 +52,15 @@ func _ready() -> void:
 	_bauen()
 
 
+var _mat_cache := {}
+
+
 func _m(c: Color, textur: String = "", skala: float = 4.0, kontur: bool = true) -> StandardMaterial3D:
+	var schluessel := str([c, textur, skala, kontur])
+	if _mat_cache.has(schluessel):
+		return _mat_cache[schluessel]
 	var m := StandardMaterial3D.new()
+	_mat_cache[schluessel] = m
 	m.albedo_color = c
 	m.roughness = 0.85
 	if textur != "":
@@ -69,6 +76,17 @@ func _m(c: Color, textur: String = "", skala: float = 4.0, kontur: bool = true) 
 	return m
 
 
+## Gleichfarbige Teile je Gelenk zu einem Mesh verbinden (weniger Zeichenaufrufe)
+func _zusammenfassen() -> void:
+	var gelenke: Array[Node3D] = [self, _rumpf, _kopf]
+	gelenke.append_array(_oberschenkel)
+	gelenke.append_array(_knie)
+	gelenke.append_array(_oberarm)
+	gelenke.append_array(_ellbogen)
+	for g in gelenke:
+		Bau.zusammenfassen_flach(g)
+
+
 func _zyl(eltern: Node3D, r_unten: float, r_oben: float, h: float, pos: Vector3, m: Material, segmente: int = 8) -> MeshInstance3D:
 	return Bau.zylinder(eltern, r_unten, h, pos, m, Vector3.ZERO, false, r_oben, segmente)
 
@@ -82,6 +100,16 @@ func _kug(eltern: Node3D, r: float, pos: Vector3, m: Material, skala: Vector3 = 
 
 
 func _bauen() -> void:
+	# Kontaktschatten unter den Füßen
+	var schatten := MeshInstance3D.new()
+	var qm := QuadMesh.new()
+	qm.size = Vector2(0.75, 0.75)
+	schatten.mesh = qm
+	schatten.material_override = Bau.schatten_mat(Bau.fleck_rund_tex(), 0.55)
+	schatten.rotation.x = -PI / 2
+	schatten.position.y = 0.012
+	schatten.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(schatten)
 	var haut := _m(stil["haut"])
 	var jacke := _m(stil["jacke"], stil["jacke_textur"])
 	var hose := _m(stil["hose"], stil["hose_textur"])
@@ -162,6 +190,7 @@ func _bauen() -> void:
 	if stil["comic"]:
 		_kopf.scale = Vector3.ONE * 1.18
 	_kopf_bauen(haut)
+	_zusammenfassen()
 
 
 func _kopf_bauen(haut: StandardMaterial3D) -> void:
@@ -173,7 +202,7 @@ func _kopf_bauen(haut: StandardMaterial3D) -> void:
 	}
 	_gesicht_offen = Gesicht.textur(gesicht_stil, false)
 	_gesicht_zu = Gesicht.textur(gesicht_stil, true)
-	_gesicht_mat = _m(Color.WHITE)
+	_gesicht_mat = _m(Color.WHITE).duplicate()
 	_gesicht_mat.albedo_texture = _gesicht_offen
 	_gesicht_mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	var kopf := _kug(k, 0.105, Vector3.ZERO, _gesicht_mat, Vector3(0.88, 1.12, 0.98))

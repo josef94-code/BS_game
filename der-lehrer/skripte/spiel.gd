@@ -83,6 +83,10 @@ func _nachbearbeitung() -> void:
 	m.shader = preload("res://shader/ps2_look.gdshader")
 	r.material = m
 	ebene.add_child(r)
+	# auf "Niedrig" ohne Filter (spart eine Bildschirmkopie)
+	var umschalten := func(): ebene.visible = Grafik.ist("mittel")
+	Grafik.geaendert.connect(umschalten)
+	umschalten.call()
 
 
 # ---------------------------------------------------------------- Zustand
@@ -148,6 +152,7 @@ func gesperrt() -> bool:
 func _process(delta: float) -> void:
 	var g := gesperrt()
 	spieler.gesperrt = g
+	Grafik.aktiv_messen = not g and not Spielstand.autotest
 	hud.alles_zeigen(not sequenz.aktiv and not dialog.ist_aktiv())
 	if g:
 		_naechstes = null

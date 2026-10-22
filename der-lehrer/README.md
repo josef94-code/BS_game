@@ -14,7 +14,7 @@ Nebel, Lichtinseln aus Glühbirnen und Leuchtstoffröhren, weicher PS2-Filter mi
 Ruf-Ziffern, Hilfe-Box oben links, Untertitel, Missionstitel unten rechts. Menü und Ladebildschirm zeigen den Lehrer
 als Porträt mit kräftigen Konturen.
 
-**Stand: Prototyp v0.5** – ein Raum (Hausmeisterkeller mit Büro des Lehrers) und vier Missionen aus Akt 1.
+**Stand: Prototyp v0.6** – ein Raum (Hausmeisterkeller mit Büro des Lehrers) und vier Missionen aus Akt 1.
 Seit v0.5 sind die Aufgaben mit den Lernunterlagen (ET, Schütztechnik, LtK) abgeglichen. Der Gesamtplan (drei Akte, 24 Missionen) steht in [`PLAN.md`](PLAN.md).
 
 ## Starten
@@ -24,6 +24,21 @@ Seit v0.5 sind die Aufgaben mit den Lernunterlagen (ET, Schütztechnik, LtK) abg
 - Die `.exe` wird automatisch gebaut: GitHub → *Actions* → *DER LEHRER – Windows-Build* → neuester Lauf → Artefakt **DerLehrer-Windows**.
 - Läuft auch vom USB-Stick oder Netzlaufwerk. Grafik: OpenGL 3.3 (Godot „Compatibility“), ohne passenden OpenGL-Treiber weicht Godot unter Windows auf Direct3D 11 (ANGLE) aus.
 - Fenstergröße: beliebig, die Oberfläche skaliert mit (getestet mit 1280×720 und 1600×900).
+
+## Grafikstufen
+
+Im Hauptmenü und im Pausenmenü (Esc) lässt sich die Grafik umschalten: **Automatisch**, **Niedrig**, **Mittel**, **Hoch**.
+
+| Stufe | Inhalt |
+|---|---|
+| Niedrig | ohne Schatten, ohne Filter und Staub, ohne Relief, 80 % Auflösung mit Kantenglättung (FXAA) – für sehr schwache Rechner |
+| Mittel | 2 Lampen mit Schatten, PS2-Filter, Leuchten (Glow), Staub im Licht, Relief auf Ziegeln/Beton/Metall, 2× MSAA |
+| Hoch | 4 Lampen mit weichen Schatten, mehr Staub, 4× MSAA |
+
+**Automatisch** startet mit „Hoch“ und schaltet eine Stufe herunter, wenn das Spiel beim Herumlaufen mehrere Sekunden
+lang unter ca. 33 Bilder pro Sekunde fällt. Die Wahl wird pro Rechner gespeichert (Benutzerordner, nicht im Spielstand).
+Alle unbeweglichen Teile des Raums werden beim Laden zusammengefasst; dadurch braucht der Keller auf „Niedrig“ nur
+etwa ein Fünftel der früheren Zeichenaufrufe.
 
 ## Steuerung
 
