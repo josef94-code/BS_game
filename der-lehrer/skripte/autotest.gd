@@ -6,12 +6,16 @@ var spiel
 var _ordner := "user://autotest"
 var _nr := 0
 var _fehler_bereiche := 0
+## --ab=<quest-id>: frühere Missionen als erledigt setzen (schneller Test späterer Akte)
+var _ab := ""
 
 
 func _ready() -> void:
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("--shots="):
 			_ordner = a.substr(8)
+		elif a.begins_with("--ab="):
+			_ab = a.substr(5)
 	DirAccess.make_dir_recursive_absolute(_ordner)
 	_ablauf.call_deferred()
 
@@ -65,7 +69,18 @@ func _ablauf() -> void:
 	await _warte(0.5)
 	await _foto("keller_ueberblick")
 
+	if _ab != "":
+		for q in Daten.quests:
+			if q["id"] == _ab:
+				break
+			Spielstand.setze_quest_status(q["id"], "erledigt")
+			Spielstand.beweis_dazu(q["beweis"])
+			Spielstand.ruf_dazu(int(q["ruf"]))
+		spiel._welt_aus_spielstand()
+		spiel._ziel_aktualisieren()
 	for q in Daten.quests:
+		if Spielstand.quest_status(q["id"]) == "erledigt":
+			continue
 		var geber: String = q.get("auftraggeber", "lehrer")
 		if q["id"] == "q05_leitung":
 			await _bereiche_testen()

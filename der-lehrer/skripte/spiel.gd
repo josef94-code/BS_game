@@ -289,6 +289,7 @@ func _process(delta: float) -> void:
 	spieler.gesperrt = g
 	Grafik.aktiv_messen = not g and not Spielstand.autotest
 	hud.alles_zeigen(not sequenz.aktiv and not dialog.ist_aktiv())
+	marker.versteckt = sequenz.aktiv or dialog.ist_aktiv()
 	if g:
 		_naechstes = null
 		hud.prompt("")

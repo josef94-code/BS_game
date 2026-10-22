@@ -16,7 +16,7 @@ const DURCHGANG := 1.6
 
 var spawn := Vector3(-15.6, 0, -1.3)
 var spawn_blick := -PI / 2.0
-var kowalski_pos := Vector3(-2.2, 0, 0.9)
+var kowalski_pos := Vector3(-5.0, 0, -0.7)
 var kowalski_blick := PI / 2.0
 var rosalita_pos := Vector3(32.2, 0, 0.4)
 var rosalita_blick := PI / 2.0

@@ -4,6 +4,8 @@ extends Node3D
 
 var _ring: Node3D
 var _zeit := 0.0
+## in Zwischensequenzen ausblenden, ohne das Ziel zu vergessen
+var versteckt := false
 
 
 func _ready() -> void:
@@ -41,5 +43,7 @@ func ziel() -> Variant:
 
 func _process(delta: float) -> void:
 	_zeit += delta
+	for c in get_children():
+		(c as Node3D).visible = not versteckt
 	if visible:
 		_ring.scale = Vector3.ONE * (1.0 + sin(_zeit * 3.0) * 0.08)
