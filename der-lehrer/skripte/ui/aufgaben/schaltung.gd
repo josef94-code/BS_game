@@ -38,16 +38,20 @@ func _bauen() -> void:
 	_optionen_box = VBoxContainer.new()
 	_optionen_box.add_theme_constant_override("separation", 5)
 	rechts.add_child(_optionen_box)
+	# viele Betriebsmittel: kompaktere Knöpfe, damit der Probelauf sichtbar bleibt
+	var kompakt: bool = a["optionen"].size() > 5
+	if kompakt:
+		_optionen_box.add_theme_constant_override("separation", 3)
 	for o in a["optionen"]:
 		var b := Stil.knopf(o["text"], _option_gewaehlt.bind(o["id"]))
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		b.add_theme_font_size_override("font_size", 19)
+		b.add_theme_font_size_override("font_size", 17 if kompakt else 19)
 		b.add_theme_font_override("font", ThemeDB.fallback_font)
-		b.custom_minimum_size.y = 40
+		b.custom_minimum_size.y = 32 if kompakt else 40
 		b.set_meta("id", o["id"])
 		_optionen_box.add_child(b)
 	var leeren := Stil.knopf("Lücke leeren", _option_gewaehlt.bind(""))
-	leeren.custom_minimum_size.y = 36
+	leeren.custom_minimum_size.y = 30 if kompakt else 36
 	_optionen_box.add_child(leeren)
 
 	# Probelauf
@@ -58,7 +62,7 @@ func _bauen() -> void:
 	probe.add_child(pv)
 	pv.add_child(Stil.label("PROBELAUF – Taster gedrückt halten", 17, Color(1.0, 0.85, 0.3), 0, Stil.fett()))
 	var ph := GridContainer.new()
-	ph.columns = 2
+	ph.columns = 4 if kompakt else 2
 	ph.add_theme_constant_override("h_separation", 10)
 	ph.add_theme_constant_override("v_separation", 6)
 	pv.add_child(ph)
@@ -69,7 +73,7 @@ func _bauen() -> void:
 		_gedrueckt[t] = false
 		var b := Button.new()
 		b.text = taster.get(t, t)
-		b.custom_minimum_size = Vector2(150, 48)
+		b.custom_minimum_size = Vector2(108, 44) if kompakt else Vector2(150, 48)
 		var farbe := Color(0.1, 0.55, 0.2) if "EIN" in String(taster[t]) else Color(0.7, 0.1, 0.1)
 		b.add_theme_stylebox_override("normal", Stil.box(farbe, Color.BLACK, 2, 24))
 		b.add_theme_stylebox_override("hover", Stil.box(farbe.lightened(0.15), Color.WHITE, 2, 24))

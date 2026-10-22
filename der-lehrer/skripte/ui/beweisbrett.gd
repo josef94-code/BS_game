@@ -119,6 +119,11 @@ func _aufbauen() -> void:
 			fragen.append("?  " + f["text"])
 	if fragen.is_empty():
 		fragen.append("?  Warum geht in der frisch sanierten Schule so viel kaputt?")
+	# nur die neuesten Fragen, damit die Notizen auf das Brett passen
+	if fragen.size() > 5:
+		var aeltere := fragen.size() - 5
+		fragen = fragen.slice(aeltere)
+		fragen.push_front("(… %d ältere Fragen)" % aeltere)
 	_rechts.add_child(_zettel("OFFENE FRAGEN", "\n".join(fragen), Color(1.0, 0.95, 0.55)))
 	var verdaechtige := "???"
 	if Spielstand.hat_beweis("b_rose"):
@@ -129,12 +134,15 @@ func _aufbauen() -> void:
 		verdaechtige += "\nVince Moretti (Abschlussklasse) – Kopf der „Black Roses“? Er trifft sich mit Sterling Bau."
 	_rechts.add_child(_zettel("VERDÄCHTIGE", verdaechtige, Color(0.75, 0.88, 1.0)))
 	var teile := []
+	var fehlen := 0
 	for id in Daten.beweise.get("sammel", {}):
 		if Spielstand.hat_sammel(id):
 			teile.append("✔  " + Daten.sammelobjekt(id)["titel"])
 		else:
-			teile.append("–  ???")
-	_rechts.add_child(_zettel("VERLORENE BAUTEILE  %d/%d" % [Spielstand.d["sammel"].size(), teile.size()], "\n".join(teile), Color(0.85, 1.0, 0.8)))
+			fehlen += 1
+	if fehlen > 0:
+		teile.append("–  %d noch nicht gefunden" % fehlen)
+	_rechts.add_child(_zettel("VERLORENE BAUTEILE  %d/%d" % [Spielstand.d["sammel"].size(), Daten.beweise.get("sammel", {}).size()], "\n".join(teile), Color(0.85, 1.0, 0.8)))
 	var rang := "%s  ·  Ruf %d" % [Spielstand.rang(), Spielstand.ruf()]
 	_rechts.add_child(_zettel(String(Spielstand.d["name"]).to_upper(), rang, Color(0.98, 0.98, 0.95)))
 

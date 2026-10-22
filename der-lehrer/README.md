@@ -37,7 +37,7 @@ Im Hauptmenü und im Pausenmenü (Esc) lässt sich die Grafik umschalten: **Auto
 
 | Stufe | Inhalt |
 |---|---|
-| Niedrig | ohne Schatten, ohne Filter und Staub, ohne Relief, 80 % Auflösung mit Kantenglättung (FXAA) – für sehr schwache Rechner |
+| Niedrig | ohne Schatten, ohne Filter und Staub, ohne Relief, ohne Kantenglättung, 80 % Auflösung – für sehr schwache Rechner |
 | Mittel | 2 Lampen mit Schatten, PS2-Filter, Leuchten (Glow), Staub im Licht, Relief auf Ziegeln/Beton/Metall, 2× MSAA |
 | Hoch | 4 Lampen mit weichen Schatten, mehr Staub, 4× MSAA |
 

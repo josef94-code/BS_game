@@ -76,7 +76,7 @@ func anwenden() -> void:
 		"niedrig":
 			vp.msaa_3d = Viewport.MSAA_DISABLED
 			vp.scaling_3d_scale = 0.8
-			vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA
+			vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED
 		"mittel":
 			vp.msaa_3d = Viewport.MSAA_2X
 			vp.scaling_3d_scale = 1.0
