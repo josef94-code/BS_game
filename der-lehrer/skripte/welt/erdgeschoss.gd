@@ -187,8 +187,7 @@ func _flur_raum() -> void:
 		var absperr := Bau.box(self, Vector3(0.02, 0.08, 1.3), Vector3(FX0 + 0.35, 0.95 + i * 0.35, 1.3), band_m)
 		absperr.rotation.x = 0.08 * (1 - i * 2)
 	Bau.schild(self, "BAUSTELLE\nSTERLING BAU", Vector3(FX0 + 0.38, 1.3, 1.3), 22, Color(0.1, 0.1, 0.1), PI / 2)
-	ausgang = Interaktiv.neu(self, "treppe", Vector3(FX0 + 0.7, 0, -1.3), "Treppe zum Keller", 1.5)
-	stationen["treppe"] = ausgang
+	stationen["treppe"] = Interaktiv.neu(self, "treppe", Vector3(FX0 + 0.7, 0, -1.3), "Treppe zum Keller", 1.5)
 	stationen["verschlossen:oben"] = Interaktiv.neu(self, "verschlossen:oben", Vector3(FX0 + 0.8, 0, 1.4), "Treppe nach oben", 1.2)
 	# Ostende: Durchgang in die Cafeteria
 	var schild_bg := Bau.mat(Color(0.5, 0.08, 0.1), "", 1.0, 0.0)
@@ -204,6 +203,24 @@ func _flur_raum() -> void:
 	# Raumgrenze zur Cafeteria (Wandstücke neben dem Durchgang)
 	_form(mx, -FZ - 0.15, laenge, 0.3, Color(0.85, 0.85, 0.8))
 	_form(mx, FZ + 0.15, laenge, 0.3, Color(0.85, 0.85, 0.8))
+
+
+## Zweiflügelige Tür mit Bullaugen (Turnhalle)
+func _doppeltuer(pos: Vector3, rot_y: float, text: String) -> void:
+	var t := Node3D.new()
+	t.position = pos
+	t.rotation.y = rot_y
+	add_child(t)
+	var blatt := Bau.mat(Color(0.55, 0.08, 0.1), "metall", 1.0, 0.012)
+	for seite in [-1, 1]:
+		Bau.box(t, Vector3(0.95, 2.25, 0.06), Vector3(0.48 * seite, 1.125, 0), blatt)
+		Bau.zylinder(t, 0.14, 0.03, Vector3(0.48 * seite, 1.6, 0.03), Bau.glas(Color(0.6, 0.7, 0.85, 0.35)), Vector3(PI / 2, 0, 0))
+		Bau.box(t, Vector3(0.6, 0.06, 0.06), Vector3(0.35 * seite, 1.0, 0.06), m_metall)
+	Bau.box(t, Vector3(2.1, 0.1, 0.12), Vector3(0, 2.3, 0), m_dunkel)
+	for seite in [-1, 1]:
+		Bau.box(t, Vector3(0.08, 2.35, 0.12), Vector3(1.0 * seite, 1.17, 0), m_dunkel)
+	Bau.box(t, Vector3(1.4, 0.26, 0.02), Vector3(0, 2.55, 0.04), Bau.mat(Color(0.98, 0.8, 0.25), "", 1.0, 0.0))
+	Bau.schild(t, text, Vector3(0, 2.55, 0.055), 26, Color(0.3, 0.05, 0.06))
 
 
 ## Tür mit Rahmen und Schild (geschlossen, nur Dekoration)
@@ -226,7 +243,7 @@ func _tuer(pos: Vector3, rot_y: float, farbe: Color, text: String) -> void:
 
 func _spinde() -> void:
 	# Nordseite (Spinde schauen nach Süden in den Flur)
-	for r in [[-16.8, -11.2], [-9.2, -3.2], [-1.4, 7.0], [11.0, 13.6]]:
+	for r in [[-16.8, -11.2], [-9.2, -3.2], [-1.4, 7.0]]:
 		_spindreihe(r[0], r[1], -FZ, 1.0)
 	# Südseite
 	for r in [[-13.2, -7.6], [-5.8, -1.6], [1.2, 9.2]]:
@@ -235,6 +252,15 @@ func _spinde() -> void:
 	_tuer(Vector3(-10.2, 0, -FZ + 0.02), 0.0, Color(0.55, 0.38, 0.2), "R 104  ·  MT10")
 	_tuer(Vector3(-2.4, 0, -FZ + 0.02), 0.0, Color(0.55, 0.38, 0.2), "R 106  ·  PHYSIK")
 	_tuer(Vector3(-6.8, 0, FZ - 0.02), PI, Color(0.55, 0.38, 0.2), "SEKRETARIAT")
+	# Doppeltür zur Turnhalle (Nordwand) und Tür zur Werkstatt (Südwand)
+	_doppeltuer(Vector3(12.3, 0, -FZ + 0.02), 0.0, "TURNHALLE")
+	_tuer(Vector3(13.1, 0, FZ - 0.02), PI, Color(0.45, 0.47, 0.5), "WERKSTATT")
+	stationen["turnhalle"] = Interaktiv.neu(self, "turnhalle", Vector3(12.3, 0, -FZ + 0.8), "Turnhalle", 1.3)
+	stationen["werkstatt"] = Interaktiv.neu(self, "werkstatt", Vector3(13.1, 0, FZ - 0.8), "Werkstatt", 1.2)
+	symbole.append({"p": Vector3(12.3, 0, -FZ - 0.4), "t": "T", "f": Color(0.3, 1.0, 0.5)})
+	symbole.append({"p": Vector3(13.1, 0, FZ + 0.4), "t": "W", "f": Color(0.3, 1.0, 0.5)})
+	tueren = {"treppe": "Keller", "turnhalle": "Turnhalle", "werkstatt": "Werkstatt"}
+	ankunft = {"Keller": [spawn, spawn_blick], "Turnhalle": [Vector3(12.3, 0, -FZ + 1.5), PI], "Werkstatt": [Vector3(13.1, 0, FZ - 1.5), 0.0]}
 	stationen["verschlossen:mt10"] = Interaktiv.neu(self, "verschlossen:mt10", Vector3(-10.2, 0, -FZ + 0.8), "Klassenzimmer der MT10", 1.0)
 	stationen["verschlossen:sekretariat"] = Interaktiv.neu(self, "verschlossen:sekretariat", Vector3(-6.8, 0, FZ - 0.8), "Sekretariat", 1.0)
 	# Der Spind von Vince Moretti (mit Rosen-Aufkleber)
@@ -330,10 +356,10 @@ func _flur_details() -> void:
 		z.rotation.z = rng.randf_range(-0.12, 0.12)
 	Bau.schild(self, "SCHWARZES BRETT", Vector3(10.4, 2.12, FZ - 0.05), 20, Color(0.95, 0.95, 0.9), PI, 4)
 	# Trinkbrunnen
-	Bau.box(self, Vector3(0.5, 0.35, 0.4), Vector3(12.6, 0.85, FZ - 0.2), m_stahl)
-	Bau.box(self, Vector3(0.4, 0.05, 0.3), Vector3(12.6, 1.03, FZ - 0.22), Bau.mat(Color(0.6, 0.62, 0.65), "metall", 1.0, 0.0, false, 0.2))
-	Bau.zylinder(self, 0.05, 0.68, Vector3(12.6, 0.34, FZ - 0.12), m_stahl)
-	_form(12.6, FZ - 0.2, 0.5, 0.4, Color(0.7, 0.7, 0.72))
+	Bau.box(self, Vector3(0.5, 0.35, 0.4), Vector3(11.85, 0.85, FZ - 0.2), m_stahl)
+	Bau.box(self, Vector3(0.4, 0.05, 0.3), Vector3(11.85, 1.03, FZ - 0.22), Bau.mat(Color(0.6, 0.62, 0.65), "metall", 1.0, 0.0, false, 0.2))
+	Bau.zylinder(self, 0.05, 0.68, Vector3(11.85, 0.34, FZ - 0.12), m_stahl)
+	_form(11.85, FZ - 0.2, 0.5, 0.4, Color(0.7, 0.7, 0.72))
 	# Wanduhr über dem Sekretariat
 	Bau.zylinder(self, 0.2, 0.05, Vector3(-6.8, 2.85, FZ - 0.03), Bau.mat(Color(0.95, 0.95, 0.92)), Vector3(PI / 2, 0, 0))
 	Bau.torus(self, 0.19, 0.22, Vector3(-6.8, 2.85, FZ - 0.04), m_dunkel, Vector3(PI / 2, 0, 0))
@@ -1045,7 +1071,7 @@ static func _lichtfleck_tex() -> ImageTexture:
 
 func _sammelobjekte() -> void:
 	_sammel_neu("s_nym", Vector3(FX0 + 0.7, 0.1, 2.1))
-	_sammel_neu("s_rj45", Vector3(12.2, 2.05, -FZ + 0.25))
+	_sammel_neu("s_rj45", Vector3(6.4, 2.05, -FZ + 0.25))
 	_sammel_neu("s_lwl", Vector3(22.6, 0.08, 4.1))
 
 

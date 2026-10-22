@@ -82,8 +82,21 @@ func _ablauf() -> void:
 		if Spielstand.quest_status(q["id"]) == "erledigt":
 			continue
 		var geber: String = q.get("auftraggeber", "lehrer")
-		if q["id"] == "q05_leitung":
-			await _bereiche_testen()
+		match q["id"]:
+			"q05_leitung":
+				await _tuer_testen("tuer", spiel.erdgeschoss, [["flur_west", Vector3(-12.0, 0, 0.0), -PI / 2.0],
+					["flur_ost", Vector3(4.0, 0, 0.5), -PI / 2.0], ["flur_rueck", Vector3(6.0, 0, -0.5), PI / 2.0],
+					["cafeteria", Vector3(16.0, 0, 0.0), -PI / 2.0 - 0.3], ["cafeteria_band", Vector3(22.0, 0, -1.5), -PI / 2.0 + 0.5],
+					["cafeteria_theke", Vector3(26.0, 0, 1.5), -PI / 2.0 + 0.2]])
+			"q08_halle":
+				await _tuer_testen("turnhalle", spiel.turnhalle, [["turnhalle_eingang", Vector3(-10.0, 0, 7.0), -0.6],
+					["turnhalle_feld", Vector3(-8.0, 0, 0.0), -PI / 2.0], ["turnhalle_tribuene", Vector3(4.0, 0, 5.0), 0.2],
+					["turnhalle_tafel", Vector3(4.0, 0, -2.0), -PI / 2.0 - 0.2]])
+			"q10_absaugung":
+				await _tuer_testen("turnhalle_raus", spiel.erdgeschoss, [])
+				await _tuer_testen("werkstatt", spiel.werkstatt, [["werkstatt_eingang", Vector3(-9.0, 0, -5.5), PI + 0.6],
+					["werkstatt_saege", Vector3(3.0, 0, -1.0), PI / 2.0 + 0.4], ["werkstatt_bank", Vector3(4.0, 0, 1.0), -PI / 2.0 + 0.5],
+					["werkstatt_labor", Vector3(1.0, 0, -1.5), 0.0]])
 		# Auftrag beim Auftraggeber annehmen
 		_vor_person(geber)
 		await _warte(0.5)
@@ -187,23 +200,20 @@ func _vor_person(id: String) -> void:
 	spiel.spieler.setze_blick(atan2(-d.x, -d.z))
 
 
-## Tür nach oben, Flur und Cafeteria ansehen
-func _bereiche_testen() -> void:
-	spiel.spieler.global_position = spiel.keller.ausgang.global_position + Vector3(1.0, 0, 0)
-	spiel.spieler.setze_blick(PI / 2.0)
+## Durch eine Tür gehen, Ankunftsbereich prüfen und Ansichten fotografieren
+func _tuer_testen(id: String, ziel: Bereich, ansichten: Array) -> void:
+	var tuer: Interaktiv = spiel.station_finden(id)
+	spiel.spieler.global_position = tuer.global_position
 	await _warte(0.6)
-	await _foto("keller_tuer_offen")
-	spiel.interagieren("tuer")
+	await _foto("tuer_" + id)
+	spiel.interagieren(id)
 	await _warte(1.6)
-	if spiel.aktueller_bereich != spiel.erdgeschoss:
-		push_error("Tür nach oben führt nicht ins Erdgeschoss")
+	if spiel.aktueller_bereich != ziel:
+		push_error("Tür %s führt nicht nach %s" % [id, ziel.titel])
 		_fehler_bereiche += 1
-	await _foto("flur_ankunft")
-	var eg: Node3D = spiel.erdgeschoss
-	for ansicht in [["flur_west", Vector3(-12.0, 0, 0.0), -PI / 2.0], ["flur_ost", Vector3(4.0, 0, 0.5), -PI / 2.0],
-			["flur_rueck", Vector3(6.0, 0, -0.5), PI / 2.0], ["cafeteria", Vector3(16.0, 0, 0.0), -PI / 2.0 - 0.3],
-			["cafeteria_band", Vector3(22.0, 0, -1.5), -PI / 2.0 + 0.5], ["cafeteria_theke", Vector3(26.0, 0, 1.5), -PI / 2.0 + 0.2]]:
-		spiel.spieler.global_position = eg.to_global(ansicht[1])
+	await _foto("ankunft_" + ziel.titel.to_lower())
+	for ansicht in ansichten:
+		spiel.spieler.global_position = ziel.to_global(ansicht[1])
 		spiel.spieler.setze_blick(ansicht[2])
 		await _warte(0.8)
 		await _foto(ansicht[0])

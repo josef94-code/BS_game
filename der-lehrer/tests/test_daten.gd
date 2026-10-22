@@ -34,6 +34,30 @@ const SCHALTUNG_VARIANTEN := {
 			{"L1": "SJ1_NC", "L2": "QA1_NO", "L3": "SJ2_NO", "L4": "SJ4_NO", "L5": "SJ3_NC"},
 		],
 	},
+	"st_wende": {
+		"richtig": [{"L1": "QA3_NC", "L2": "SJ3_NC", "L3": "QA2_NC", "L4": "SJ2_NC"}],
+		"falsch": [
+			{"L1": "SJ3_NC", "L2": "QA2_NC", "L3": "SJ2_NC", "L4": "QA3_NC"},
+			{"L1": "SJ2_NC", "L2": "QA3_NC", "L3": "SJ3_NC", "L4": "QA2_NC"},
+			{"L1": "SJ3_NC", "L2": "QA3_NO", "L3": "SJ2_NC", "L4": "QA2_NC"},
+			{"L1": "QA3_NC", "L2": "QA2_NO", "L3": "SJ2_NC", "L4": "QA2_NC"},
+		],
+	},
+	"st_folge": {
+		"richtig": [
+			{"L1": "SJ3_NC", "L2": "QA2_NO", "L3": "SJ4_NO", "L4": "QA1_NO"},
+			{"L1": "QA2_NO", "L2": "SJ3_NC", "L3": "QA1_NO", "L4": "SJ4_NO"},
+			# Selbsthaltung über den zweiten Schließer 43–44 funktioniert ebenso
+			{"L1": "QA2_NO", "L2": "SJ3_NC", "L3": "SJ4_NO", "L4": "QA1_43"},
+		],
+		"falsch": [
+			{"L1": "BRUECKE", "L2": "SJ3_NC", "L3": "SJ4_NO", "L4": "QA1_NO"},
+			{"L1": "QA2_NC", "L2": "SJ3_NC", "L3": "SJ4_NO", "L4": "QA1_NO"},
+			{"L1": "QA1_43", "L2": "SJ3_NC", "L3": "SJ4_NO", "L4": "QA1_NO"},
+			{"L1": "QA2_NO", "L2": "SJ3_NC", "L3": "SJ4_NO", "L4": "BRUECKE"},
+			{"L1": "QA2_NO", "L2": "BRUECKE", "L3": "SJ4_NO", "L4": "QA1_NO"},
+		],
+	},
 }
 
 
@@ -50,7 +74,7 @@ func _init() -> void:
 	var dialoge: Dictionary = DatenSkript.lade("res://daten/dialoge.json")
 	var beweise: Dictionary = DatenSkript.lade("res://daten/beweise.json")
 
-	var personen := ["lehrer", "kowalski", "rosalita"]
+	var personen := ["lehrer", "kowalski", "rosalita", "bradley", "sparky"]
 	for q in quests["quests"]:
 		var geber: String = q.get("auftraggeber", "lehrer")
 		pruefe(geber in personen, "%s: unbekannter Auftraggeber %s" % [q["id"], geber])
@@ -93,6 +117,9 @@ func _init() -> void:
 				pruefe(n == 1, id + ": genau ein Fehler erwartet")
 			"schaltung":
 				pruefe(Logik.schaltung_richtig(a, a["loesung_belegung"]), id + ": Musterlösung besteht Prüfung nicht")
+				for schritt in a["pruefung"]:
+					for sp in Logik.spulen(a):
+						pruefe(schritt.has(sp), "%s: Prüfschritt ohne Sollwert für %s: %s" % [id, sp, schritt["text"]])
 				var v: Dictionary = SCHALTUNG_VARIANTEN.get(id, {})
 				pruefe(not v.is_empty(), id + ": keine Testvarianten in SCHALTUNG_VARIANTEN")
 				# gleichwertige Lösungen (vertauschte Reihen- oder Parallelzweige) sind ebenfalls richtig
@@ -110,5 +137,9 @@ func _init() -> void:
 	pruefe(Logik.zahl_gueltig(60.0) == "60,0", "drei gültige Stellen 60,0")
 	pruefe(Logik.zahl_gueltig(28.75) == "28,8", "drei gültige Stellen 28,8")
 
+	# Türen und Beweise
+	for tuer in quests.get("tueren", {}):
+		var nach: String = quests["tueren"][tuer]
+		pruefe(quests["quests"].any(func(q): return q["id"] == nach), "Tür %s: Mission %s fehlt" % [tuer, nach])
 	print("Datenprüfung: %d Aufgaben, %d Quests – %s" % [aufgaben.size(), quests["quests"].size(), "OK" if fehler == 0 else "%d FEHLER" % fehler])
 	quit(1 if fehler > 0 else 0)

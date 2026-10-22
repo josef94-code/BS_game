@@ -1,5 +1,5 @@
 class_name Nebenfiguren
-## Aussehen der Auftraggeber im Erdgeschoss.
+## Aussehen der Auftraggeber (außer dem Lehrer).
 
 
 ## Hausmeister Kowalski: grauer Schnauzer, Schirmmütze, Arbeitsanzug aus Jeansstoff
@@ -24,6 +24,51 @@ static func kowalski() -> Person:
 		"breite": 1.12,
 	})
 	return p
+
+
+## Coach Bradley: Sportlehrer im Trainingsanzug in Schulfarben, Kappe und Trillerpfeife
+static func bradley() -> Person:
+	return Person.new({
+		"haut": Color(0.55, 0.38, 0.27),
+		"haare": Color(0.07, 0.05, 0.04),
+		"frisur": "kurz",
+		"augenfarbe": Color(0.2, 0.13, 0.08),
+		"bart": 0.4,
+		"haaransatz": 0.36,
+		"jacke": Color(0.52, 0.08, 0.11),
+		"jacke_textur": "strick",
+		"hose": Color(0.52, 0.08, 0.11),
+		"schuhe": Color(0.95, 0.95, 0.93),
+		"sohle": Color(0.2, 0.2, 0.2),
+		"muetze": Color(0.95, 0.75, 0.2),
+		"pfeife": true,
+		"anzug": false,
+		"aufdruck_vorne": "LIONS",
+		"aufdruck_hinten": "COACH",
+		"breite": 1.1,
+	})
+
+
+## Sparky Russo: Abschlussklasse, Werkstattdienst – Arbeitsjacke, Schutzbrille auf der Stirn
+static func sparky() -> Person:
+	return Person.new({
+		"haut": Color(0.92, 0.75, 0.6),
+		"haare": Color(0.12, 0.08, 0.05),
+		"frisur": "tolle",
+		"augenfarbe": Color(0.25, 0.45, 0.3),
+		"bart": 0.12,
+		"haaransatz": 0.3,
+		"jacke": Color(0.88, 0.45, 0.12),
+		"jacke_textur": "strick",
+		"hose": Color(0.22, 0.24, 0.28),
+		"hose_textur": "jeans",
+		"schuhe": Color(0.3, 0.2, 0.1),
+		"sohle": Color(0.1, 0.08, 0.06),
+		"brille": Color(0.75, 0.9, 1.0, 0.45),
+		"anzug": false,
+		"aufdruck_hinten": "SPARKY",
+		"breite": 0.98,
+	})
 
 
 ## Rosalita, Chefin der Cafeteria: Haarknoten, weiße Kochjacke, rosa Schürze

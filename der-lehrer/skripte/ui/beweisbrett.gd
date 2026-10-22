@@ -80,8 +80,15 @@ func _aufbauen() -> void:
 	_karten.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var gefunden: Array = Spielstand.d["beweise"]
 	var positionen := [Vector2(10, 10), Vector2(370, 60), Vector2(130, 330), Vector2(500, 360), Vector2(20, 560)]
-	var kompakt := gefunden.size() > positionen.size()
-	if kompakt:
+	# je mehr Beweise, desto kleiner die Karten (0 = groß, 1 = kompakt, 2 = Mini)
+	var stufe := 0
+	if gefunden.size() > 9:
+		stufe = 2
+		positionen = []
+		for i in 12:
+			positionen.append(Vector2((i % 4) * 228 + (i / 4 % 2) * 12, (i / 4) * 225 + (i % 2) * 14))
+	elif gefunden.size() > positionen.size():
+		stufe = 1
 		positionen = [Vector2(0, 0), Vector2(300, 30), Vector2(600, 0), Vector2(20, 225), Vector2(320, 250),
 			Vector2(620, 220), Vector2(0, 450), Vector2(300, 470), Vector2(600, 440)]
 	var mitten := []
@@ -91,11 +98,11 @@ func _aufbauen() -> void:
 		_karten.add_child(leer)
 	for i in gefunden.size():
 		var b := Daten.beweis(gefunden[i])
-		var k := _karte(b, i, kompakt)
+		var k := _karte(b, i, stufe)
 		k.position = positionen[i % positionen.size()]
 		k.rotation = deg_to_rad([-3.0, 2.5, -1.5, 3.0, -2.0][i % 5])
 		_karten.add_child(k)
-		mitten.append(k.position + Vector2(140 if kompakt else 160, 20))
+		mitten.append(k.position + Vector2([160, 140, 105][stufe], 20))
 	# Roter Faden zwischen den Karten
 	_faeden = Control.new()
 	_faeden.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -132,6 +139,10 @@ func _aufbauen() -> void:
 		verdaechtige += "\nSterling Bau? Ihr Fernwartungskonto war um 22:47 Uhr aktiv."
 	if Spielstand.hat_beweis("b_foto"):
 		verdaechtige += "\nVince Moretti (Abschlussklasse) – Kopf der „Black Roses“? Er trifft sich mit Sterling Bau."
+	if Spielstand.hat_beweis("b_schluessel"):
+		verdaechtige += "\nCoach Bradley? Entlastet – sein Schlüssel hängt noch am Bund. Jemand hat ihn kopiert."
+	if Spielstand.hat_beweis("b_vertrag"):
+		verdaechtige = "Sterling Bau: will einen Wartungsvertrag über 480 000 $ – das Motiv.\nVince Moretti und die „Black Roses“ machen die Drecksarbeit."
 	_rechts.add_child(_zettel("VERDÄCHTIGE", verdaechtige, Color(0.75, 0.88, 1.0)))
 	var teile := []
 	var fehlen := 0
@@ -147,8 +158,9 @@ func _aufbauen() -> void:
 	_rechts.add_child(_zettel(String(Spielstand.d["name"]).to_upper(), rang, Color(0.98, 0.98, 0.95)))
 
 
-func _karte(b: Dictionary, i: int, kompakt: bool = false) -> Control:
-	var breite := 280.0 if kompakt else 330.0
+func _karte(b: Dictionary, i: int, stufe: int = 0) -> Control:
+	var kompakt := stufe > 0
+	var breite: float = [330.0, 280.0, 215.0][stufe]
 	var p := PanelContainer.new()
 	p.add_theme_stylebox_override("panel", Stil.box(Stil.PAPIER, Color(0.5, 0.4, 0.3), 1, 2))
 	p.custom_minimum_size = Vector2(breite, 0)
@@ -162,9 +174,14 @@ func _karte(b: Dictionary, i: int, kompakt: bool = false) -> Control:
 	nr.position = Vector2(10, 6 if kompakt else 18)
 	foto.add_child(nr)
 	v.add_child(foto)
-	var t := Stil.label(b.get("titel", ""), 19 if kompakt else 22, Color(0.1, 0.05, 0.03), 0, Stil.schreibmaschine())
+	var t := Stil.label(b.get("titel", ""), [22, 19, 15][stufe], Color(0.1, 0.05, 0.03), 0, Stil.schreibmaschine())
+	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	t.custom_minimum_size.x = breite - 30.0
 	v.add_child(t)
-	var txt := Stil.label(b.get("text", ""), 14 if kompakt else 17, Color(0.15, 0.1, 0.08))
+	var text: String = b.get("text", "")
+	if stufe == 2 and text.length() > 120:
+		text = text.substr(0, 117) + " …"
+	var txt := Stil.label(text, [17, 14, 12][stufe], Color(0.15, 0.1, 0.08))
 	txt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	txt.custom_minimum_size.x = breite - 30.0
 	v.add_child(txt)

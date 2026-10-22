@@ -14,7 +14,7 @@ static var _materialien := {}
 static var _normalmaps_an := true
 ## Texturen mit Normal-Map (Relief für Fugen, Poren, Maserung)
 const RELIEF := {"beton": 1.5, "beton_dunkel": 1.5, "ziegel": 5.0, "metall": 0.8, "holz": 1.2, "kork": 2.0, "karton": 0.8,
-	"fliesen": 1.2, "fliesen_rot": 1.2, "deckenplatten": 1.5, "wandfliesen": 2.0, "putz": 1.0, "bloecke": 3.0}
+	"fliesen": 1.2, "fliesen_rot": 1.2, "deckenplatten": 1.5, "wandfliesen": 2.0, "putz": 1.0, "bloecke": 3.0, "parkett": 1.0}
 static var _konturen := {}
 
 
@@ -363,6 +363,7 @@ static func tex(name: String) -> Texture2D:
 		"deckenplatten": img = _deckenplatten()
 		"putz": img = _schmutz(_beton(Color(0.84, 0.8, 0.7), 0.08, 14.0), 0.18, 14, false)
 		"bloecke": img = _schmutz(_bloecke(), 0.2, 15, false)
+		"parkett": img = _parkett()
 		_: img = _beton(Color(0.6, 0.6, 0.6), 0.1, 3.0)
 	img.generate_mipmaps()
 	var t := ImageTexture.create_from_image(img)
@@ -627,5 +628,23 @@ static func _bloecke() -> Image:
 			var c := Color(0.86, 0.83, 0.74).darkened(v * 0.1)
 			if (x + versatz) % 64 < 3 or y % 32 < 3:
 				c = Color(0.74, 0.71, 0.63).darkened(v * 0.2)
+			img.set_pixel(x, y, c)
+	return img
+
+
+## Helles Hallenparkett (Ahorn): lange Dielen mit versetzten Stößen
+static func _parkett() -> Image:
+	var rausch := _rauschen(18.0, 29).get_seamless_image(256, 256)
+	var img := Image.create(256, 256, false, Image.FORMAT_RGB8)
+	for y in 256:
+		var diele := y / 16
+		var versatz := (diele * 97) % 256
+		for x in 256:
+			var v := rausch.get_pixel(x, y).r
+			var maser := sin((x + v * 40.0) * 0.08 + diele) * 0.03
+			var ton := 0.04 * float((diele * 7) % 5) / 4.0
+			var c := Color(0.86, 0.66, 0.42).darkened(ton + maser + (v - 0.5) * 0.08)
+			if y % 16 == 0 or (x + versatz) % 256 < 1:
+				c = c.darkened(0.35)
 			img.set_pixel(x, y, c)
 	return img

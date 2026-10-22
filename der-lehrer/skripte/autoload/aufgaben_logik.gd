@@ -123,53 +123,74 @@ static func _option(a: Dictionary, id: String) -> Dictionary:
 	return {}
 
 
-## Simuliert den Steuerstromkreis.
-## belegung: Lücken-ID -> Options-ID, eingaenge: Taster -> bool (z. B. {"SJ1": false, "SJ2": true})
-## Rückgabe: {"spule": bool, "stabil": bool}
-static func simuliere(a: Dictionary, belegung: Dictionary, eingaenge: Dictionary, spule_vorher: bool) -> Dictionary:
+## Spulen der Schaltung: Name -> Logikausdruck. Ältere Aufgaben haben genau eine "spule" mit "ausdruck",
+## neuere (Folge- und Wendeschützschaltung) mehrere unter "spulen".
+static func spulen(a: Dictionary) -> Dictionary:
 	var logik: Dictionary = a["logik"]
-	var ausdruck: String = logik["ausdruck"]
-	for el in a["schaltplan"]["elemente"]:
-		if el["typ"] != "luecke":
-			continue
-		var opt := _option(a, belegung.get(el["id"], ""))
-		ausdruck = ausdruck.replace("{%s}" % el["id"], opt.get("logik", "false"))
-	var spule_name: String = logik["spule"]
-	var taster: Array = logik.get("taster", {}).keys()
+	if logik.has("spulen"):
+		return logik["spulen"]
+	return {logik["spule"]: logik["ausdruck"]}
+
+
+## Simuliert den Steuerstromkreis.
+## belegung: Lücken-ID -> Options-ID, eingaenge: Taster -> bool (z. B. {"SJ1": false, "SJ2": true}),
+## vorher: Spule -> bool (Zustand vor dem Schritt; Selbsthaltung und Verriegelung hängen davon ab).
+## Alle Spulen werden gleichzeitig neu berechnet, bis sich nichts mehr ändert.
+## Rückgabe: {"spulen": {Spule: bool}, "stabil": bool}
+static func simuliere(a: Dictionary, belegung: Dictionary, eingaenge: Dictionary, vorher: Dictionary) -> Dictionary:
+	var namen_spulen: Array = spulen(a).keys()
+	namen_spulen.sort()
+	var taster: Array = a["logik"].get("taster", {}).keys()
 	taster.sort()
 	var namen := PackedStringArray(taster)
-	namen.append(spule_name)
-	var e := Expression.new()
-	if e.parse(ausdruck, namen) != OK:
-		push_error("Schaltungslogik fehlerhaft: %s" % ausdruck)
-		return {"spule": false, "stabil": true}
-	var zustand := spule_vorher
-	for i in 8:
+	namen.append_array(PackedStringArray(namen_spulen))
+	var ausdruecke := {}
+	for sp in namen_spulen:
+		var ausdruck: String = spulen(a)[sp]
+		for el in a["schaltplan"]["elemente"]:
+			if el["typ"] != "luecke":
+				continue
+			var opt := _option(a, belegung.get(el["id"], ""))
+			ausdruck = ausdruck.replace("{%s}" % el["id"], opt.get("logik", "false"))
+		var e := Expression.new()
+		if e.parse(ausdruck, namen) != OK:
+			push_error("Schaltungslogik fehlerhaft: %s" % ausdruck)
+			return {"spulen": {}, "stabil": true}
+		ausdruecke[sp] = e
+	var zustand := {}
+	for sp in namen_spulen:
+		zustand[sp] = bool(vorher.get(sp, false))
+	for i in 12:
 		var werte := []
 		for t in taster:
 			werte.append(bool(eingaenge.get(t, false)))
-		werte.append(zustand)
-		var neu := bool(e.execute(werte))
+		for sp in namen_spulen:
+			werte.append(zustand[sp])
+		var neu := {}
+		for sp in namen_spulen:
+			neu[sp] = bool((ausdruecke[sp] as Expression).execute(werte))
 		if neu == zustand:
-			return {"spule": zustand, "stabil": true}
+			return {"spulen": zustand, "stabil": true}
 		zustand = neu
 	# Kein stabiler Zustand: Schütz "flattert" (z. B. eigener Öffner in Reihe zur Spule)
-	return {"spule": false, "stabil": false}
+	var aus := {}
+	for sp in namen_spulen:
+		aus[sp] = false
+	return {"spulen": aus, "stabil": false}
 
 
-## Prüfablauf aus der Aufgabe durchspielen. Rückgabe: Liste {text, soll, ist, ok}
+## Prüfablauf aus der Aufgabe durchspielen. Rückgabe: Liste {text, ok, stabil}
 static func pruefe_schaltung(a: Dictionary, belegung: Dictionary) -> Array:
 	var erg := []
-	var spule := false
-	var spule_name: String = a["logik"]["spule"]
+	var zustand := {}
 	for schritt in a["pruefung"]:
-		var r := simuliere(a, belegung, schritt, spule)
-		spule = r["spule"]
-		var soll := bool(schritt[spule_name])
-		erg.append({
-			"text": schritt["text"], "soll": soll, "ist": spule,
-			"ok": r["stabil"] and spule == soll, "stabil": r["stabil"]
-		})
+		var r := simuliere(a, belegung, schritt, zustand)
+		zustand = r["spulen"]
+		var ok: bool = r["stabil"]
+		for sp in zustand:
+			if schritt.has(sp) and bool(schritt[sp]) != bool(zustand[sp]):
+				ok = false
+		erg.append({"text": schritt["text"], "ok": ok, "stabil": r["stabil"]})
 	return erg
 
 

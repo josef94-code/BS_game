@@ -162,9 +162,16 @@ func _ladebildschirm() -> void:
 	v.add_theme_constant_override("separation", 18)
 	ebene.add_child(v)
 	Stil.setze(v, Control.PRESET_CENTER_RIGHT, -820, -200, -120, 220)
-	var akt2 := Spielstand.quest_status(String(Daten.quest_info.get("tuer_offen_nach", ""))) == "erledigt"
-	v.add_child(Stil.label("AKT 2" if akt2 else "AKT 1", 30, Color(0.9, 0.85, 0.75), 0, Stil.schreibmaschine()))
-	v.add_child(Stil.label("DIE SCHWARZEN\nROSEN" if akt2 else "SELTSAME\nVORFÄLLE", 110, Color(0.96, 0.8, 0.45), 18, Stil.titel_schrift()))
+	# Akt der aktuellen Mission, z. B. "Akt 2 – Die schwarzen Rosen"
+	var q := Spielstand.aktuelle_quest()
+	if q.is_empty() and not Daten.quests.is_empty():
+		q = Daten.quests[-1]
+	var akt := String(q.get("akt", "Akt 1 – Seltsame Vorfälle")).split(" – ")
+	var woerter := akt[-1].to_upper().split(" ")
+	var mitte := ceili(woerter.size() / 2.0)
+	var titel := " ".join(woerter.slice(0, mitte)) + "\n" + " ".join(woerter.slice(mitte))
+	v.add_child(Stil.label(akt[0].to_upper(), 30, Color(0.9, 0.85, 0.75), 0, Stil.schreibmaschine()))
+	v.add_child(Stil.label(titel.strip_edges(), 110, Color(0.96, 0.8, 0.45), 18, Stil.titel_schrift()))
 	var tipp := Stil.label(TIPPS[randi() % TIPPS.size()], 22, Color(0.9, 0.9, 0.9))
 	tipp.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	tipp.custom_minimum_size.x = 660

@@ -6,7 +6,9 @@
     "erzaehler": { "name": "", "farbe": "#bbbbbb" },
     "radio": { "name": "WLHS-Radio", "farbe": "#ff8a5c" },
     "kowalski": { "name": "Hausmeister Kowalski", "farbe": "#6fa8dc" },
-    "rosalita": { "name": "Rosalita", "farbe": "#e8829f" }
+    "rosalita": { "name": "Rosalita", "farbe": "#e8829f" },
+    "bradley": { "name": "Coach Bradley", "farbe": "#f0b429" },
+    "sparky": { "name": "Sparky", "farbe": "#ff8c42" }
   },
 
   "intro": [
@@ -131,7 +133,71 @@
     { "s": "rosalita", "t": "Und was ist das für ein Foto?" },
     { "s": "erzaehler", "t": "Ein Polaroid: Vor dem Schultor schüttelt Vince Moretti aus der Abschlussklasse einem Mann im grauen Anzug die Hand. Auf dem Anzug: das Logo von Sterling Bau. Am Rand klebt eine schwarze Rose." },
     { "s": "rosalita", "t": "Vince Moretti … der Junge mit der schwarzen Lederjacke. Er isst nie etwas. Er sitzt immer nur da und schaut auf das Band." },
-    { "s": "rosalita", "t": "Hier, cariño – ein Pudding. Der erste, der heute heil angekommen ist. Den hast du dir verdient." }
+    { "s": "rosalita", "t": "Hier, cariño – ein Pudding. Der erste, der heute heil angekommen ist. Den hast du dir verdient." },
+    { "s": "erzaehler", "t": "Es knackt in der Sprechanlage." },
+    { "s": "lehrer", "t": "Hier spricht der Lehrer. Kowalski hat mir alles erzählt. Leitungen, Funk, Bedienstelle – saubere Arbeit." },
+    { "s": "lehrer", "t": "Vince Moretti und Sterling Bau. Die schwarzen Rosen haben jetzt ein Gesicht. Wer so arbeitet, ist kein Schülersprecher mehr. Ab heute bist du Capo." },
+    { "s": "lehrer", "t": "Und noch etwas: Coach Bradley braucht dich in der Turnhalle. Die Tür am Ostende des Flurs ist offen." }
+  ],
+
+  "q08_start": [
+    { "s": "bradley", "t": "Du bist also der Capo vom Lehrer. Bradley. Sportlehrer, Basketballtrainer, und seit heute auch Hausmeister, wie es aussieht." },
+    { "s": "bradley", "t": "Gestern: Heimspiel gegen Westside. Dritte Halbzeit … ich meine, drittes Viertel. Die Anzeigetafel geht aus. Und mit ihr das Hallenlicht, die Lüftung, alles." },
+    { "s": "spieler", "t": "Alles gleichzeitig? Dann hängt das irgendwie zusammen." },
+    { "s": "bradley", "t": "Sterling Bau hat die ganze Hallentechnik „vernetzt“. Der Steuerrechner steht am Kampfgericht. Ich verstehe davon so viel wie vom Ballett." },
+    { "wahl": [ { "t": "Ich sehe mir das Hallennetz an.", "ok": true }, { "t": "Gleich, Coach.", "ok": false } ] }
+  ],
+  "q08_ende": [
+    { "s": "spieler", "t": "Die Geräte hingen in einer Linie hintereinander. Als die Anzeigetafel ausgefallen ist, war alles dahinter abgeschnitten. Jetzt hängt jedes Gerät einzeln am Switch." },
+    { "s": "spieler", "t": "Und im Steuerrechner steckte dieser USB-Stick. Mit einer Datei: „licht_aus.txt“." },
+    { "s": "bradley", "t": "Ein Zeitplan? Heimspiel, Elternabend … und der letzte Eintrag ist der Tag der Abschlussprüfung." },
+    { "s": "bradley", "t": "V.M. … Vince Moretti. Der Junge war mal in meinem Team. Bester Werfer der Schule. Bis er lieber mit den Black Roses rumgehangen hat." },
+    { "s": "bradley", "t": "Gute Arbeit, Capo. Ich hab noch was – und das ist peinlich." }
+  ],
+
+  "q09_start": [
+    { "s": "bradley", "t": "Der Trennvorhang. Drei Tonnen Stoff an der Decke. Gestern ist er mitten im Spiel runtergekommen. Hat fast unseren Center erwischt." },
+    { "s": "bradley", "t": "Ich hab HOCH gedrückt, dann sofort RUNTER. Es hat geknallt, die Sicherung ist raus, und das Ding hing schief." },
+    { "s": "spieler", "t": "Das klingt nach einem Kurzschluss im Hauptstromkreis. Beide Schütze gleichzeitig." },
+    { "s": "bradley", "t": "Der Monteur von Sterling Bau war heute früh da. Hat „repariert“. Jetzt flattert das Ding wie ein nervöser Rookie. Bitte schau dir die Steuerung an." },
+    { "wahl": [ { "t": "Ich mache den Vorhang sicher.", "ok": true }, { "t": "Später, Coach.", "ok": false } ] }
+  ],
+  "q09_ende": [
+    { "s": "spieler", "t": "Die Verriegelungen waren ausgebaut, und der Monteur hat den eigenen Öffner von -QA2 eingesetzt. Jetzt sind Taster- und Schützverriegelung drin, direktes Umschalten geht." },
+    { "s": "spieler", "t": "Und hinter dem Steuerkasten lag das hier. Ein Schlüssel – mit Anhänger von Sterling Bau." },
+    { "s": "bradley", "t": "Das ist der Kellerschlüssel! Aber meiner …" },
+    { "s": "erzaehler", "t": "Bradley zieht seinen Schlüsselbund aus der Tasche. Sein Kellerschlüssel hängt dran." },
+    { "s": "bradley", "t": "Jemand hat meinen Schlüssel nachmachen lassen. Und der Lehrer dachte bestimmt, ich wäre es gewesen." },
+    { "s": "bradley", "t": "Geh in die Werkstatt, Capo. Sparky Russo ist da unten. Der Junge hat gesehen, wer sich da nachts rumtreibt." }
+  ],
+
+  "q10_start": [
+    { "s": "sparky", "t": "Ey, der Neue! Sparky. Abschlussklasse, Werkstattdienst. Der Lehrer meint, du bist in Ordnung." },
+    { "s": "sparky", "t": "Wir haben ein Problem: Die Säge läuft, die Absaugung nicht. Gestern sah's hier aus wie in einer Mehltüte." },
+    { "s": "sparky", "t": "Früher ging die Säge nur an, wenn die Absaugung läuft. Seit Sterling Bau den Schaltschrank „modernisiert“ hat, geht sie immer." },
+    { "s": "spieler", "t": "Dann fehlt der Folgekontakt. Ich schau mir den Schaltschrank an." },
+    { "wahl": [ { "t": "Erst saugen, dann sägen.", "ok": true }, { "t": "Gleich, Sparky.", "ok": false } ] }
+  ],
+  "q10_ende": [
+    { "s": "spieler", "t": "Der Folgekontakt war überbrückt. Jetzt liegt -QA2 43–44 im Strompfad der Säge, und die Motorschutzrelais sitzen richtig." },
+    { "s": "spieler", "t": "Und hinter der Montageplatte lag ein Vertragsentwurf von Sterling Bau. 480 000 Dollar für fünf Jahre Wartung." },
+    { "s": "sparky", "t": "Fünf Jahre lang alles reparieren, was sie selbst kaputt gemacht haben. Das ist ihr Geschäft." },
+    { "s": "sparky", "t": "„Nach der Prüfung unterschreiben die bestimmt.“ … Wenn bei der Abschlussprüfung alles zusammenbricht, unterschreibt die Schulleitung alles." },
+    { "s": "sparky", "t": "Da ist noch was. Mit unserem Netzwerk stimmt was nicht. Und der Werkstatt-PC zeigt wieder das Jahr 2000." }
+  ],
+
+  "q11_start": [
+    { "s": "sparky", "t": "Der Werkstatt-PC in der Ecke. Jeden Morgen steht die Uhr auf dem 1. Januar 2000. Und das Netz ist lahm, seit Sterling Bau einen neuen „Verteiler“ hingestellt hat." },
+    { "s": "sparky", "t": "Ich sitz da manchmal drei Stunden und programmiere die Laborschütze. Danach fühlt sich mein Nacken an wie ein Bimetall bei Überlast." },
+    { "s": "spieler", "t": "Ich räume da auf. Netz, Rechner und Arbeitsplatz." },
+    { "s": "sparky", "t": "Du bist ja schlimmer als der Lehrer. Gefällt mir." },
+    { "wahl": [ { "t": "Ich nehme mir die Ecke vor.", "ok": true }, { "t": "Später.", "ok": false } ] }
+  ],
+  "q11_ende": [
+    { "s": "spieler", "t": "Der „Verteiler“ war ein Hub. Er hat jedes Paket an alle Anschlüsse geschickt. Und daran hing dieses kleine Gerät." },
+    { "s": "spieler", "t": "Es hat alles mitgeschnitten. Auf der SD-Karte gibt es einen Ordner: „MT10_Abschlusspruefung“." },
+    { "s": "sparky", "t": "Die wollen nicht nur die Technik lahmlegen. Die wollen an die Prüfung ran." },
+    { "s": "sparky", "t": "Bring das dem Lehrer, Capo. Und, hey – danke für den Stuhl. Mein Nacken auch." }
   ],
 
   "lehrer_abgelehnt": [ { "s": "lehrer", "t": "Die Familie wartet. Aber nicht ewig." } ],
@@ -144,10 +210,10 @@
   "lehrer_verweis": [ { "s": "lehrer", "t": "Was stehst du hier unten herum? Oben wartet Arbeit auf dich. Schau auf die Karte – wer dich braucht, ist markiert." } ],
   "lehrer_ende": [
     { "s": "erzaehler", "t": "Es knackt in der Sprechanlage." },
-    { "s": "lehrer", "t": "Hier spricht der Lehrer. Kowalski hat mir alles erzählt. Leitungen, Funk, Bedienstelle – saubere Arbeit." },
-    { "s": "lehrer", "t": "Vince Moretti und Sterling Bau. Die schwarzen Rosen haben jetzt ein Gesicht." },
-    { "s": "lehrer", "t": "Wer so arbeitet, ist kein Schülersprecher mehr. Ab heute bist du Capo. Die Familie vergisst nicht." },
-    { "s": "erzaehler", "t": "Ende von Akt 2. Die Geschichte geht weiter – mit Turnhalle, Werkstatt und dem Finale: der Prüfung." }
+    { "s": "lehrer", "t": "Hier spricht der Lehrer. Sparky hat mir das Gerät gebracht. Ein Mitschnitt vom Prüfungsserver." },
+    { "s": "lehrer", "t": "Sterling Bau will den Wartungsvertrag. Die Black Roses machen die Drecksarbeit. Und die Abschlussprüfung der MT10 soll der große Knall werden." },
+    { "s": "lehrer", "t": "Nicht in meiner Schule, Capo. Ruh dich aus. Wenn es so weit ist, brauche ich dich." },
+    { "s": "erzaehler", "t": "Ende von Akt 3, Teil 1. Die Geschichte geht weiter mit dem Finale: der Abschlussprüfung." }
   ],
 
   "kowalski_aktiv": [ { "s": "kowalski", "t": "Na los, die Leitung repariert sich nicht von allein. Dein Ziel ist auf der Karte markiert." } ],
@@ -161,6 +227,22 @@
   "rosalita_aktiv": [ { "s": "rosalita", "t": "Die Bedienstelle ist gleich da drüben am Band. ¡Ándale!" } ],
   "rosalita_abgelehnt": [ { "s": "rosalita", "t": "Gut. Ich koche solange. Aber nicht ewig." } ],
   "rosalita_verweis": [ { "s": "rosalita", "t": "Ich habe gerade nichts für dich, cariño. Aber jemand anderes in dieser Schule bestimmt." } ],
+  "bradley_aktiv": [ { "s": "bradley", "t": "Los, los, los! Das Ziel ist auf deiner Karte. Sprint, nicht spazieren." } ],
+  "bradley_abgelehnt": [ { "s": "bradley", "t": "Auszeit genommen? Na gut. Aber nicht zu lang." } ],
+  "bradley_verweis": [ { "s": "bradley", "t": "Ich hab gerade nichts für dich, Capo. Schau auf die Karte – irgendwer braucht dich immer." } ],
+  "bradley_leerlauf": [
+    { "s": "bradley", "t": "Defense wins championships. Und Verriegelung gewinnt Wendeschützschaltungen." },
+    { "s": "bradley", "t": "1987 waren wir State Champions. Damals hat noch alles funktioniert." },
+    { "s": "bradley", "t": "Zehn Liegestütze, Capo. War nur Spaß. Oder?" }
+  ],
+  "sparky_aktiv": [ { "s": "sparky", "t": "Na? Dein Ziel steht auf der Karte. Ich halt solange die Stellung." } ],
+  "sparky_abgelehnt": [ { "s": "sparky", "t": "Kein Stress. Ich feil solange weiter." } ],
+  "sparky_verweis": [ { "s": "sparky", "t": "Bei mir ist gerade alles ruhig. Schau auf deine Karte." } ],
+  "sparky_leerlauf": [
+    { "s": "sparky", "t": "Messen, nicht schätzen. Steht über meiner Werkbank." },
+    { "s": "sparky", "t": "Nächstes Jahr bin ich Mechatroniker. Dann reparier ich Sterling Bau ihre Kunden weg." },
+    { "s": "sparky", "t": "Gehörschutz auf, wenn die Säge läuft. Ernsthaft." }
+  ],
   "rosalita_leerlauf": [
     { "s": "rosalita", "t": "Pudding gibt es erst, wenn das Band läuft. Das ist Gesetz." },
     { "s": "rosalita", "t": "Hast du Hunger, cariño? Nein? Dann arbeite." },

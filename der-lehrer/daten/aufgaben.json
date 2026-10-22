@@ -1695,5 +1695,1607 @@
       "Ein Kontakt, der bei abgefallenem Schütz geschlossen ist, ist ein Öffner."
     ],
     "erklaerung": "Für -PF1 wurde der Öffner 21–22 statt des Schließers 43–44 angeklemmt. Deshalb leuchtet -PF1 genau dann, wenn das Band steht. Richtig: freischalten, auf 43–44 umklemmen, dann prüfen: -PF1 leuchtet genau dann, wenn -MA1 läuft."
+  },
+  "lt_netzarten": {
+    "typ": "sortieren",
+    "titel": "Vom Headset bis zum Satelliten",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Netzwerksysteme, -komponenten und -topologien (Lernunterlagen LtK 03 Industrielle Netzwerke, Kap. 1)",
+    "schwierigkeit": 1,
+    "frage": "Coach Bradley will wissen, was „Netzwerk“ eigentlich heißt. Sortiere die Netzwerkarten nach ihrer räumlichen Ausdehnung – oben die kleinste, unten die größte.",
+    "elemente": [
+      "PAN – wenige Meter (Bluetooth-Headset)",
+      "LAN – Gebäude, Werksgelände (Hallennetz der Turnhalle)",
+      "MAN – Stadtgebiet (Stadtnetz der Stadtwerke)",
+      "WAN – Land, Kontinent (Mobilfunknetz)",
+      "GAN – weltweit (Satelliten-Internet)"
+    ],
+    "tipps": [
+      "Das P in PAN steht für „Personal“ – das Netz direkt an der Person.",
+      "Local – Metropolitan – Wide – Global: Die Ausdehnung wächst von Gebäude über Stadt und Land bis zur ganzen Welt."
+    ],
+    "erklaerung": "PAN (Personal Area Network, wenige Meter) – LAN (Local, Gebäude/Gelände) – MAN (Metropolitan, Stadtgebiet) – WAN (Wide, Land/Kontinent) – GAN (Global, weltweit). Ein Netzwerk ist der Zusammenschluss eigenständiger Geräte über ein gemeinsames Übertragungsmedium, damit sie Daten austauschen und Geräte gemeinsam nutzen können."
+  },
+  "lt_linie": {
+    "typ": "mc",
+    "titel": "Alles dunkel ab der Anzeigetafel",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Netzwerksysteme, -komponenten und -topologien (Lernunterlagen LtK 03 Industrielle Netzwerke, Kap. 2)",
+    "schwierigkeit": 2,
+    "frage": "Sterling Bau hat die Hallentechnik so verbunden: Netzwerkschrank → Anzeigetafel → Hallenlicht → Lüftung → Infoscreen, Gerät an Gerät, der Switch steckt jeweils im Gerät. Seit die Anzeigetafel defekt ist, reagieren auch Licht, Lüftung und Infoscreen nicht mehr. Was liegt vor?",
+    "optionen": [
+      "Eine Linien-Topologie: Fällt ein Gerät aus, trennt es den restlichen Strang ab",
+      "Eine Stern-Topologie: Fällt der zentrale Switch aus, steht alles",
+      "Eine vermaschte Topologie: Sie ist besonders ausfallsicher, das kann nicht die Ursache sein",
+      "Eine Ring-Topologie: Der letzte Teilnehmer ist mit dem ersten verbunden"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Wie sind die Geräte verbunden – jedes an einem zentralen Punkt oder eines hinter dem anderen?",
+      "Gerät an Gerät mit eingebautem Switch heißt Linie. Ihr Vorteil: wenig Verkabelung."
+    ],
+    "erklaerung": "Linie: Gerät an Gerät, der Switch ist im Gerät eingebaut. Das spart Verkabelung – aber fällt ein Teilnehmer aus, ist der restliche Strang abgetrennt. Genau das ist hier passiert: Hinter der defekten Anzeigetafel ist alles tot."
+  },
+  "lt_stern": {
+    "typ": "mc",
+    "titel": "Neu verkabeln",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Netzwerksysteme, -komponenten und -topologien (Lernunterlagen LtK 03 Industrielle Netzwerke, Kap. 2)",
+    "schwierigkeit": 2,
+    "frage": "Du verkabelst die Hallentechnik neu: jedes Gerät mit einer eigenen Leitung zu einem Industrial-Ethernet-Switch im Netzwerkschrank. Welche Aussagen zu dieser Stern-Topologie sind richtig?",
+    "optionen": [
+      "Ein Fehler an einem Gerät oder seiner Leitung stört die anderen Geräte nicht",
+      "Die Fehlersuche ist einfach: Jeder Anschluss lässt sich einzeln prüfen und abschalten",
+      "Fällt der zentrale Switch aus, steht alles",
+      "Der Stern braucht am wenigsten Leitung von allen Topologien",
+      "An den beiden Enden der Leitung braucht man einen Abschluss"
+    ],
+    "richtig": [
+      0,
+      1,
+      2
+    ],
+    "tipps": [
+      "Im Stern hängt jedes Gerät einzeln am Switch.",
+      "Wenig Leitung und Abschlüsse an den Enden – das gehört zur Bus-Topologie."
+    ],
+    "erklaerung": "Stern: alle an einem zentralen Switch. Vorteil: Ein Fehler stört die anderen nicht, jeder Anschluss lässt sich einzeln prüfen. Nachteil: Fällt der Switch aus, steht alles. Am wenigsten Leitung braucht der Bus – dort legt aber ein einziger Leitungsfehler alles lahm."
+  },
+  "lt_ebenen": {
+    "typ": "sortieren",
+    "titel": "Die Pyramide",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Netzwerksysteme, -komponenten und -topologien (Lernunterlagen LtK 03 Industrielle Netzwerke, Kap. 3)",
+    "schwierigkeit": 2,
+    "frage": "Ordne die Ebenen des Ebenenmodells der Produktion – oben die oberste Ebene der Pyramide, unten die unterste.",
+    "elemente": [
+      "Unternehmensebene – Aufträge, Material, Kosten",
+      "Betriebsleitebene – Produktionsplanung, Betriebsdaten",
+      "Prozessleitebene – Überwachen und Anzeigen des Prozesses",
+      "Steuerungsebene – Signale verknüpfen, Ablauf steuern",
+      "Feldebene – Messen und Stellen direkt am Prozess"
+    ],
+    "tipps": [
+      "Ganz unten geht es um wenige Bits in Millisekunden: Not-Halt, Motorschutz, Motor.",
+      "Oben stehen Aufträge und Kosten, darunter die Planung, dann der Leitstand, dann die Steuerung."
+    ],
+    "erklaerung": "Unternehmensebene – Betriebsleitebene – Prozessleitebene – Steuerungsebene – Feldebene. Nach unten steigt die Anforderung an die Geschwindigkeit (wenige Bits in Millisekunden), nach oben die Datenmenge je Nachricht (Auswertungen, bei denen Sekunden keine Rolle spielen)."
+  },
+  "lt_bussysteme": {
+    "typ": "mc",
+    "titel": "Bus oder nicht Bus",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Netzwerksysteme, -komponenten und -topologien (Lernunterlagen LtK 03 Industrielle Netzwerke, Kap. 4)",
+    "schwierigkeit": 2,
+    "frage": "Unter der Tribüne liegt ein gelbes Flachkabel zu den Sensoren der Hallentore. Welche Aussagen zu Bussystemen sind richtig?",
+    "optionen": [
+      "AS-Interface überträgt Daten und Strom über dieselbe Leitung (gelbes Flachkabel)",
+      "IO-Link ist eine Punkt-zu-Punkt-Verbindung zum einzelnen Sensor",
+      "PROFINET braucht eine eigene Verkabelung, die nicht Ethernet-kompatibel ist",
+      "Auf der Feldebene sind die Datenmengen je Nachricht am größten"
+    ],
+    "richtig": [
+      0,
+      1
+    ],
+    "tipps": [
+      "PROFINET nutzt normale Industrial-Ethernet-Technik (Twisted Pair oder LWL).",
+      "Auf der Feldebene werden nur wenige Bits übertragen – dafür sehr schnell."
+    ],
+    "erklaerung": "AS-Interface: gelbes Flachkabel, zwei Adern, Daten und Strom gleichzeitig – für einfache Sensoren und Aktoren. IO-Link: Punkt zu Punkt, der Sensor liefert auch Diagnosedaten. PROFINET ist echtzeitfähiges Industrial Ethernet. Auf der Feldebene sind die Datenmengen je Nachricht am kleinsten."
+  },
+  "st_gleichstrom": {
+    "typ": "mc",
+    "titel": "Hoch oder runter?",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik, Antriebe (Lernunterlagen Schütztechnik Kap. 5.1)",
+    "schwierigkeit": 1,
+    "frage": "Der Trennvorhang wird von einem 24-V-Gleichstrommotor -MA2 hochgezogen und heruntergelassen. Wie kehrt man die Drehrichtung eines Gleichstrommotors um?",
+    "optionen": [
+      "Die Spannung am Anker umpolen: A1 und A2 werden vertauscht",
+      "Eine höhere Spannung anlegen",
+      "Den Leitungsschutzschalter -FC2 tauschen",
+      "Den Motor kurz ausschalten – danach dreht er automatisch andersherum"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Die Drehrichtung hängt von der Stromrichtung im Anker ab.",
+      "Was passiert mit der Stromrichtung, wenn man Plus und Minus am Anker tauscht?"
+    ],
+    "erklaerung": "Die Spannung am Anker wird umgepolt: A1 und A2 werden vertauscht. Damit kehrt sich die Stromrichtung im Anker um und der Motor dreht andersherum. In der Wendeschützschaltung legt -QA2 24 V an A1, -QA3 legt 24 V an A2."
+  },
+  "st_kurzschluss": {
+    "typ": "mc",
+    "titel": "Beide gleichzeitig",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik, Antriebe (Lernunterlagen Schütztechnik Kap. 5.1)",
+    "schwierigkeit": 2,
+    "frage": "Im Spiel gegen Westside haben beide Schütze -QA2 (HOCH) und -QA3 (RUNTER) gleichzeitig angezogen. Was ist im Hauptstromkreis passiert?",
+    "optionen": [
+      "Ein Kurzschluss: 24 V gelangen über -QA2 und -QA3 direkt auf 0 V, der Motor ist überbrückt",
+      "-FC2.1/-FC2.2 lösen aus, und die Hauptkontakte können durch den Lichtbogen verschweißen",
+      "Der Motor bleibt einfach stehen, weil sich beide Richtungen aufheben – sonst passiert nichts",
+      "Der Motor dreht doppelt so schnell"
+    ],
+    "richtig": [
+      0,
+      1
+    ],
+    "tipps": [
+      "Verfolge den Weg von 24 V über beide geschlossenen Schütze.",
+      "Ein Kurzschluss ist für die Kontakte gefährlich: Es entsteht ein Lichtbogen."
+    ],
+    "erklaerung": "Ziehen -QA2 und -QA3 gleichzeitig an, gelangen 24 V über -QA2 (1–2) und -QA3 (4–3) direkt auf 0 V – ein Kurzschluss. Der Motor ist dabei überbrückt, -FC2.1/-FC2.2 lösen aus, die Hauptkontakte können verschweißen. Deshalb müssen die Schütze gegeneinander verriegelt werden."
+  },
+  "st_verriegelung": {
+    "typ": "mc",
+    "titel": "Doppelt verriegelt",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik, Antriebe (Lernunterlagen Schütztechnik Kap. 5.2, 5.3)",
+    "schwierigkeit": 2,
+    "frage": "Coach Bradley will direkt von HOCH auf RUNTER umschalten können, ohne vorher -SJ1 zu drücken. Welche Aussagen sind richtig?",
+    "optionen": [
+      "Schützverriegelung: Im Strompfad von -QA2 liegt ein Öffner von -QA3 (21–22) und umgekehrt",
+      "Tasterverriegelung: Der Öffner des einen Richtungstasters liegt im Strompfad des anderen Schützes – damit ist direktes Umschalten möglich",
+      "Die Schützverriegelung bleibt trotz Tasterverriegelung nötig: Ein Schütz kann hängen bleiben oder verschweißen, das merkt nur sein eigener Öffner",
+      "Mit Tasterverriegelung kann man die Schützverriegelung weglassen"
+    ],
+    "richtig": [
+      0,
+      1,
+      2
+    ],
+    "tipps": [
+      "Nur mit Schützverriegelung muss man zum Richtungswechsel erst ausschalten.",
+      "Der Taster weiß nicht, ob das Schütz wirklich abgefallen ist – der Öffner des Schützes schon."
+    ],
+    "erklaerung": "Schützverriegelung: Öffner (21–22) des jeweils anderen Schützes im eigenen Strompfad. Allein erzwingt sie den Umweg über AUS. Tasterverriegelung: Der Öffner des Gegentasters unterbricht das andere Schütz, so ist direktes Umschalten möglich. Die Schützverriegelung bleibt trotzdem nötig, weil nur sie den wirklichen Schaltzustand meldet – etwa bei einem verschweißten Schütz."
+  },
+  "st_wende": {
+    "typ": "schaltung",
+    "titel": "Wendeschützschaltung Trennvorhang",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik, Antriebe (Lernunterlagen Schütztechnik Kap. 5.2, 5.3)",
+    "schwierigkeit": 3,
+    "frage": "Jemand hat beide Verriegelungen ausgebaut. Setze in jeden Strompfad die Tasterverriegelung und die Schützverriegelung (je ein Öffner 21–22). -SJ2 = HOCH (-QA2), -SJ3 = RUNTER (-QA3), -SJ1 = AUS. Direktes Umschalten muss möglich sein. Teste im Probelauf.",
+    "schaltplan": {
+      "breite": 9.5,
+      "hoehe": 8,
+      "schienen": [
+        {
+          "y": 0,
+          "text": "24 V"
+        },
+        {
+          "y": 8,
+          "text": "0 V"
+        }
+      ],
+      "elemente": [
+        {
+          "id": "FC1",
+          "typ": "sicherung",
+          "x": 4.5,
+          "y": 0,
+          "bez": "-FC1",
+          "kl": "B 2 A"
+        },
+        {
+          "id": "SG0",
+          "typ": "nothalt_nc",
+          "x": 4.5,
+          "y": 1,
+          "bez": "-SG0",
+          "kl": "11/12"
+        },
+        {
+          "id": "SJ1",
+          "typ": "taster_nc",
+          "x": 4.5,
+          "y": 2,
+          "bez": "-SJ1",
+          "kl": "21/22"
+        },
+        {
+          "id": "SJ2",
+          "typ": "taster_no",
+          "x": 2,
+          "y": 3.3,
+          "bez": "-SJ2",
+          "kl": "13/14"
+        },
+        {
+          "id": "QA2_13",
+          "typ": "schliesser",
+          "x": 3.3,
+          "y": 3.3,
+          "bez": "-QA2",
+          "kl": "13/14"
+        },
+        {
+          "id": "SJ3",
+          "typ": "taster_no",
+          "x": 7,
+          "y": 3.3,
+          "bez": "-SJ3",
+          "kl": "13/14"
+        },
+        {
+          "id": "QA3_13",
+          "typ": "schliesser",
+          "x": 8.3,
+          "y": 3.3,
+          "bez": "-QA3",
+          "kl": "13/14"
+        },
+        {
+          "id": "L1",
+          "typ": "luecke",
+          "x": 2,
+          "y": 4.6
+        },
+        {
+          "id": "L2",
+          "typ": "luecke",
+          "x": 2,
+          "y": 5.6
+        },
+        {
+          "id": "L3",
+          "typ": "luecke",
+          "x": 7,
+          "y": 4.6
+        },
+        {
+          "id": "L4",
+          "typ": "luecke",
+          "x": 7,
+          "y": 5.6
+        },
+        {
+          "id": "QA2",
+          "typ": "spule",
+          "x": 2,
+          "y": 6.8,
+          "bez": "-QA2",
+          "kl": "A1/A2"
+        },
+        {
+          "id": "QA3",
+          "typ": "spule",
+          "x": 7,
+          "y": 6.8,
+          "bez": "-QA3",
+          "kl": "A1/A2"
+        }
+      ],
+      "leitungen": [
+        [
+          [
+            4.5,
+            3
+          ],
+          [
+            4.5,
+            3.15
+          ]
+        ],
+        [
+          [
+            2,
+            3.15
+          ],
+          [
+            4.5,
+            3.15
+          ]
+        ],
+        [
+          [
+            4.5,
+            3.15
+          ],
+          [
+            7,
+            3.15
+          ]
+        ],
+        [
+          [
+            2,
+            3.15
+          ],
+          [
+            2,
+            3.3
+          ]
+        ],
+        [
+          [
+            2,
+            3.3
+          ],
+          [
+            3.3,
+            3.3
+          ]
+        ],
+        [
+          [
+            2,
+            4.3
+          ],
+          [
+            3.3,
+            4.3
+          ]
+        ],
+        [
+          [
+            2,
+            4.3
+          ],
+          [
+            2,
+            4.6
+          ]
+        ],
+        [
+          [
+            7,
+            3.15
+          ],
+          [
+            7,
+            3.3
+          ]
+        ],
+        [
+          [
+            7,
+            3.3
+          ],
+          [
+            8.3,
+            3.3
+          ]
+        ],
+        [
+          [
+            7,
+            4.3
+          ],
+          [
+            8.3,
+            4.3
+          ]
+        ],
+        [
+          [
+            7,
+            4.3
+          ],
+          [
+            7,
+            4.6
+          ]
+        ],
+        [
+          [
+            2,
+            6.6
+          ],
+          [
+            2,
+            6.8
+          ]
+        ],
+        [
+          [
+            7,
+            6.6
+          ],
+          [
+            7,
+            6.8
+          ]
+        ],
+        [
+          [
+            2,
+            7.8
+          ],
+          [
+            2,
+            8
+          ]
+        ],
+        [
+          [
+            7,
+            7.8
+          ],
+          [
+            7,
+            8
+          ]
+        ]
+      ]
+    },
+    "optionen": [
+      {
+        "id": "SJ2_NC",
+        "text": "-SJ2 HOCH, Öffner (21–22)",
+        "symbol": "taster_nc",
+        "bez": "-SJ2",
+        "kl": "21/22",
+        "logik": "(not SJ2)"
+      },
+      {
+        "id": "SJ3_NC",
+        "text": "-SJ3 RUNTER, Öffner (21–22)",
+        "symbol": "taster_nc",
+        "bez": "-SJ3",
+        "kl": "21/22",
+        "logik": "(not SJ3)"
+      },
+      {
+        "id": "QA2_NC",
+        "text": "-QA2 Öffner (21–22)",
+        "symbol": "oeffner",
+        "bez": "-QA2",
+        "kl": "21/22",
+        "logik": "(not QA2)"
+      },
+      {
+        "id": "QA3_NC",
+        "text": "-QA3 Öffner (21–22)",
+        "symbol": "oeffner",
+        "bez": "-QA3",
+        "kl": "21/22",
+        "logik": "(not QA3)"
+      },
+      {
+        "id": "QA2_NO",
+        "text": "-QA2 Schließer (43–44)",
+        "symbol": "schliesser",
+        "bez": "-QA2",
+        "kl": "43/44",
+        "logik": "QA2"
+      },
+      {
+        "id": "QA3_NO",
+        "text": "-QA3 Schließer (43–44)",
+        "symbol": "schliesser",
+        "bez": "-QA3",
+        "kl": "43/44",
+        "logik": "QA3"
+      }
+    ],
+    "loesung_belegung": {
+      "L1": "SJ3_NC",
+      "L2": "QA3_NC",
+      "L3": "SJ2_NC",
+      "L4": "QA2_NC"
+    },
+    "logik": {
+      "spulen": {
+        "QA2": "(not SJ1) and (SJ2 or QA2) and {L1} and {L2}",
+        "QA3": "(not SJ1) and (SJ3 or QA3) and {L3} and {L4}"
+      },
+      "taster": {
+        "SJ1": "-SJ1 AUS",
+        "SJ2": "-SJ2 HOCH",
+        "SJ3": "-SJ3 RUNTER"
+      },
+      "anzeige": {
+        "QA2": "Vorhang fährt HOCH",
+        "QA3": "Vorhang fährt RUNTER",
+        "aus": "Vorhang steht"
+      }
+    },
+    "pruefung": [
+      {
+        "SJ1": false,
+        "SJ2": false,
+        "SJ3": false,
+        "QA2": false,
+        "QA3": false,
+        "text": "Grundstellung: Vorhang steht"
+      },
+      {
+        "SJ1": false,
+        "SJ2": true,
+        "SJ3": false,
+        "QA2": true,
+        "QA3": false,
+        "text": "-SJ2 betätigen: Vorhang fährt hoch"
+      },
+      {
+        "SJ1": false,
+        "SJ2": false,
+        "SJ3": false,
+        "QA2": true,
+        "QA3": false,
+        "text": "-SJ2 loslassen: fährt weiter (Selbsthaltung)"
+      },
+      {
+        "SJ1": false,
+        "SJ2": false,
+        "SJ3": true,
+        "QA2": false,
+        "QA3": true,
+        "text": "-SJ3 betätigen: direkt umschalten auf runter"
+      },
+      {
+        "SJ1": false,
+        "SJ2": false,
+        "SJ3": false,
+        "QA2": false,
+        "QA3": true,
+        "text": "-SJ3 loslassen: fährt weiter runter"
+      },
+      {
+        "SJ1": false,
+        "SJ2": true,
+        "SJ3": false,
+        "QA2": true,
+        "QA3": false,
+        "text": "-SJ2 betätigen: direkt zurück auf hoch"
+      },
+      {
+        "SJ1": false,
+        "SJ2": false,
+        "SJ3": false,
+        "QA2": true,
+        "QA3": false,
+        "text": "-SJ2 loslassen"
+      },
+      {
+        "SJ1": true,
+        "SJ2": false,
+        "SJ3": false,
+        "QA2": false,
+        "QA3": false,
+        "text": "-SJ1 betätigen: alles aus"
+      },
+      {
+        "SJ1": false,
+        "SJ2": false,
+        "SJ3": false,
+        "QA2": false,
+        "QA3": false,
+        "text": "-SJ1 loslassen: bleibt aus"
+      },
+      {
+        "SJ1": false,
+        "SJ2": true,
+        "SJ3": true,
+        "QA2": false,
+        "QA3": false,
+        "text": "-SJ2 und -SJ3 gleichzeitig: keines zieht an"
+      }
+    ],
+    "tipps": [
+      "Im Strompfad von -QA2 brauchst du den Öffner des RUNTER-Tasters und den Öffner von -QA3 – im Strompfad von -QA3 umgekehrt.",
+      "Ein eigener Öffner im eigenen Strompfad lässt das Schütz flattern."
+    ],
+    "erklaerung": "Strompfad -QA2: -SJ1 → [-SJ2 (13–14) ∥ -QA2 (13–14)] → -SJ3 (21–22) → -QA3 (21–22) → Spule -QA2. Strompfad -QA3 spiegelbildlich mit -SJ2 (21–22) und -QA2 (21–22). Tasterverriegelung erlaubt direktes Umschalten, die Schützverriegelung verhindert, dass beide Schütze gleichzeitig anziehen."
+  },
+  "st_wende_fehler": {
+    "typ": "fehlersuche",
+    "titel": "Das Schütz flattert",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik, Antriebe (Lernunterlagen Schütztechnik Kap. 5.4)",
+    "schwierigkeit": 3,
+    "frage": "Nach der Reparatur durch einen Monteur von Sterling Bau: Drückt man -SJ2, zieht -QA2 an und fällt sofort wieder ab – immer wieder. Klicke die Betriebsmittel an, um die Messergebnisse zu sehen, und wähle das fehlerhafte.",
+    "schaltplan": {
+      "breite": 9.5,
+      "hoehe": 8,
+      "schienen": [
+        {
+          "y": 0,
+          "text": "24 V"
+        },
+        {
+          "y": 8,
+          "text": "0 V"
+        }
+      ],
+      "elemente": [
+        {
+          "id": "FC1",
+          "typ": "sicherung",
+          "x": 4.5,
+          "y": 0,
+          "bez": "-FC1",
+          "kl": "B 2 A"
+        },
+        {
+          "id": "SG0",
+          "typ": "nothalt_nc",
+          "x": 4.5,
+          "y": 1,
+          "bez": "-SG0",
+          "kl": "11/12"
+        },
+        {
+          "id": "SJ1",
+          "typ": "taster_nc",
+          "x": 4.5,
+          "y": 2,
+          "bez": "-SJ1",
+          "kl": "21/22"
+        },
+        {
+          "id": "SJ2",
+          "typ": "taster_no",
+          "x": 2,
+          "y": 3.3,
+          "bez": "-SJ2",
+          "kl": "13/14"
+        },
+        {
+          "id": "QA2_13",
+          "typ": "schliesser",
+          "x": 3.3,
+          "y": 3.3,
+          "bez": "-QA2",
+          "kl": "13/14"
+        },
+        {
+          "id": "SJ3",
+          "typ": "taster_no",
+          "x": 7,
+          "y": 3.3,
+          "bez": "-SJ3",
+          "kl": "13/14"
+        },
+        {
+          "id": "QA3_13",
+          "typ": "schliesser",
+          "x": 8.3,
+          "y": 3.3,
+          "bez": "-QA3",
+          "kl": "13/14"
+        },
+        {
+          "id": "QA2",
+          "typ": "spule",
+          "x": 2,
+          "y": 6.8,
+          "bez": "-QA2",
+          "kl": "A1/A2"
+        },
+        {
+          "id": "QA3",
+          "typ": "spule",
+          "x": 7,
+          "y": 6.8,
+          "bez": "-QA3",
+          "kl": "A1/A2"
+        },
+        {
+          "id": "SJ3_21",
+          "typ": "taster_nc",
+          "x": 2,
+          "y": 4.6,
+          "bez": "-SJ3",
+          "kl": "21/22"
+        },
+        {
+          "id": "VERR_A",
+          "typ": "oeffner",
+          "x": 2,
+          "y": 5.6,
+          "bez": "-QA3",
+          "kl": "21/22"
+        },
+        {
+          "id": "SJ2_21",
+          "typ": "taster_nc",
+          "x": 7,
+          "y": 4.6,
+          "bez": "-SJ2",
+          "kl": "21/22"
+        },
+        {
+          "id": "VERR_B",
+          "typ": "oeffner",
+          "x": 7,
+          "y": 5.6,
+          "bez": "-QA2",
+          "kl": "21/22"
+        }
+      ],
+      "leitungen": [
+        [
+          [
+            4.5,
+            3
+          ],
+          [
+            4.5,
+            3.15
+          ]
+        ],
+        [
+          [
+            2,
+            3.15
+          ],
+          [
+            4.5,
+            3.15
+          ]
+        ],
+        [
+          [
+            4.5,
+            3.15
+          ],
+          [
+            7,
+            3.15
+          ]
+        ],
+        [
+          [
+            2,
+            3.15
+          ],
+          [
+            2,
+            3.3
+          ]
+        ],
+        [
+          [
+            2,
+            3.3
+          ],
+          [
+            3.3,
+            3.3
+          ]
+        ],
+        [
+          [
+            2,
+            4.3
+          ],
+          [
+            3.3,
+            4.3
+          ]
+        ],
+        [
+          [
+            2,
+            4.3
+          ],
+          [
+            2,
+            4.6
+          ]
+        ],
+        [
+          [
+            7,
+            3.15
+          ],
+          [
+            7,
+            3.3
+          ]
+        ],
+        [
+          [
+            7,
+            3.3
+          ],
+          [
+            8.3,
+            3.3
+          ]
+        ],
+        [
+          [
+            7,
+            4.3
+          ],
+          [
+            8.3,
+            4.3
+          ]
+        ],
+        [
+          [
+            7,
+            4.3
+          ],
+          [
+            7,
+            4.6
+          ]
+        ],
+        [
+          [
+            2,
+            6.6
+          ],
+          [
+            2,
+            6.8
+          ]
+        ],
+        [
+          [
+            7,
+            6.6
+          ],
+          [
+            7,
+            6.8
+          ]
+        ],
+        [
+          [
+            2,
+            7.8
+          ],
+          [
+            2,
+            8
+          ]
+        ],
+        [
+          [
+            7,
+            7.8
+          ],
+          [
+            7,
+            8
+          ]
+        ]
+      ]
+    },
+    "bauteile": {
+      "SJ2": {
+        "name": "Taster -SJ2 HOCH (13–14)",
+        "messung": "Abgeklemmt: unbetätigt ∞ Ω, betätigt 0,1 Ω – Schließer in Ordnung.",
+        "fehler": false
+      },
+      "QA2_13": {
+        "name": "Selbsthaltekontakt -QA2 13–14",
+        "messung": "Schütz abgefallen ∞ Ω, von Hand betätigt 0,1 Ω – in Ordnung.",
+        "fehler": false
+      },
+      "SJ3_21": {
+        "name": "Tasterverriegelung -SJ3 21–22",
+        "messung": "Unbetätigt 0,1 Ω, betätigt ∞ Ω – Öffner in Ordnung.",
+        "fehler": false
+      },
+      "VERR_A": {
+        "name": "Schützverriegelung im Strompfad -QA2",
+        "messung": "Die Leitungen sind an den Klemmen 21–22 von -QA2 angeschlossen – nicht an -QA3. Zieht -QA2 an, öffnet dieser Kontakt.",
+        "fehler": true
+      },
+      "QA2": {
+        "name": "Spule -QA2",
+        "messung": "Spulenwiderstand 300 Ω – in Ordnung. Beim Betätigen von -SJ2 springt die Spannung ständig zwischen 24 V und 0 V.",
+        "fehler": false
+      },
+      "SJ1": {
+        "name": "AUS-Taster -SJ1",
+        "messung": "Unbetätigt 0,1 Ω, betätigt ∞ Ω – Öffner in Ordnung.",
+        "fehler": false
+      },
+      "VERR_B": {
+        "name": "Schützverriegelung im Strompfad -QA3",
+        "messung": "Angeschlossen an -QA2 21–22. Schütz abgefallen 0,1 Ω, angezogen ∞ Ω – richtig.",
+        "fehler": false
+      }
+    },
+    "tipps": [
+      "Welcher Kontakt öffnet genau in dem Moment, in dem -QA2 anzieht?",
+      "Im Strompfad von -QA2 gehört der Öffner von -QA3 – nicht der eigene."
+    ],
+    "erklaerung": "Im Strompfad von -QA2 ist der eigene Öffner 21–22 von -QA2 angeschlossen statt der Öffner von -QA3. Zieht -QA2 an, öffnet er seinen eigenen Strompfad, fällt ab, der Öffner schließt wieder – das Schütz flattert. Abhilfe: freischalten, auf -QA3 21–22 umklemmen, prüfen."
+  },
+  "st_folge_forderung": {
+    "typ": "mc",
+    "titel": "Erst saugen, dann sägen",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik, Schutzeinrichtungen (Lernunterlagen Schütztechnik Kap. 4.1)",
+    "schwierigkeit": 2,
+    "frage": "Die Tischkreissäge (-MA1, Schütz -QA1) darf nur laufen, wenn die Absauganlage (-MA2, Schütz -QA2) läuft – wie Band 1 und Band 2 in den Unterlagen. Wie setzt du „Säge nur einschaltbar, wenn die Absaugung läuft“ um?",
+    "optionen": [
+      "Mit einem Folgekontakt: Schließer -QA2 (43–44) in Reihe im Strompfad von -QA1",
+      "Mit einem Öffner -QA2 (21–22) im Strompfad von -QA1",
+      "Mit einem Schließer -QA1 (43–44) im Strompfad von -QA2",
+      "Gar nicht nötig – man schaltet einfach immer zuerst die Absaugung ein"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Der Kontakt muss geschlossen sein, wenn -QA2 angezogen hat.",
+      "Derselbe Kontakt sorgt auch dafür: Absaugung aus → Säge aus."
+    ],
+    "erklaerung": "Folgekontakt -QA2 (43–44) in Reihe im Strompfad von -QA1: Nur wenn -QA2 angezogen hat, kann -QA1 anziehen. Fällt -QA2 ab, öffnet 43–44 und auch -QA1 fällt ab. Allein ausschalten lässt sich die Säge mit -SJ3, der nur im Strompfad von -QA1 liegt."
+  },
+  "st_folge_bc": {
+    "typ": "mc",
+    "titel": "Wer schützt wen?",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik, Schutzeinrichtungen (Lernunterlagen Schütztechnik Kap. 4.1)",
+    "schwierigkeit": 2,
+    "frage": "Forderung: Ist die Absaugung (-MA2) überlastet, stehen beide Maschinen. Ist die Säge (-MA1) überlastet, läuft die Absaugung weiter und saugt den restlichen Staub ab. Wo liegen die Öffner 95–96 der Motorschutzrelais?",
+    "optionen": [
+      "-BC2 (95–96) im gemeinsamen Strompfad vor beiden Schützen, -BC1 (95–96) nur im Strompfad von -QA1",
+      "-BC1 (95–96) im gemeinsamen Strompfad, -BC2 (95–96) nur im Strompfad von -QA2",
+      "Beide im gemeinsamen Strompfad",
+      "Beide im Hauptstromkreis, im Steuerstromkreis braucht man sie nicht"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Welcher Motor soll bei seiner Überlast beide Maschinen stilllegen?",
+      "Ein Öffner im gemeinsamen Strompfad schaltet alles ab, einer im Einzelpfad nur dieses Schütz."
+    ],
+    "erklaerung": "-BC2 (95–96) liegt im gemeinsamen Strompfad vor beiden Schützen: Überlast der Absaugung → beide stehen. -BC1 (95–96) liegt nur im Strompfad von -QA1: Überlast der Säge → nur die Säge steht, die Absaugung läuft weiter."
+  },
+  "st_folge_pf2": {
+    "typ": "mc",
+    "titel": "Eine Lampe für zwei",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik, Schutzeinrichtungen (Lernunterlagen Schütztechnik Kap. 4.1)",
+    "schwierigkeit": 2,
+    "frage": "Die rote Leuchte -PF2 soll melden, wenn einer der beiden Motoren überlastet ist. Sie wird über zwei parallel geschaltete Schließer angesteuert. Warum?",
+    "optionen": [
+      "ODER-Verknüpfung: Jeder Schließer (-BC1 97–98, -BC2 97–98) schaltet -PF2 allein ein – eine Sammelstörmeldung",
+      "UND-Verknüpfung: -PF2 leuchtet nur, wenn beide Motoren gleichzeitig überlastet sind",
+      "Damit die Leuchte doppelt so hell leuchtet",
+      "Weil die Öffner 95–96 schon belegt sind und man sonst keinen Platz hätte"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Parallel geschaltete Kontakte: Es reicht, wenn einer geschlossen ist.",
+      "97–98 ist der Schließer des Motorschutzrelais – er schließt bei Überlast."
+    ],
+    "erklaerung": "Die Leuchte soll bei Überlast von -MA1 ODER von -MA2 leuchten. Deshalb liegen die Schließer -BC1 (97–98) und -BC2 (97–98) parallel in Reihe mit -PF2 – jeder allein schaltet die Sammelstörmeldung ein."
+  },
+  "st_folge": {
+    "typ": "schaltung",
+    "titel": "Folgeschaltung Absaugung und Säge",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik, Schutzeinrichtungen (Lernunterlagen Schütztechnik Kap. 4.2)",
+    "schwierigkeit": 3,
+    "frage": "Links die Absaugung (-QA2, AUS -SJ1, EIN -SJ2), rechts die Säge (-QA1, AUS -SJ3, EIN -SJ4). Ergänze den Strompfad der Säge: Sie darf nur laufen, wenn die Absaugung läuft, und lässt sich allein ausschalten. Mit „Test -BC1/-BC2“ simulierst du eine Überlast.",
+    "schaltplan": {
+      "breite": 9.5,
+      "hoehe": 9,
+      "schienen": [
+        {
+          "y": 0,
+          "text": "24 V"
+        },
+        {
+          "y": 9,
+          "text": "0 V"
+        }
+      ],
+      "elemente": [
+        {
+          "id": "FC1",
+          "typ": "sicherung",
+          "x": 3.5,
+          "y": 0,
+          "bez": "-FC1",
+          "kl": "B 2 A"
+        },
+        {
+          "id": "SG0",
+          "typ": "nothalt_nc",
+          "x": 3.5,
+          "y": 1,
+          "bez": "-SG0",
+          "kl": "11/12"
+        },
+        {
+          "id": "BC2",
+          "typ": "mschutz_nc",
+          "x": 3.5,
+          "y": 2,
+          "bez": "-BC2",
+          "kl": "95/96"
+        },
+        {
+          "id": "SJ1",
+          "typ": "taster_nc",
+          "x": 2,
+          "y": 3.3,
+          "bez": "-SJ1",
+          "kl": "21/22"
+        },
+        {
+          "id": "SJ2",
+          "typ": "taster_no",
+          "x": 2,
+          "y": 4.5,
+          "bez": "-SJ2",
+          "kl": "13/14"
+        },
+        {
+          "id": "QA2_13",
+          "typ": "schliesser",
+          "x": 3.3,
+          "y": 4.5,
+          "bez": "-QA2",
+          "kl": "13/14"
+        },
+        {
+          "id": "QA2",
+          "typ": "spule",
+          "x": 2,
+          "y": 7.6,
+          "bez": "-QA2",
+          "kl": "A1/A2"
+        },
+        {
+          "id": "L1",
+          "typ": "luecke",
+          "x": 6,
+          "y": 3.3
+        },
+        {
+          "id": "BC1",
+          "typ": "mschutz_nc",
+          "x": 6,
+          "y": 4.3,
+          "bez": "-BC1",
+          "kl": "95/96"
+        },
+        {
+          "id": "L2",
+          "typ": "luecke",
+          "x": 6,
+          "y": 5.3
+        },
+        {
+          "id": "L3",
+          "typ": "luecke",
+          "x": 6,
+          "y": 6.3
+        },
+        {
+          "id": "L4",
+          "typ": "luecke",
+          "x": 7.6,
+          "y": 6.3
+        },
+        {
+          "id": "QA1",
+          "typ": "spule",
+          "x": 6,
+          "y": 7.6,
+          "bez": "-QA1",
+          "kl": "A1/A2"
+        }
+      ],
+      "leitungen": [
+        [
+          [
+            3.5,
+            3
+          ],
+          [
+            3.5,
+            3.15
+          ]
+        ],
+        [
+          [
+            2,
+            3.15
+          ],
+          [
+            3.5,
+            3.15
+          ]
+        ],
+        [
+          [
+            3.5,
+            3.15
+          ],
+          [
+            6,
+            3.15
+          ]
+        ],
+        [
+          [
+            2,
+            3.15
+          ],
+          [
+            2,
+            3.3
+          ]
+        ],
+        [
+          [
+            6,
+            3.15
+          ],
+          [
+            6,
+            3.3
+          ]
+        ],
+        [
+          [
+            2,
+            4.3
+          ],
+          [
+            2,
+            4.5
+          ]
+        ],
+        [
+          [
+            2,
+            4.5
+          ],
+          [
+            3.3,
+            4.5
+          ]
+        ],
+        [
+          [
+            2,
+            5.5
+          ],
+          [
+            3.3,
+            5.5
+          ]
+        ],
+        [
+          [
+            2,
+            5.5
+          ],
+          [
+            2,
+            7.6
+          ]
+        ],
+        [
+          [
+            2,
+            8.6
+          ],
+          [
+            2,
+            9
+          ]
+        ],
+        [
+          [
+            6,
+            6.3
+          ],
+          [
+            7.6,
+            6.3
+          ]
+        ],
+        [
+          [
+            6,
+            7.3
+          ],
+          [
+            7.6,
+            7.3
+          ]
+        ],
+        [
+          [
+            6,
+            7.3
+          ],
+          [
+            6,
+            7.6
+          ]
+        ],
+        [
+          [
+            6,
+            8.6
+          ],
+          [
+            6,
+            9
+          ]
+        ]
+      ]
+    },
+    "optionen": [
+      {
+        "id": "QA2_NO",
+        "text": "-QA2 Folgekontakt, Schließer (43–44)",
+        "symbol": "schliesser",
+        "bez": "-QA2",
+        "kl": "43/44",
+        "logik": "QA2"
+      },
+      {
+        "id": "QA2_NC",
+        "text": "-QA2 Öffner (21–22)",
+        "symbol": "oeffner",
+        "bez": "-QA2",
+        "kl": "21/22",
+        "logik": "(not QA2)"
+      },
+      {
+        "id": "SJ3_NC",
+        "text": "-SJ3 AUS Säge, Öffner (21–22)",
+        "symbol": "taster_nc",
+        "bez": "-SJ3",
+        "kl": "21/22",
+        "logik": "(not SJ3)"
+      },
+      {
+        "id": "SJ4_NO",
+        "text": "-SJ4 EIN Säge, Schließer (13–14)",
+        "symbol": "taster_no",
+        "bez": "-SJ4",
+        "kl": "13/14",
+        "logik": "SJ4"
+      },
+      {
+        "id": "QA1_NO",
+        "text": "-QA1 Selbsthaltekontakt, Schließer (13–14)",
+        "symbol": "schliesser",
+        "bez": "-QA1",
+        "kl": "13/14",
+        "logik": "QA1"
+      },
+      {
+        "id": "QA1_43",
+        "text": "-QA1 Schließer (43–44)",
+        "symbol": "schliesser",
+        "bez": "-QA1",
+        "kl": "43/44",
+        "logik": "QA1"
+      },
+      {
+        "id": "BRUECKE",
+        "text": "Drahtbrücke",
+        "symbol": "leitung",
+        "bez": "",
+        "kl": "",
+        "logik": "true"
+      }
+    ],
+    "loesung_belegung": {
+      "L1": "QA2_NO",
+      "L2": "SJ3_NC",
+      "L3": "SJ4_NO",
+      "L4": "QA1_NO"
+    },
+    "logik": {
+      "spulen": {
+        "QA2": "(not BC2) and (not SJ1) and (SJ2 or QA2)",
+        "QA1": "(not BC2) and {L1} and (not BC1) and {L2} and ({L3} or {L4})"
+      },
+      "taster": {
+        "SJ1": "-SJ1 AUS",
+        "SJ2": "-SJ2 EIN",
+        "SJ3": "-SJ3 AUS",
+        "SJ4": "-SJ4 EIN",
+        "BC1": "Test -BC1",
+        "BC2": "Test -BC2"
+      },
+      "anzeige": {
+        "QA1": "Säge LÄUFT",
+        "QA2": "Absaugung LÄUFT",
+        "aus": "beide Maschinen stehen"
+      }
+    },
+    "pruefung": [
+      {
+        "QA1": false,
+        "QA2": false,
+        "text": "Grundstellung: beide stehen"
+      },
+      {
+        "SJ4": true,
+        "QA1": false,
+        "QA2": false,
+        "text": "-SJ4 bei stehender Absaugung: Säge startet nicht"
+      },
+      {
+        "QA1": false,
+        "QA2": false,
+        "text": "-SJ4 loslassen"
+      },
+      {
+        "SJ2": true,
+        "QA1": false,
+        "QA2": true,
+        "text": "-SJ2: Absaugung läuft an"
+      },
+      {
+        "QA1": false,
+        "QA2": true,
+        "text": "-SJ2 loslassen: Absaugung läuft weiter, Säge steht"
+      },
+      {
+        "SJ4": true,
+        "QA1": true,
+        "QA2": true,
+        "text": "-SJ4: Säge läuft an"
+      },
+      {
+        "QA1": true,
+        "QA2": true,
+        "text": "-SJ4 loslassen: beide laufen (Selbsthaltung)"
+      },
+      {
+        "SJ3": true,
+        "QA1": false,
+        "QA2": true,
+        "text": "-SJ3: nur die Säge stoppt"
+      },
+      {
+        "QA1": false,
+        "QA2": true,
+        "text": "-SJ3 loslassen: Säge bleibt aus"
+      },
+      {
+        "SJ4": true,
+        "QA1": true,
+        "QA2": true,
+        "text": "-SJ4: Säge wieder an"
+      },
+      {
+        "QA1": true,
+        "QA2": true,
+        "text": "-SJ4 loslassen"
+      },
+      {
+        "SJ1": true,
+        "QA1": false,
+        "QA2": false,
+        "text": "-SJ1: Absaugung aus – Säge stoppt mit"
+      },
+      {
+        "QA1": false,
+        "QA2": false,
+        "text": "-SJ1 loslassen: beide bleiben aus"
+      },
+      {
+        "SJ2": true,
+        "QA1": false,
+        "QA2": true,
+        "text": "-SJ2: Absaugung an"
+      },
+      {
+        "SJ4": true,
+        "QA1": true,
+        "QA2": true,
+        "text": "-SJ4: Säge an"
+      },
+      {
+        "BC1": true,
+        "QA1": false,
+        "QA2": true,
+        "text": "Überlast Säge (-BC1): Absaugung läuft weiter"
+      },
+      {
+        "QA1": false,
+        "QA2": true,
+        "text": "-BC1 zurückgestellt: Säge bleibt aus"
+      },
+      {
+        "SJ1": false,
+        "SJ4": true,
+        "QA1": true,
+        "QA2": true,
+        "text": "-SJ4: Säge wieder an"
+      },
+      {
+        "BC2": true,
+        "QA1": false,
+        "QA2": false,
+        "text": "Überlast Absaugung (-BC2): beide stehen"
+      }
+    ],
+    "tipps": [
+      "Ganz oben im Strompfad der Säge: ein Kontakt, der nur geschlossen ist, wenn -QA2 angezogen hat.",
+      "Darunter wie bei jeder Selbsthaltung: AUS-Taster als Öffner in Reihe, EIN-Taster und Selbsthaltekontakt parallel."
+    ],
+    "erklaerung": "Strompfad -QA1: -QA2 (43–44, Folgekontakt) → -BC1 (95–96) → -SJ3 (21–22) → [-SJ4 (13–14) ∥ -QA1 (13–14)] → Spule -QA1. -BC2 liegt im gemeinsamen Strompfad. So lässt sich die Säge nur bei laufender Absaugung starten, allein ausschalten, und die Absaugung läuft bei Überlast der Säge weiter."
+  },
+  "st_folge_fehler": {
+    "typ": "mc",
+    "titel": "Fehlerbilder",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik, Schutzeinrichtungen (Lernunterlagen Schütztechnik Kap. 4.3)",
+    "schwierigkeit": 3,
+    "frage": "Sparky erzählt: „Vorige Woche ließ sich die Säge auch bei stehender Absaugung einschalten. Die ganze Werkstatt war voller Staub.“ Was sind mögliche Ursachen?",
+    "optionen": [
+      "Der Folgekontakt fehlt bzw. ist überbrückt",
+      "Statt des Schließers 43–44 wurde ein Öffner von -QA2 verwendet",
+      "-SJ3 liegt im gemeinsamen Strompfad statt nur im Strompfad von -QA1",
+      "-BC1 (95–96) liegt im gemeinsamen Strompfad"
+    ],
+    "richtig": [
+      0,
+      1
+    ],
+    "tipps": [
+      "Welcher Kontakt soll verhindern, dass die Säge ohne Absaugung läuft?",
+      "Die anderen beiden Fehler führen dazu, dass beim Ausschalten oder bei Überlast der Säge auch die Absaugung stehen bleibt."
+    ],
+    "erklaerung": "Lässt sich -QA1 bei stehendem -QA2 einschalten, fehlt der Folgekontakt, ist überbrückt oder es wurde ein Öffner von -QA2 verwendet (der ist gerade bei stehender Absaugung geschlossen). -SJ3 bzw. -BC1 im gemeinsamen Strompfad würden dagegen beim Ausschalten bzw. bei Überlast der Säge auch die Absaugung abschalten."
+  },
+  "lt_hub": {
+    "typ": "mc",
+    "titel": "Hub statt Switch",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Netzwerksysteme und -komponenten (Lernunterlagen LtK 04 Netzwerkkomponenten und Rechnersysteme, Kap. 1.1)",
+    "schwierigkeit": 2,
+    "frage": "Im Netzwerk der Werkstatt hängt seit der Sanierung ein alter Hub statt eines Switches. Was ist daran problematisch?",
+    "optionen": [
+      "Der Hub schickt jedes Paket an alle Anschlüsse – jeder kann den Verkehr der anderen mitlesen",
+      "Alle Geräte teilen sich die Bandbreite, es kommt zu Zusammenstößen (Kollisionen)",
+      "Ein Switch wertet die MAC-Adresse aus und schickt jedes Paket nur an den Port des Empfängers",
+      "Ein Hub ist schneller als ein Switch, weil er nichts auswerten muss"
+    ],
+    "richtig": [
+      0,
+      1,
+      2
+    ],
+    "tipps": [
+      "Wohin schickt der Hub ein Paket – und wohin der Switch?",
+      "Die MAC-Adresse ist die feste Gerätenummer der Netzwerkkarte."
+    ],
+    "erklaerung": "Ein Hub schickt jedes Paket an alle Anschlüsse gleichzeitig: Alle teilen sich die Bandbreite, es gibt Kollisionen, und jeder kann mitlesen – ein Sicherheitsrisiko. Ein Switch merkt sich anhand der MAC-Adresse, welches Gerät an welchem Port hängt, und belastet nur die Leitung zum Empfänger."
+  },
+  "lt_komponenten": {
+    "typ": "mc",
+    "titel": "Wer macht was?",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Netzwerksysteme und -komponenten (Lernunterlagen LtK 04 Netzwerkkomponenten und Rechnersysteme, Kap. 1.2)",
+    "schwierigkeit": 2,
+    "frage": "Sparky räumt den Netzwerkschrank der Werkstatt auf. Welche Zuordnungen von Komponente und Aufgabe sind richtig?",
+    "optionen": [
+      "Router: verbindet zwei Netze und wählt den Weg anhand der IP-Adresse",
+      "Firewall: prüft den Datenverkehr nach Regeln und trennt Anlagen- und Büronetz",
+      "Medienkonverter: wandelt das Signal von Kupfer auf Lichtwellenleiter und zurück",
+      "Access Point: verbindet zwei Netze anhand der MAC-Adresse",
+      "HMI: speichert die Daten aller Benutzer mit eigener Benutzerverwaltung"
+    ],
+    "richtig": [
+      0,
+      1,
+      2
+    ],
+    "tipps": [
+      "Der Access Point bindet Funkgeräte in das Kabelnetz ein.",
+      "Speicherplatz mit Benutzerverwaltung stellt das NAS bereit; das HMI zeigt Anlagenzustände an und nimmt Befehle entgegen."
+    ],
+    "erklaerung": "Router: verbindet zwei Netze, Weg anhand der IP-Adresse. Firewall: prüft den Verkehr nach Regeln. Medienkonverter: Kupfer ↔ LWL. Access Point: bindet Funkgeräte ins Kabelnetz ein. NAS: Speicher mit Benutzerverwaltung. HMI: Anzeige und Bedienung der Anlage."
+  },
+  "lt_knopfzelle": {
+    "typ": "mc",
+    "titel": "1. Januar 2000",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Betriebssysteme und Rechnersysteme (Lernunterlagen LtK 04 Netzwerkkomponenten und Rechnersysteme, Kap. 2.3)",
+    "schwierigkeit": 1,
+    "frage": "Der Werkstatt-PC startet und zeigt als Datum den 1. Januar 2000. Was ist die wahrscheinliche Ursache?",
+    "optionen": [
+      "Die Knopfzelle auf der Hauptplatine ist leer – tauschen (meist CR2032), dann Datum und Uhrzeit neu einstellen",
+      "Der Arbeitsspeicher ist zu klein",
+      "Die SSD ist voll",
+      "Das Netzwerkkabel ist nicht eingesteckt"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Welches Bauteil versorgt die Uhr, wenn der PC ausgeschaltet ist?",
+      "Auf der Hauptplatine sitzt eine kleine Batterie."
+    ],
+    "erklaerung": "Die Knopfzelle versorgt die Uhr und die Grundeinstellungen (UEFI), wenn der PC aus ist. Ist sie leer, startet der Rechner mit falscher Uhrzeit. Abhilfe: Knopfzelle tauschen (meist CR2032), Datum und Uhrzeit neu einstellen. Ohne richtige Uhrzeit sind auch alle Protokolle wertlos."
+  },
+  "lt_speicher": {
+    "typ": "mc",
+    "titel": "Stecker gezogen",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Betriebssysteme und Rechnersysteme (Lernunterlagen LtK 04 Netzwerkkomponenten und Rechnersysteme, Kap. 2.2, 2.3)",
+    "schwierigkeit": 2,
+    "frage": "Sparky zieht beim fremden Mitschnitt-Gerät am Hub sofort den Stecker. Welche Speicher verlieren ihren Inhalt ohne Spannung (flüchtig)?",
+    "optionen": [
+      "DRAM – der Arbeitsspeicher",
+      "SRAM – der Cache im Prozessor",
+      "Flash – z. B. die SD-Karte im Gerät",
+      "SSD (NVMe)",
+      "HDD (Festplatte)"
+    ],
+    "richtig": [
+      0,
+      1
+    ],
+    "tipps": [
+      "Flüchtig heißt: Der Inhalt geht ohne Spannung verloren.",
+      "Alles, was man „speichert“, landet auf nicht flüchtigen Speichern."
+    ],
+    "erklaerung": "Flüchtig sind SRAM (Cache) und DRAM (Arbeitsspeicher). Flash, SSD und HDD sind nicht flüchtig – die Mitschnitte auf der SD-Karte des Geräts sind also noch da. Genau deshalb muss man ein Programm speichern, bevor man den Rechner ausschaltet."
+  },
+  "lt_ergonomie": {
+    "typ": "mc",
+    "titel": "Rücken gerade!",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Ergonomische Gesichtspunkte von Computerarbeitsplätzen (Lernunterlagen LtK 04 Netzwerkkomponenten und Rechnersysteme, Kap. 4)",
+    "schwierigkeit": 1,
+    "frage": "Sparky programmiert seit Stunden am Notebook auf dem Rollwagen und klagt über Nackenschmerzen. Du richtest ihm einen Bildschirmarbeitsplatz ein. Welche Richtwerte stimmen?",
+    "optionen": [
+      "Sehabstand Auge – Bildschirm 50 bis 80 cm",
+      "Oberste Bildschirmzeile auf oder unter Augenhöhe",
+      "Tischhöhe 68 bis 76 cm",
+      "Beleuchtung mindestens 500 lx, blendfrei, Bildschirm seitlich zum Fenster",
+      "Bildschirm möglichst hoch über Augenhöhe, damit man aufrecht sitzt",
+      "Sehabstand höchstens 25 cm, damit man alles gut erkennt"
+    ],
+    "richtig": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "tipps": [
+      "Die Anforderungen stehen in der Arbeitsstättenverordnung und in der DGUV Information 215-410.",
+      "Ein zu tiefer Bildschirm führt zu Nackenverspannungen – zu hoch aber auch."
+    ],
+    "erklaerung": "Sehabstand 50–80 cm, oberste Zeile auf oder unter Augenhöhe, Tischhöhe 68–76 cm, Sitzhöhe 42–53 cm, Winkel an Knie und Ellbogen etwa 90°, mindestens 500 lx blendfrei. Gegen Nackenschmerzen am Notebook: Notebook-Ständer, externe Tastatur und Maus, regelmäßige Pausen (20-20-20-Regel)."
   }
 }

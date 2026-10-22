@@ -163,6 +163,13 @@ func _bauen() -> void:
 		for seite in [-1, 1]:
 			var band := Bau.box(_rumpf, Vector3(0.015, 0.16, 0.012), Vector3(0.07 * seite, 0.58, -0.105), schuerze)
 			band.rotation.z = -0.35 * seite
+	if stil.get("pfeife", false):
+		# Trillerpfeife am Band
+		var band := _m(Color(0.95, 0.8, 0.15))
+		for seite in [-1, 1]:
+			var b := Bau.box(_rumpf, Vector3(0.012, 0.2, 0.01), Vector3(0.045 * seite, 0.5, -0.125), band)
+			b.rotation.z = 0.25 * seite
+		Bau.zylinder(_rumpf, 0.014, 0.05, Vector3(0.0, 0.4, -0.14), _m(Color(0.82, 0.82, 0.85)), Vector3(0, 0, PI / 2))
 	if stil["kapuze"]:
 		_kug(_rumpf, 0.13, Vector3(0, 0.6, 0.085), jacke, Vector3(1.35, 0.55, 0.85))
 		for seite in [-1, 1]:
@@ -241,6 +248,12 @@ func _kopf_bauen(haut: StandardMaterial3D) -> void:
 		_:
 			var pony := _kug(k, 0.07, Vector3(0, 0.085, -0.05), haar, Vector3(1.3, 0.45, 1.0))
 			pony.rotation.x = -0.2
+	if stil.has("brille"):
+		# Schutzbrille auf die Stirn geschoben
+		var glas := Bau.glas(stil["brille"])
+		var b := Bau.box(k, Vector3(0.2, 0.055, 0.02), Vector3(0, 0.07, -0.098), glas)
+		b.rotation.x = -0.35
+		Bau.box(k, Vector3(0.21, 0.012, 0.18), Vector3(0, 0.085, -0.0), _m(Color(0.12, 0.12, 0.12)))
 	if stil.has("muetze"):
 		# Schirmmütze: Kappe über den Haaren, Schirm nach vorne
 		var muetze := _m(stil["muetze"])

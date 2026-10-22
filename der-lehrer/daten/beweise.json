@@ -42,6 +42,30 @@
       "text": "Vince Moretti aus der Abschlussklasse schüttelt vor dem Schultor einem Mann im Sterling-Bau-Anzug die Hand. Am Rand klebt eine schwarze Rose.",
       "ort": "Cafeteria, Bedienstelle",
       "farbe": "#7b241c"
+    },
+    "b_usb": {
+      "titel": "USB-Stick mit Zeitplan",
+      "text": "Steckte im Steuerrechner der Anzeigetafel. Datei „licht_aus.txt“: wann die Hallentechnik ausfallen soll. Letzter Eintrag: der Tag der Abschlussprüfung. Initialen: V.M.",
+      "ort": "Turnhalle, Kampfgericht",
+      "farbe": "#1f618d"
+    },
+    "b_schluessel": {
+      "titel": "Nachgemachter Kellerschlüssel",
+      "text": "Klemmte hinter dem Steuerkasten des Trennvorhangs. Anhänger: „Sterling Bau – Baustelle Lincoln High“. Coach Bradley hat seinen Schlüssel noch – jemand hat ihn kopieren lassen.",
+      "ort": "Turnhalle, Trennvorhang",
+      "farbe": "#7d6608"
+    },
+    "b_vertrag": {
+      "titel": "Entwurf Wartungsvertrag",
+      "text": "Sterling Bau soll die gesamte Haustechnik der Lincoln High fünf Jahre lang warten – für 480 000 Dollar. Die Unterschrift der Schulleitung fehlt. Randnotiz: „Nach der Prüfung unterschreiben die bestimmt.“",
+      "ort": "Werkstatt, Schaltschrank +S3",
+      "farbe": "#5d6d7e"
+    },
+    "b_mitschnitt": {
+      "titel": "Mitschnitt-Gerät",
+      "text": "Ein kleiner Rechner am Hub der Werkstatt hat den Netzverkehr mitgeschnitten – auch Anmeldungen am Prüfungsserver. Ordner auf der SD-Karte: „MT10_Abschlusspruefung“.",
+      "ort": "Werkstatt, Netzwerkecke",
+      "farbe": "#145a32"
     }
   },
   "fragen": [
@@ -53,7 +77,11 @@
     { "text": "Was hat Sterling Bau davon, wenn in der Schule alles kaputtgeht?", "ab": "b_protokoll" },
     { "text": "Warum bestellt eine Baufirma Telefonleitungen als Energieleitung?", "ab": "b_lieferschein" },
     { "text": "Wer hat über das Funknetz BLACK_ROSE das Band geschaltet?", "ab": "b_router" },
-    { "text": "Wer ist Vince Moretti – und was verbindet ihn mit Sterling Bau?", "ab": "b_foto" }
+    { "text": "Wer ist Vince Moretti – und was verbindet ihn mit Sterling Bau?", "ab": "b_foto" },
+    { "text": "Was soll am Tag der Abschlussprüfung passieren?", "ab": "b_usb" },
+    { "text": "Wer hat den Kellerschlüssel nachmachen lassen?", "ab": "b_schluessel" },
+    { "text": "Warum braucht Sterling Bau eine Schule, in der nichts mehr funktioniert?", "ab": "b_vertrag" },
+    { "text": "Wollen die Black Roses die Abschlussprüfung stehlen – oder sabotieren?", "ab": "b_mitschnitt" }
   ],
   "sammel": {
     "s_widerstand": {
@@ -79,6 +107,18 @@
     "s_lwl": {
       "titel": "LWL-Patchkabel mit LC-Stecker",
       "text": "Im Lichtwellenleiter überträgt Licht die Information: unempfindlich gegen Störfelder, große Reichweite, keine elektrische Verbindung zwischen den Enden."
+    },
+    "s_asi": {
+      "titel": "Stück AS-i-Flachkabel (gelb)",
+      "text": "AS-Interface: zwei Adern im gelben Flachkabel übertragen Daten und Strom gleichzeitig – für einfache Sensoren und Aktoren."
+    },
+    "s_knopfzelle": {
+      "titel": "Knopfzelle CR2032",
+      "text": "Versorgt auf der Hauptplatine die Uhr und die Grundeinstellungen (UEFI), wenn der PC ausgeschaltet ist."
+    },
+    "s_bimetall": {
+      "titel": "Bimetallstreifen",
+      "text": "Aus einem Motorschutzrelais: Zwei verbundene Metalle dehnen sich verschieden stark aus. Bei Überlast biegt sich der Streifen und löst aus."
     }
   }
 }

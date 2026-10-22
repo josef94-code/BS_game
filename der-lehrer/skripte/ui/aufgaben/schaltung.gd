@@ -9,7 +9,7 @@ var _optionen_box: VBoxContainer
 var _info: Label
 var _band: Label
 var _gedrueckt := {}
-var _spule := false
+var _spulen := {}
 
 
 func _bauen() -> void:
@@ -67,14 +67,18 @@ func _bauen() -> void:
 	ph.add_theme_constant_override("v_separation", 6)
 	pv.add_child(ph)
 	var taster: Dictionary = a["logik"].get("taster", {})
-	var namen := taster.keys()
-	namen.sort()
-	for t in namen:
+	# Reihenfolge wie in der Aufgabe (z. B. AUS links neben EIN)
+	for t in taster.keys():
 		_gedrueckt[t] = false
 		var b := Button.new()
 		b.text = taster.get(t, t)
 		b.custom_minimum_size = Vector2(108, 44) if kompakt else Vector2(150, 48)
-		var farbe := Color(0.1, 0.55, 0.2) if "EIN" in String(taster[t]) else Color(0.7, 0.1, 0.1)
+		var beschriftung := String(taster[t])
+		var farbe := Color(0.1, 0.55, 0.2)
+		if "AUS" in beschriftung:
+			farbe = Color(0.7, 0.1, 0.1)
+		elif "Test" in beschriftung:
+			farbe = Color(0.75, 0.42, 0.05)
 		b.add_theme_stylebox_override("normal", Stil.box(farbe, Color.BLACK, 2, 24))
 		b.add_theme_stylebox_override("hover", Stil.box(farbe.lightened(0.15), Color.WHITE, 2, 24))
 		b.add_theme_stylebox_override("pressed", Stil.box(farbe.darkened(0.3), Color.WHITE, 3, 24))
@@ -119,27 +123,40 @@ func _taster(t: String, an: bool) -> void:
 
 
 func _simulieren() -> void:
-	var r := AufgabenLogik.simuliere(a, _belegung, _gedrueckt, _spule)
-	_spule = r["spule"]
-	_plan.spule_an = _spule
+	var r := AufgabenLogik.simuliere(a, _belegung, _gedrueckt, _spulen)
+	_spulen = r["spulen"]
+	_plan.spulen_an = _spulen
 	_plan.betaetigt = {}
-	# Kontakte im Plan entsprechend darstellen
-	for l in _belegung:
-		var oid: String = _belegung[l]
-		var geraet := oid.get_slice("_", 0)
+	# Kontakte im Plan entsprechend darstellen (Lücken und fest eingezeichnete Kontakte)
+	for el in a["schaltplan"]["elemente"]:
+		var geraet: String = el["id"].get_slice("_", 0)
+		if el["typ"] == "luecke":
+			if not _belegung.has(el["id"]):
+				continue
+			geraet = String(_belegung[el["id"]]).get_slice("_", 0)
+		elif el["typ"] == "spule":
+			continue
 		if _gedrueckt.has(geraet):
-			_plan.betaetigt[l] = _gedrueckt[geraet]
-		elif geraet == String(a["logik"]["spule"]):
-			_plan.betaetigt[l] = _spule
+			_plan.betaetigt[el["id"]] = _gedrueckt[geraet]
+		elif _spulen.has(geraet):
+			_plan.betaetigt[el["id"]] = _spulen[geraet]
+	var anzeige: Dictionary = a["logik"].get("anzeige", {})
 	if not r["stabil"]:
-		_band.text = "⚠ Das Schütz flattert! (Kontakt prüfen)"
+		_band.text = "⚠ Ein Schütz flattert! (Kontakt prüfen)"
 		_band.add_theme_color_override("font_color", Color(1.0, 0.4, 0.3))
-	elif _spule:
-		_band.text = "-QA1 angezogen  →  Band LÄUFT"
-		_band.add_theme_color_override("font_color", Stil.GRUEN)
-	else:
-		_band.text = "-QA1 abgefallen  →  Band steht"
+		return
+	var an := []
+	var namen: Array = _spulen.keys()
+	namen.sort()
+	for sp in namen:
+		if _spulen[sp]:
+			an.append("-%s  →  %s" % [sp, anzeige.get(sp, "Band LÄUFT")])
+	if an.is_empty():
+		_band.text = "Alle Schütze abgefallen  →  %s" % anzeige.get("aus", "Band steht")
 		_band.add_theme_color_override("font_color", Color(0.85, 0.85, 0.85))
+	else:
+		_band.text = "\n".join(an)
+		_band.add_theme_color_override("font_color", Stil.GRUEN)
 	_plan.queue_redraw()
 
 
@@ -153,7 +170,7 @@ func _aktualisieren() -> void:
 	for b in _optionen_box.get_children():
 		if b.has_meta("id"):
 			(b as Button).disabled = _auswahl == ""
-	_spule = false
+	_spulen = {}
 	_simulieren()
 
 

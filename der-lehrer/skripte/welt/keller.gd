@@ -242,7 +242,8 @@ func _raum() -> void:
 	exit_licht.omni_range = 3.0
 	add_child(exit_licht)
 	stationen["tuer"] = Interaktiv.neu(self, "tuer", Vector3(-B + 0.7, 0, 7.0), "Tür nach oben", 1.6)
-	ausgang = stationen["tuer"]
+	tueren = {"tuer": "Erdgeschoss"}
+	ankunft = {"Erdgeschoss": [spawn, spawn_blick]}
 	# Schilder an den Wänden
 	Bau.schild(self, "LINCOLN HIGH  ·  KELLER / HAUSTECHNIK", Vector3(-3.0, 2.75, -T + 0.02), 56, Color(0.95, 0.85, 0.6), 0.0, 8)
 	Bau.schild(self, "UNBEFUGTEN IST DER ZUTRITT VERBOTEN", Vector3(-B + 0.03, 2.2, 3.5), 34, Color(0.95, 0.2, 0.15), PI / 2, 6)

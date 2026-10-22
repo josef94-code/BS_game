@@ -14,8 +14,10 @@ var boeden: Array = []
 var symbole: Array = []
 var stationen := {}
 var umwelt: Environment
-## Tür, über die man den Bereich verlässt (dorthin zeigt der Zielmarker, wenn das Ziel woanders liegt)
-var ausgang: Interaktiv
+## Türen in andere Bereiche: Stations-ID -> Titel des Zielbereichs
+var tueren := {}
+## Ankunftsorte: Titel des Herkunftsbereichs -> [lokale Position, Blickrichtung]
+var ankunft := {}
 
 ## Lichter, die je nach Grafikstufe Schatten werfen (wichtigste zuerst)
 var _schatten_lichter: Array[Light3D] = []
@@ -30,6 +32,17 @@ func _form(mitte_x: float, mitte_z: float, breite: float, tiefe: float, farbe: C
 
 func _boden_form(x0: float, z0: float, x1: float, z1: float, farbe: Color, name: String = "") -> void:
 	boeden.append({"r": Rect2(x0, z0, x1 - x0, z1 - z0), "f": farbe, "name": name})
+
+
+## Tür in Richtung eines anderen Bereichs (sonst die Tür ins Erdgeschoss, das alle Bereiche verbindet)
+func ausgang_nach(ziel_titel: String) -> Interaktiv:
+	for id in tueren:
+		if tueren[id] == ziel_titel and stationen.has(id):
+			return stationen[id]
+	for id in tueren:
+		if tueren[id] == "Erdgeschoss" and stationen.has(id):
+			return stationen[id]
+	return null
 
 
 ## Liegt ein Weltpunkt in diesem Bereich?
@@ -228,6 +241,19 @@ func _sammel_neu(id: String, pos: Vector3) -> void:
 			Bau.torus(k, 0.06, 0.08, Vector3.ZERO, orange, Vector3(PI / 2, 0, 0))
 			for seite in [-1, 1]:
 				Bau.box(k, Vector3(0.02, 0.02, 0.06), Vector3(0.09 * seite, 0, 0.06), Bau.mat(Color(0.9, 0.9, 0.88)))
+		"s_asi":
+			var gelb := Bau.mat(Color(0.98, 0.82, 0.1))
+			for i in 3:
+				var stueck := Bau.box(k, Vector3(0.12, 0.012, 0.035), Vector3(-0.1 + i * 0.1, 0, 0.02 * (i % 2)), gelb)
+				stueck.rotation.y = 0.4 * (i - 1)
+		"s_knopfzelle":
+			Bau.zylinder(k, 0.035, 0.01, Vector3.ZERO, metall, Vector3(PI / 2, 0, 0))
+			Bau.zylinder(k, 0.03, 0.002, Vector3(0, 0, 0.006), Bau.mat(Color(0.85, 0.85, 0.8)), Vector3(PI / 2, 0, 0))
+		"s_bimetall":
+			var a := Bau.box(k, Vector3(0.16, 0.008, 0.03), Vector3(0, 0.004, 0), Bau.mat(Color(0.8, 0.45, 0.25)))
+			var b := Bau.box(k, Vector3(0.16, 0.008, 0.03), Vector3(0, -0.004, 0), metall)
+			a.rotation.z = 0.15
+			b.rotation.z = 0.15
 		_:
 			Bau.box(k, Vector3(0.1, 0.12, 0.08), Vector3.ZERO, Bau.mat(Color(0.35, 0.37, 0.4)))
 			Bau.box(k, Vector3(0.06, 0.02, 0.085), Vector3(0, 0.03, 0), Bau.mat(Color(0.9, 0.9, 0.9)))

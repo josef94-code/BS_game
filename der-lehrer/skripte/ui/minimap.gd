@@ -6,7 +6,8 @@ extends Control
 const GROESSE := 230.0
 const SKALA := 9.5   # Pixel pro Meter
 
-const FARBEN := {"kowalski": Color(0.45, 0.68, 0.95), "rosalita": Color(0.95, 0.5, 0.65)}
+const FARBEN := {"kowalski": Color(0.45, 0.68, 0.95), "rosalita": Color(0.95, 0.5, 0.65),
+	"bradley": Color(0.98, 0.78, 0.25), "sparky": Color(1.0, 0.55, 0.25)}
 
 var bereich: Bereich
 var spieler: Spieler

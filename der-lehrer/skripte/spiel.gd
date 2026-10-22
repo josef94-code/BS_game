@@ -1,21 +1,32 @@
 extends Node3D
 ## Spielablauf: baut Welt, Figuren und Oberfläche auf und steuert die Missionen
 ## (Auftrag annehmen -> Anlage reparieren -> Beweis finden -> beim Auftraggeber melden).
-## Die Welt besteht aus Bereichen (Keller, Erdgeschoss), die über Türen verbunden sind.
+## Die Welt besteht aus Bereichen (Keller, Erdgeschoss, Turnhalle, Werkstatt), die über Türen verbunden sind.
 
 const ZIEL_START := {
 	"lehrer": "Sprich mit dem Lehrer in seinem Büro im Keller.",
 	"kowalski": "Sprich mit Hausmeister Kowalski im Flur.",
 	"rosalita": "Sprich mit Rosalita an der Essensausgabe in der Cafeteria.",
+	"bradley": "Sprich mit Coach Bradley in der Turnhalle.",
+	"sparky": "Sprich mit Sparky in der Werkstatt.",
+}
+## Meldung, wenn eine Tür noch abgeschlossen ist
+const TUER_ZU := {
+	"tuer": "Die Tür nach oben ist zu. Erst muss im Keller alles laufen – der Lehrer sagt dir, wann.",
+	"turnhalle": "Die Turnhalle ist abgeschlossen. Erst müssen Flur und Cafeteria laufen.",
+	"werkstatt": "Die Werkstatt ist abgeschlossen. Coach Bradley weiß, wer den Schlüssel hat.",
 }
 const VERSCHLOSSEN := {
 	"oben": ["Abgesperrt", "Das Treppenhaus nach oben ist Baustelle von Sterling Bau. Hier kommst du noch nicht weiter."],
 	"mt10": ["R 104 · MT10", "Dein Klassenzimmer. Abgeschlossen – um diese Uhrzeit ist hier niemand mehr."],
 	"sekretariat": ["Sekretariat", "Abgeschlossen. Durch die Glasscheibe siehst du einen Stapel Rechnungen von Sterling Bau."],
+	"geraeteraum": ["Geräteraum", "Abgeschlossen. Coach Bradley lässt hier niemanden rein – „Da drin ist Ordnung, und so bleibt das.“"],
 }
 
 var keller: Keller
 var erdgeschoss: Erdgeschoss
+var turnhalle: Turnhalle
+var werkstatt: Werkstatt
 var bereiche: Array[Bereich] = []
 var aktueller_bereich: Bereich
 var spieler: Spieler
@@ -50,7 +61,13 @@ func _ready() -> void:
 	erdgeschoss = Erdgeschoss.new()
 	erdgeschoss.position = Vector3(0, 0, -80)
 	add_child(erdgeschoss)
-	bereiche = [keller, erdgeschoss]
+	turnhalle = Turnhalle.new()
+	turnhalle.position = Vector3(0, 0, -160)
+	add_child(turnhalle)
+	werkstatt = Werkstatt.new()
+	werkstatt.position = Vector3(0, 0, -240)
+	add_child(werkstatt)
+	bereiche = [keller, erdgeschoss, turnhalle, werkstatt]
 	_umgebung = WorldEnvironment.new()
 	add_child(_umgebung)
 	marker = Zielmarker.new()
@@ -59,6 +76,8 @@ func _ready() -> void:
 	_person_neu("lehrer", lehrer, keller, keller.lehrer_pos, 0.0, 1.9)
 	_person_neu("kowalski", Nebenfiguren.kowalski(), erdgeschoss, erdgeschoss.kowalski_pos, erdgeschoss.kowalski_blick, 1.6)
 	_person_neu("rosalita", Nebenfiguren.rosalita(), erdgeschoss, erdgeschoss.rosalita_pos, erdgeschoss.rosalita_blick, 2.5)
+	_person_neu("bradley", Nebenfiguren.bradley(), turnhalle, turnhalle.bradley_pos, turnhalle.bradley_blick, 1.8)
+	_person_neu("sparky", Nebenfiguren.sparky(), werkstatt, werkstatt.sparky_pos, werkstatt.sparky_blick, 1.6)
 	spieler = Spieler.new()
 	add_child(spieler)
 	spieler.position = keller.spawn
@@ -157,6 +176,16 @@ func _anlage_reparieren(quest_id: String) -> void:
 			erdgeschoss.funk_abschliessen()
 		"q07_bedienstelle":
 			erdgeschoss.bedienstelle_reparieren()
+		"q08_halle":
+			turnhalle.anzeige_reparieren()
+			turnhalle.usb_entfernen()
+		"q09_vorhang":
+			turnhalle.vorhang_reparieren()
+		"q10_absaugung":
+			werkstatt.absaugung_reparieren()
+		"q11_lauscher":
+			werkstatt.netz_reparieren()
+			werkstatt.lauscher_zeigen(false)
 
 
 func _zustand_sichern() -> void:
@@ -190,13 +219,22 @@ func bereich_an(p: Vector3) -> Bereich:
 	return null
 
 
-func _tuer_offen() -> bool:
-	return Spielstand.quest_status(String(Daten.quest_info.get("tuer_offen_nach", ""))) == "erledigt"
+## Ist eine Tür offen? Türen ohne Eintrag in quests.json ("tueren") sind immer offen.
+func _tuer_offen(id: String) -> bool:
+	var nach := String(Daten.quest_info.get("tueren", {}).get(id, ""))
+	return nach == "" or Spielstand.quest_status(nach) == "erledigt"
+
+
+func _bereich_mit_titel(t: String) -> Bereich:
+	for b in bereiche:
+		if b.titel == t:
+			return b
+	return null
 
 
 func _ziel_aktualisieren() -> void:
 	var q := Spielstand.aktuelle_quest()
-	keller.ausgang.hinweis = "Treppe nach oben" if _tuer_offen() else "Tür nach oben"
+	keller.stationen["tuer"].hinweis = "Treppe nach oben" if _tuer_offen("tuer") else "Tür nach oben"
 	var ziel: Variant = null
 	var geber := ""
 	var status := ""
@@ -217,8 +255,12 @@ func _ziel_aktualisieren() -> void:
 				hud.ziel(q["ziel_zurueck"])
 				ziel = person_vorne(geber)
 	# Liegt das Ziel in einem anderen Bereich, zeigt der Marker auf die Tür dorthin
-	if ziel != null and aktueller_bereich and bereich_an(ziel) != aktueller_bereich and aktueller_bereich.ausgang:
-		ziel = aktueller_bereich.ausgang.global_position
+	if ziel != null and aktueller_bereich:
+		var zb := bereich_an(ziel)
+		if zb and zb != aktueller_bereich:
+			var tuer := aktueller_bereich.ausgang_nach(zb.titel)
+			if tuer:
+				ziel = tuer.global_position
 	marker.setzen(ziel)
 	var liste := []
 	for id in personen:
@@ -350,14 +392,15 @@ func interagieren(id: String) -> void:
 	_beschaeftigt = true
 	if personen.has(id):
 		await _gespraech(id)
-	elif id == "tuer":
-		if _tuer_offen():
-			await _wechseln(erdgeschoss, erdgeschoss.spawn, erdgeschoss.spawn_blick)
+	elif _tuer_bereich(id):
+		var von := _tuer_bereich(id)
+		if _tuer_offen(id):
+			var ziel := _bereich_mit_titel(von.tueren[id])
+			var ank: Array = ziel.ankunft.get(von.titel, [Vector3.ZERO, 0.0])
+			await _wechseln(ziel, ank[0], ank[1])
 		else:
 			Audio.spiele("tuer")
-			hud.toast("Abgeschlossen", "Die Tür nach oben ist zu. Erst muss im Keller alles laufen – der Lehrer sagt dir, wann.")
-	elif id == "treppe":
-		await _wechseln(keller, keller.spawn, keller.spawn_blick)
+			hud.toast("Abgeschlossen", TUER_ZU.get(id, "Diese Tür ist abgeschlossen."))
 	elif id.begins_with("verschlossen:"):
 		var v: Array = VERSCHLOSSEN.get(id.substr(13), ["Abgeschlossen", "Hier kommst du nicht weiter."])
 		Audio.spiele("tuer", -6.0)
@@ -375,8 +418,21 @@ func interagieren(id: String) -> void:
 	_ziel_aktualisieren()
 
 
+## Bereich, in dem eine Tür mit dieser ID steht (sonst null)
+func _tuer_bereich(id: String) -> Bereich:
+	for b in bereiche:
+		if b.tueren.has(id):
+			return b
+	return null
+
+
 func _radio_spielen() -> void:
-	var zeilen: Array = Daten.radio.get("akt2" if _tuer_offen() else "akt1", [])
+	var akt := "akt1"
+	if _tuer_offen("turnhalle"):
+		akt = "akt3"
+	elif _tuer_offen("tuer"):
+		akt = "akt2"
+	var zeilen: Array = Daten.radio.get(akt, [])
 	if zeilen.is_empty():
 		return
 	hud.radio(zeilen[_radio_index % zeilen.size()])
@@ -400,6 +456,7 @@ func _station(id: String) -> void:
 			"schaltschrank_band": keller.schrank_oeffnen(false)
 			"unterverteilung": erdgeschoss.uv_oeffnen(true)
 			"bedienstelle": erdgeschoss.bedienstelle_oeffnen(true)
+			"absaugung": werkstatt.schrank_oeffnen(true)
 		var ok := await aufgaben.starte(q, Spielstand.fortschritt(q["id"]))
 		if ok:
 			await _auftrag_geloest(q)
@@ -407,6 +464,7 @@ func _station(id: String) -> void:
 			match id:
 				"unterverteilung": erdgeschoss.uv_oeffnen(false)
 				"bedienstelle": erdgeschoss.bedienstelle_oeffnen(false)
+				"absaugung": werkstatt.schrank_oeffnen(false)
 		return
 	var texte := {
 		"verteiler_licht": ["Die Leuchte flackert. Die Abzweigdose -XD3 sieht unauffällig aus … Vielleicht weiß der Lehrer mehr.",
@@ -423,6 +481,14 @@ func _station(id: String) -> void:
 			"Der Infoscreen zeigt den Vertretungsplan. Das fremde Funknetz ist verschwunden."],
 		"bedienstelle": ["Bedienstelle Band 1: -SG0, -SJ3, -SJ4 und -PF1. Das Band läuft – aber die grüne Leuchte ist aus.",
 			"Bedienstelle Band 1: -PF1 leuchtet, das Band läuft. Ehrliche Lampe."],
+		"anzeigetafel": ["Steuerrechner der Anzeigetafel. Die Tafel flackert „88:88“, das Hallenlicht flackert mit.",
+			"Die Anzeigetafel zeigt den Spielstand. Jedes Gerät hängt einzeln am Switch."],
+		"vorhang": ["Steuerung des Trennvorhangs: -SJ1 AUS, -SJ2 HOCH, -SJ3 RUNTER. Der Vorhang hängt schief.",
+			"Der Trennvorhang ist oben. Taster- und Schützverriegelung sind drin."],
+		"absaugung": ["Schaltschrank +S3 für Absaugung und Säge. Die Säge läuft, die Absaugung steht – überall Staub.",
+			"+S3: Erst die Absaugung, dann die Säge. Die Luft ist klar."],
+		"werkstatt_pc": ["Der Werkstatt-PC zeigt den 1. Januar 2000. Daneben blinkt ein alter Hub wie wild.",
+			"Neuer Switch, richtige Uhrzeit, ein ordentlicher Stuhl. So arbeitet man."],
 	}
 	var fertig := false
 	match id:
@@ -433,6 +499,10 @@ func _station(id: String) -> void:
 		"unterverteilung": fertig = erdgeschoss.leitung_ok
 		"infoscreen": fertig = erdgeschoss.funk_ok
 		"bedienstelle": fertig = erdgeschoss.bedienstelle_ok
+		"anzeigetafel": fertig = turnhalle.anzeige_ok
+		"vorhang": fertig = turnhalle.vorhang_ok
+		"absaugung": fertig = werkstatt.absaugung_ok
+		"werkstatt_pc": fertig = werkstatt.netz_ok
 	if texte.has(id):
 		hud.toast("Untersucht", texte[id][1 if fertig else 0])
 
@@ -502,6 +572,38 @@ func _fund_sequenz(q: Dictionary) -> void:
 				{"von": eg.to_global(Vector3(28.85, 1.5, -5.3)), "nach": eg.to_global(Vector3(29.0, 1.45, -5.6)), "blick_von": eg.to_global(Vector3(29.2, 1.35, -6.2)),
 					"dauer": 5.0, "t": fund[1], "aktion": func(): eg.bedienstelle_oeffnen(true, true); Audio.spiele("beweis", -2.0)},
 			]
+		"q08_halle":
+			var th := turnhalle
+			shots = [
+				{"von": th.to_global(Vector3(2.0, 2.5, 4.0)), "nach": th.to_global(Vector3(5.0, 2.8, 3.0)), "blick_von": th.to_global(Vector3(14.8, 5.0, 0.0)),
+					"dauer": 4.0, "t": fund[0], "aktion": func(): th.anzeige_reparieren(); Audio.spiele("richtig", -6.0)},
+				{"von": th.to_global(Vector3(-3.6, 1.5, 6.6)), "nach": th.to_global(Vector3(-3.5, 1.35, 6.9)), "blick_von": th.to_global(Vector3(-3.45, 0.87, 7.7)),
+					"dauer": 5.0, "t": fund[1], "aktion": func(): th.usb_zeigen(true); Audio.spiele("beweis", -2.0)},
+			]
+		"q09_vorhang":
+			var th := turnhalle
+			shots = [
+				{"von": th.to_global(Vector3(-6.0, 2.0, 3.0)), "nach": th.to_global(Vector3(-4.0, 2.2, 2.0)), "blick_von": th.to_global(Vector3(0.0, 5.0, 0.0)),
+					"dauer": 4.5, "t": fund[0], "aktion": func(): th.vorhang_reparieren(); Audio.spiele("richtig", -6.0)},
+				{"von": th.to_global(Vector3(0.9, 1.65, 8.8)), "nach": th.to_global(Vector3(1.1, 1.62, 9.1)), "blick_von": th.to_global(Vector3(1.3, 1.6, 9.78)),
+					"dauer": 5.0, "t": fund[1], "aktion": func(): th.schluessel_zeigen(true); Audio.spiele("beweis", -2.0)},
+			]
+		"q10_absaugung":
+			var ws := werkstatt
+			shots = [
+				{"von": ws.to_global(Vector3(1.5, 2.0, -0.5)), "nach": ws.to_global(Vector3(0.5, 1.8, 0.0)), "blick_von": ws.to_global(Vector3(-4.0, 1.0, 4.5)),
+					"dauer": 4.0, "t": fund[0], "aktion": func(): ws.absaugung_reparieren(); Audio.spiele("richtig", -6.0)},
+				{"von": ws.to_global(Vector3(-10.3, 1.6, 1.6)), "nach": ws.to_global(Vector3(-10.6, 1.55, 1.75)), "blick_von": ws.to_global(Vector3(-11.44, 1.5, 1.8)),
+					"dauer": 5.0, "t": fund[1], "aktion": func(): ws.schrank_oeffnen(true, true); Audio.spiele("beweis", -2.0)},
+			]
+		"q11_lauscher":
+			var ws := werkstatt
+			shots = [
+				{"von": ws.to_global(Vector3(7.0, 1.7, 3.8)), "nach": ws.to_global(Vector3(7.6, 1.6, 4.4)), "blick_von": ws.to_global(Vector3(8.4, 1.0, 6.8)),
+					"dauer": 4.0, "t": fund[0], "aktion": func(): ws.netz_reparieren(); Audio.spiele("richtig", -6.0)},
+				{"von": ws.to_global(Vector3(9.0, 1.3, 5.6)), "nach": ws.to_global(Vector3(9.1, 1.2, 5.85)), "blick_von": ws.to_global(Vector3(9.22, 0.8, 6.45)),
+					"dauer": 5.0, "t": fund[1], "aktion": func(): ws.lauscher_zeigen(true); Audio.spiele("beweis", -2.0)},
+			]
 	if not shots.is_empty():
 		spieler.visible = false
 		await sequenz.spiele(shots)
@@ -515,6 +617,10 @@ func _fund_sequenz(q: Dictionary) -> void:
 			erdgeschoss.uv_oeffnen(false)
 		"q07_bedienstelle":
 			erdgeschoss.bedienstelle_oeffnen(false)
+		"q09_vorhang":
+			turnhalle.schluessel_zeigen(false)
+		"q10_absaugung":
+			werkstatt.vertrag_entfernen()
 
 
 # ---------------------------------------------------------------- Gespräche mit Auftraggebern
@@ -596,7 +702,7 @@ func _mission_abschluss(q: Dictionary) -> void:
 		await _bilanz()
 
 
-## Auswertung am Ende von Akt 2 (auch für die Lehrkraft interessant)
+## Auswertung nach der letzten Mission (auch für die Lehrkraft interessant)
 func _bilanz() -> void:
 	var ebene := CanvasLayer.new()
 	ebene.name = "Bilanz"
@@ -612,7 +718,7 @@ func _bilanz() -> void:
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 12)
 	p.add_child(v)
-	v.add_child(Stil.label("ENDE VON AKT 2", 54, Stil.GOLD_HELL, 12, Stil.fett()))
+	v.add_child(Stil.label(String(Daten.quest_info.get("bilanz_titel", "ENDE")), 54, Stil.GOLD_HELL, 12, Stil.fett()))
 	var gesamt := 0
 	var erster := 0
 	var geloest := 0

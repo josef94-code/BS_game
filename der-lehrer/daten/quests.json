@@ -1,5 +1,5 @@
 {
-  "_info": "Missionen in Spielreihenfolge. 'auftraggeber' ist die Figur, die den Auftrag vergibt und abnimmt (lehrer, kowalski, rosalita). 'station' ist die ID eines interaktiven Objekts in der Welt. 'ruf' = Grundbelohnung, je Aufgabe beim ersten Versuch gibt es zusätzlich 'bonus_pro_aufgabe'.",
+  "_info": "Missionen in Spielreihenfolge. 'auftraggeber' ist die Figur, die den Auftrag vergibt und abnimmt (lehrer, kowalski, rosalita, bradley, sparky). 'station' ist die ID eines interaktiven Objekts in der Welt. 'ruf' = Grundbelohnung, je Aufgabe beim ersten Versuch gibt es zusätzlich 'bonus_pro_aufgabe'.",
   "bonus_pro_aufgabe": 2,
   "raenge": [
     {
@@ -20,7 +20,7 @@
     },
     {
       "name": "Consigliere",
-      "ab": 450
+      "ab": 700
     }
   ],
   "quests": [
@@ -199,7 +199,113 @@
         "Hinter der Abdeckung der Bedienstelle klemmt ein Foto. Darauf: zwei Männer vor der Schule – und eine schwarze Rose."
       ],
       "ziel_zurueck": "Zeig Rosalita das Foto."
+    },
+    {
+      "id": "q08_halle",
+      "nr": 8,
+      "titel": "Halbzeit",
+      "akt": "Akt 3 – Licht ins Dunkel",
+      "auftraggeber": "bradley",
+      "ruf": 45,
+      "dialog_start": "q08_start",
+      "dialog_ende": "q08_ende",
+      "station": "anzeigetafel",
+      "ziel_hin": "Untersuche den Steuerrechner der Anzeigetafel am Kampfgericht.",
+      "aufgaben": [
+        "lt_netzarten",
+        "lt_linie",
+        "lt_stern",
+        "lt_ebenen",
+        "lt_bussysteme"
+      ],
+      "beweis": "b_usb",
+      "fund": [
+        "Anzeigetafel, Hallenlicht, Lüftung: alles einzeln am neuen Switch. Die Tafel zeigt wieder den Spielstand.",
+        "Im Steuerrechner der Anzeigetafel steckt ein USB-Stick mit einer schwarzen Rose."
+      ],
+      "ziel_zurueck": "Bring Coach Bradley den USB-Stick."
+    },
+    {
+      "id": "q09_vorhang",
+      "nr": 9,
+      "titel": "Der Vorhang fällt",
+      "akt": "Akt 3 – Licht ins Dunkel",
+      "auftraggeber": "bradley",
+      "ruf": 50,
+      "dialog_start": "q09_start",
+      "dialog_ende": "q09_ende",
+      "station": "vorhang",
+      "ziel_hin": "Prüfe die Steuerung des Trennvorhangs an der Nordwand.",
+      "aufgaben": [
+        "st_gleichstrom",
+        "st_kurzschluss",
+        "st_verriegelung",
+        "st_wende",
+        "st_wende_fehler"
+      ],
+      "beweis": "b_schluessel",
+      "fund": [
+        "Der Trennvorhang fährt sauber hoch und runter. Direkt umschalten – kein Knall mehr.",
+        "Hinter dem Steuerkasten des Vorhangs klemmt ein Schlüssel. Frisch nachgemacht."
+      ],
+      "ziel_zurueck": "Zeig Coach Bradley den Schlüssel."
+    },
+    {
+      "id": "q10_absaugung",
+      "nr": 10,
+      "titel": "Dicke Luft",
+      "akt": "Akt 3 – Licht ins Dunkel",
+      "auftraggeber": "sparky",
+      "ruf": 50,
+      "dialog_start": "q10_start",
+      "dialog_ende": "q10_ende",
+      "station": "absaugung",
+      "ziel_hin": "Öffne den Schaltschrank der Absauganlage in der Werkstatt.",
+      "aufgaben": [
+        "st_folge_forderung",
+        "st_folge_bc",
+        "st_folge_pf2",
+        "st_folge",
+        "st_folge_fehler"
+      ],
+      "beweis": "b_vertrag",
+      "fund": [
+        "Erst die Absaugung, dann die Säge. Die Luft in der Werkstatt wird klar.",
+        "Hinter der Montageplatte steckt ein Vertragsentwurf von Sterling Bau."
+      ],
+      "ziel_zurueck": "Zeig Sparky den Vertrag."
+    },
+    {
+      "id": "q11_lauscher",
+      "nr": 11,
+      "titel": "Der Lauscher",
+      "akt": "Akt 3 – Licht ins Dunkel",
+      "auftraggeber": "sparky",
+      "ruf": 60,
+      "dialog_start": "q11_start",
+      "dialog_ende": "q11_ende",
+      "station": "werkstatt_pc",
+      "ziel_hin": "Untersuche den Werkstatt-PC und das Netzwerk in der Ecke am Fenster.",
+      "aufgaben": [
+        "lt_hub",
+        "lt_komponenten",
+        "lt_knopfzelle",
+        "lt_speicher",
+        "lt_ergonomie"
+      ],
+      "beweis": "b_mitschnitt",
+      "fund": [
+        "Neuer Switch, richtige Uhrzeit, ein Arbeitsplatz, an dem man gerade sitzt.",
+        "Und am alten Hub hing ein kleiner fremder Rechner, der alles mitgeschnitten hat."
+      ],
+      "ziel_zurueck": "Bring Sparky das Mitschnitt-Gerät."
     }
   ],
-  "tuer_offen_nach": "q04_netz"
+  "tueren": {
+    "tuer": "q04_netz",
+    "turnhalle": "q07_bedienstelle",
+    "werkstatt": "q09_vorhang"
+  },
+  "_tueren": "Türen zwischen den Bereichen: Tür-ID -> Mission, nach der die Tür offen ist.",
+  "bilanz_titel": "FORTSETZUNG FOLGT: DAS FINALE"
 }

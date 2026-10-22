@@ -15,7 +15,8 @@ var plan: Dictionary = {}
 var belegung := {}
 ## Element-ID -> true, wenn der Kontakt betätigt ist (für den Probelauf)
 var betaetigt := {}
-var spule_an := false
+## Spule (Element-ID) -> angezogen?
+var spulen_an := {}
 var auswahl := ""
 ## Welche Element-IDs anklickbar sind
 var klickbar: Array = []
@@ -117,7 +118,7 @@ func _draw() -> void:
 		var oben := _punkt(float(el["x"]), float(el["y"]))
 		var unten := _punkt(float(el["x"]), float(el["y"]) + 1.0)
 		var zu := _ist_geschlossen(el["id"], typ)
-		_symbol(typ, oben, unten, zu)
+		_symbol(typ, oben, unten, zu, bool(spulen_an.get(el["id"], false)))
 		if bez != "":
 			var bs := f.get_string_size(bez, HORIZONTAL_ALIGNMENT_LEFT, -1, 19)
 			var mit_antrieb := typ.begins_with("taster") or typ in ["zeit_no", "mschutz_nc", "nothalt_nc"]
@@ -176,7 +177,7 @@ func _luecke(el: Dictionary) -> void:
 
 # ---------------------------------------------------------------- Symbole (DIN EN 60617)
 
-func _symbol(typ: String, oben: Vector2, unten: Vector2, zu: bool) -> void:
+func _symbol(typ: String, oben: Vector2, unten: Vector2, zu: bool, spule_an: bool = false) -> void:
 	var l := unten.y - oben.y
 	var cx := oben.x
 	var a := Vector2(cx, oben.y + l * 0.3)   # oberer Festkontakt
