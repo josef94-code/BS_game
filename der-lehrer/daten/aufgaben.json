@@ -1,0 +1,830 @@
+{
+  "_info": "Fachaufgaben für DER LEHRER. Platzhalter in {geschweiften Klammern} werden durch Zufallswerte aus 'variablen' bzw. 'varianten' ersetzt; {ERG} ist das Ergebnis. 'loesung' ist ein Rechenausdruck mit diesen Variablen. 'toleranz' ist relativ (0.02 = 2 %). Ergebnisse werden wie in den Lernunterlagen mit drei gültigen Stellen angezeigt. Typen: mc, berechnung, sortieren, fehlersuche, schaltung.",
+  "et_kennbuchstabe": {
+    "typ": "mc",
+    "titel": "Kennbuchstaben im Schaltplan",
+    "thema": "Elektrotechnik",
+    "lehrplan": "LF 3 – Elektrische Größen, Darstellungsmöglichkeiten (Lernunterlagen ET Kap. 2)",
+    "schwierigkeit": 1,
+    "frage": "Im Schaltplan der Kellerbeleuchtung steht vor jedem Schaltzeichen ein Kennzeichen nach DIN EN 81346-2. Welcher Kennbuchstabe steht für die Sicherung?",
+    "optionen": [
+      "F",
+      "S",
+      "E",
+      "P"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Das englische Wort für Sicherung ist „fuse“.",
+      "R = Widerstand, P = Messgerät, S = Schalter, E = Leuchte, G = Spannungsquelle, M = Motor – und die Sicherung?"
+    ],
+    "erklaerung": "F = Sicherung (fuse). Weitere Kennbuchstaben: R Widerstand, P Strom- und Spannungsmessgerät, S Schalter, G Batterie bzw. Spannungsquelle, E Leuchte, M Motor. Mit der Zählnummer entsteht das Kennzeichen, z. B. -F1."
+  },
+  "et_vorwiderstand": {
+    "typ": "berechnung",
+    "titel": "Der verkohlte Vorwiderstand",
+    "thema": "Elektrotechnik",
+    "lehrplan": "LF 3 – Elektrische Größen, deren Zusammenhänge und Berechnungen (Lernunterlagen ET Kap. 3)",
+    "schwierigkeit": 1,
+    "frage": "Auch die Notleuchte über der Kellertür ist dunkel: Ihr Vorwiderstand ist verkohlt. Lampe und Vorwiderstand liegen in Reihe an U = {U} V DC. Laut Datenblatt braucht die Lampe U_L = {UL} V und I = {I} mA. Welchen Wert muss der neue Vorwiderstand R haben?",
+    "varianten": [
+      {
+        "U": 12,
+        "UL": 6,
+        "I": 100
+      },
+      {
+        "U": 24,
+        "UL": 12,
+        "I": 80
+      },
+      {
+        "U": 24,
+        "UL": 6,
+        "I": 150
+      }
+    ],
+    "loesung": "(U - UL) / (I / 1000)",
+    "einheit": "Ω",
+    "toleranz": 0.02,
+    "stellen": 3,
+    "tipps": [
+      "Am Vorwiderstand liegt nur die Spannung, die die Lampe nicht braucht: U_R = U – U_L.",
+      "Dann das Ohm’sche Gesetz: R = U_R / I. Den Strom vorher von mA in A umrechnen."
+    ],
+    "erklaerung": "U_R = {U} V – {UL} V; R = U_R / I = ({U} V – {UL} V) / {I} mA ≈ {ERG} Ω"
+  },
+  "et_uebergang_r": {
+    "typ": "berechnung",
+    "titel": "Das Messprotokoll",
+    "thema": "Elektrotechnik",
+    "lehrplan": "LF 3 – Elektrische Größen, deren Zusammenhänge und Berechnungen (Lernunterlagen ET Kap. 3)",
+    "schwierigkeit": 1,
+    "frage": "Im Messprotokoll der Elektrofachkraft steht: Über der gelockerten Klemme in der Abzweigdose fällt eine Spannung von U = {U} V ab, durch die Klemme fließt I = {I} A. Wie groß ist der Übergangswiderstand R der Klemme?",
+    "variablen": {
+      "U": [
+        2.3,
+        3.45,
+        4.6
+      ],
+      "I": [
+        0.16,
+        0.2,
+        0.25
+      ]
+    },
+    "loesung": "U / I",
+    "einheit": "Ω",
+    "toleranz": 0.02,
+    "stellen": 3,
+    "tipps": [
+      "Das ohmsche Gesetz verknüpft U, R und I.",
+      "R = U / I – Spannung in Volt durch Strom in Ampere ergibt Ohm."
+    ],
+    "erklaerung": "R = U / I = {U} V / {I} A ≈ {ERG} Ω. Eine gute Klemmstelle hat nur wenige Milliohm, z. B. 8 mΩ – diese hier ist tausendfach schlechter: Sie wird heiß und verursacht Wackelkontakte."
+  },
+  "sr_5regeln": {
+    "typ": "sortieren",
+    "titel": "Die fünf Sicherheitsregeln",
+    "thema": "Elektrotechnik",
+    "lehrplan": "LF 3 – Stromwirkung auf den Organismus, Sicherheitsregeln (Lernunterlagen ET Kap. 1.5)",
+    "schwierigkeit": 1,
+    "frage": "Bevor du die Abzweigdose öffnest: Bring die fünf Sicherheitsregeln in die richtige Reihenfolge (oben = zuerst).",
+    "elemente": [
+      "Freischalten",
+      "Gegen Wiedereinschalten sichern",
+      "Spannungsfreiheit allpolig feststellen",
+      "Erden und kurzschließen",
+      "Benachbarte, unter Spannung stehende Teile abdecken oder abschranken"
+    ],
+    "tipps": [
+      "Zuerst muss die Anlage vom Netz getrennt werden.",
+      "Erst sichern, dann prüfen – sonst könnte während der Prüfung jemand wieder einschalten. Abdecken kommt zum Schluss."
+    ],
+    "erklaerung": "Die „lebenswichtigen Fünf“ nach DIN VDE 0105-100: Freischalten – gegen Wiedereinschalten sichern – Spannungsfreiheit allpolig feststellen – erden und kurzschließen – benachbarte Teile abdecken. Beim Aufheben in umgekehrter Reihenfolge."
+  },
+  "sr_pruefer": {
+    "typ": "mc",
+    "titel": "Das richtige Werkzeug",
+    "thema": "Elektrotechnik",
+    "lehrplan": "LF 3 – Sicherheitsregeln (Lernunterlagen ET Kap. 1.5)",
+    "schwierigkeit": 1,
+    "frage": "Womit stellst du die Spannungsfreiheit fest?",
+    "optionen": [
+      "Mit einem zweipoligen Spannungsprüfer",
+      "Mit einem einpoligen Spannungsprüfer (Phasenprüfer-Schraubendreher)",
+      "Mit einem Multimeter im Widerstandsmessbereich",
+      "Kurz mit dem Handrücken antippen"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Der einpolige Prüfer heißt in der Werkstatt nicht ohne Grund „Lügenstift“.",
+      "Gesucht ist ein Prüfgerät, das zwischen zwei Punkten prüft – allpolig, also zwischen allen Leitern."
+    ],
+    "erklaerung": "Die Spannungsfreiheit wird allpolig mit einem zweipoligen Spannungsprüfer festgestellt – vorher und nachher an einer bekannten Spannungsquelle prüfen."
+  },
+  "st_schliesser": {
+    "typ": "mc",
+    "titel": "Schließer oder Öffner?",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik (Lernunterlagen Schütztechnik Kap. 1.3)",
+    "schwierigkeit": 1,
+    "frage": "Die Glocke soll nur läuten, solange der Kontakt der Zeitschaltuhr -KF1 betätigt (eingeschaltet) ist. Dafür braucht man einen Schließer (NO). Wie verhält sich ein Schließer?",
+    "optionen": [
+      "Unbetätigt offen – betätigt geschlossen",
+      "Unbetätigt geschlossen – betätigt offen",
+      "Er wechselt bei jeder Betätigung seinen Zustand und bleibt dort",
+      "Er schließt erst nach einer einstellbaren Zeit"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Der Name verrät es: Was macht der Kontakt, wenn man ihn betätigt?",
+      "Ein Schließer schließt bei Betätigung den Stromkreis. Ein Öffner öffnet ihn."
+    ],
+    "erklaerung": "Schließer (NO, normally open): unbetätigt offen, betätigt geschlossen. Öffner (NC, normally closed): unbetätigt geschlossen, betätigt offen."
+  },
+  "st_ziffern": {
+    "typ": "mc",
+    "titel": "Klemmenbezeichnungen",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Technische Unterlagen (Lernunterlagen Schütztechnik Kap. 1.3, 1.4)",
+    "schwierigkeit": 1,
+    "frage": "Der Handtaster -SJ3 hat einen Schließer und einen Öffner. Welche Anschlussbezeichnung hat sein Öffner?",
+    "optionen": [
+      "21 – 22",
+      "13 – 14",
+      "95 – 96",
+      "A1 – A2"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Die erste Ziffer ist die Ordnungsziffer: Sie zählt die Kontakte durch.",
+      "Am Laborschütz: 13–14 Schließer, 21–22 und 31–32 Öffner, A1–A2 Spule."
+    ],
+    "erklaerung": "13–14 = Schließer (NO), 21–22 = Öffner (NC); die erste Ziffer ist die Ordnungsziffer. A1–A2 ist die Spule eines Schützes, 95–96 der Öffner des Motorschutzrelais."
+  },
+  "st_glocke_fehler": {
+    "typ": "fehlersuche",
+    "titel": "Die Glocke lügt",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Technische Unterlagen, Signale und Messwerte (Stromlaufplan in aufgelöster Darstellung)",
+    "schwierigkeit": 2,
+    "frage": "Die Glocke läutet im Unterricht und schweigt in den Pausen. Die Zeitschaltuhr -KF1 steht gerade auf „Unterricht“, ihr Programm ist also AUS. Klicke die Betriebsmittel an, um die Messergebnisse zu sehen. Wähle dann das fehlerhafte Betriebsmittel.",
+    "schaltplan": {
+      "breite": 7,
+      "hoehe": 5,
+      "schienen": [
+        {
+          "y": 0,
+          "text": "24 V"
+        },
+        {
+          "y": 5,
+          "text": "0 V"
+        }
+      ],
+      "elemente": [
+        {
+          "id": "FC1",
+          "typ": "sicherung",
+          "x": 3.5,
+          "y": 0,
+          "bez": "-FC1",
+          "kl": "B 2 A"
+        },
+        {
+          "id": "SJ3",
+          "typ": "taster_no",
+          "x": 2,
+          "y": 2,
+          "bez": "-SJ3",
+          "kl": "13/14"
+        },
+        {
+          "id": "KF1",
+          "typ": "zeit_no",
+          "x": 5,
+          "y": 2,
+          "bez": "-KF1",
+          "kl": "Uhr"
+        },
+        {
+          "id": "PB1",
+          "typ": "glocke",
+          "x": 3.5,
+          "y": 4,
+          "bez": "-PB1",
+          "kl": ""
+        }
+      ],
+      "leitungen": [
+        [
+          [
+            3.5,
+            1
+          ],
+          [
+            3.5,
+            1.5
+          ]
+        ],
+        [
+          [
+            2,
+            1.5
+          ],
+          [
+            3.5,
+            1.5
+          ]
+        ],
+        [
+          [
+            3.5,
+            1.5
+          ],
+          [
+            5,
+            1.5
+          ]
+        ],
+        [
+          [
+            2,
+            1.5
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        [
+          [
+            5,
+            1.5
+          ],
+          [
+            5,
+            2
+          ]
+        ],
+        [
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            3.5
+          ]
+        ],
+        [
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            3.5
+          ]
+        ],
+        [
+          [
+            2,
+            3.5
+          ],
+          [
+            3.5,
+            3.5
+          ]
+        ],
+        [
+          [
+            3.5,
+            3.5
+          ],
+          [
+            5,
+            3.5
+          ]
+        ],
+        [
+          [
+            3.5,
+            3.5
+          ],
+          [
+            3.5,
+            4
+          ]
+        ]
+      ]
+    },
+    "bauteile": {
+      "KF1": {
+        "name": "Zeitschaltuhr -KF1",
+        "messung": "Freigeschaltet und abgeklemmt, Widerstandsmessung am angeschlossenen Kontakt: Programm AUS (Unterricht) → 0,1 Ω (geschlossen)! Programm EIN (Pause) → ∞ Ω (offen).",
+        "fehler": true
+      },
+      "PB1": {
+        "name": "Schulglocke -PB1",
+        "messung": "Während des Unterrichts liegen an -PB1 24 V an, die Glocke läutet. Die Glocke selbst funktioniert.",
+        "fehler": false
+      },
+      "FC1": {
+        "name": "Leitungsschutzschalter -FC1",
+        "messung": "Spannungsmessung über -FC1: 0 V. Der Leitungsschutzschalter ist eingeschaltet und in Ordnung.",
+        "fehler": false
+      },
+      "SJ3": {
+        "name": "Handtaster -SJ3 (Sekretariat)",
+        "messung": "Freigeschaltet und abgeklemmt, Widerstandsmessung: unbetätigt ∞ Ω (offen), betätigt 0,1 Ω (geschlossen). Verhält sich wie ein Schließer – in Ordnung.",
+        "fehler": false
+      }
+    },
+    "tipps": [
+      "Vergleiche bei jedem Kontakt: Wie müsste er sich laut Schaltplan verhalten – und was wurde gemessen?",
+      "Im Plan ist -KF1 als Schließer gezeichnet. Ein Schließer ist bei Programm AUS offen …"
+    ],
+    "erklaerung": "-KF1 verhält sich wie ein Öffner: geschlossen bei Programm AUS, offen bei EIN. Die Leitung wurde am Öffneranschluss der Zeitschaltuhr angeklemmt statt am Schließeranschluss – deshalb läutet die Glocke genau verkehrt herum."
+  },
+  "st_glocke_fix": {
+    "typ": "mc",
+    "titel": "Fachgerecht beheben",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Gefahren beim Umgang mit elektrischen Baugruppen; LF 3 – Sicherheitsregeln",
+    "schwierigkeit": 2,
+    "frage": "Die Leitung zur Glocke ist am Öffnerkontakt der Zeitschaltuhr -KF1 angeklemmt statt am Schließer. Wie gehst du vor?",
+    "optionen": [
+      "Freischalten, gegen Wiedereinschalten sichern, Spannungsfreiheit feststellen – dann vom Öffner- auf den Schließeranschluss umklemmen und die Funktion prüfen",
+      "Die Glocke abklemmen, dann ist endlich Ruhe",
+      "Einen größeren Leitungsschutzschalter -FC1 einsetzen",
+      "Unter Spannung schnell umklemmen, das dauert ja nur eine Minute"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Denk an die fünf Sicherheitsregeln aus dem ersten Auftrag.",
+      "Die Ursache ist der falsche Anschluss – und gearbeitet wird nur im freigeschalteten Zustand."
+    ],
+    "erklaerung": "Erst die Sicherheitsregeln, dann umklemmen, dann eine Funktionsprüfung: Programm EIN → Glocke läutet, Programm AUS → Glocke still."
+  },
+  "st_selbsthaltung_mc": {
+    "typ": "mc",
+    "titel": "Was fehlt?",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik (Lernunterlagen Schütztechnik Kap. 2.1)",
+    "schwierigkeit": 2,
+    "frage": "Das Förderband läuft nur, solange jemand den EIN-Taster -SJ2 gedrückt hält (Tippbetrieb). Welche Funktion fehlt im Steuerstromkreis?",
+    "optionen": [
+      "Die Selbsthaltung: ein Schließer (13–14) des Schützes -QA1 parallel zum EIN-Taster -SJ2",
+      "Die Selbsthaltung: ein Öffner des Schützes -QA1 in Reihe zum AUS-Taster -SJ1",
+      "Ein größerer Leitungsschutzschalter im Steuerstromkreis",
+      "Ein zweiter EIN-Taster in Reihe zu -SJ2"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Das Schütz soll nach dem Loslassen des EIN-Tasters angezogen bleiben – der Strom braucht einen zweiten Weg zur Spule.",
+      "Diesen Weg schafft ein Schließer des Schützes selbst, der Selbsthaltekontakt."
+    ],
+    "erklaerung": "Selbsthaltung: Der Selbsthaltekontakt -QA1 (13–14) liegt parallel zu -SJ2. Zieht das Schütz an, überbrückt er den Taster – das Schütz hält sich selbst, bis -SJ1 den Stromkreis unterbricht."
+  },
+  "st_selbsthaltung": {
+    "typ": "schaltung",
+    "titel": "Steuerstromkreis Förderband",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik (Lernunterlagen Schütztechnik Kap. 2.1, 2.2)",
+    "schwierigkeit": 2,
+    "frage": "Jemand hat die Kontakte im Steuerstromkreis abgeklemmt. Setze die richtigen Betriebsmittel in die drei Lücken: Klicke eine Lücke an und wähle dann ein Betriebsmittel. Teste im Probelauf und prüfe dann. (Vorrang AUS!)",
+    "schaltplan": {
+      "breite": 6,
+      "hoehe": 7,
+      "schienen": [
+        {
+          "y": 0,
+          "text": "24 V"
+        },
+        {
+          "y": 7,
+          "text": "0 V"
+        }
+      ],
+      "elemente": [
+        {
+          "id": "FC1",
+          "typ": "sicherung",
+          "x": 2,
+          "y": 0,
+          "bez": "-FC1",
+          "kl": "B 2 A"
+        },
+        {
+          "id": "BC1",
+          "typ": "mschutz_nc",
+          "x": 2,
+          "y": 1,
+          "bez": "-BC1",
+          "kl": "95/96"
+        },
+        {
+          "id": "L1",
+          "typ": "luecke",
+          "x": 2,
+          "y": 2
+        },
+        {
+          "id": "L2",
+          "typ": "luecke",
+          "x": 2,
+          "y": 3.5
+        },
+        {
+          "id": "L3",
+          "typ": "luecke",
+          "x": 4,
+          "y": 3.5
+        },
+        {
+          "id": "QA1",
+          "typ": "spule",
+          "x": 2,
+          "y": 5,
+          "bez": "-QA1",
+          "kl": "A1/A2"
+        }
+      ],
+      "leitungen": [
+        [
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            3.5
+          ]
+        ],
+        [
+          [
+            2,
+            3.5
+          ],
+          [
+            4,
+            3.5
+          ]
+        ],
+        [
+          [
+            2,
+            4.5
+          ],
+          [
+            4,
+            4.5
+          ]
+        ],
+        [
+          [
+            2,
+            4.5
+          ],
+          [
+            2,
+            5
+          ]
+        ],
+        [
+          [
+            2,
+            6
+          ],
+          [
+            2,
+            7
+          ]
+        ]
+      ]
+    },
+    "optionen": [
+      {
+        "id": "SJ1_NC",
+        "text": "-SJ1 AUS, Öffner (21–22)",
+        "symbol": "taster_nc",
+        "bez": "-SJ1",
+        "kl": "21/22",
+        "logik": "(not SJ1)"
+      },
+      {
+        "id": "SJ2_NO",
+        "text": "-SJ2 EIN, Schließer (13–14)",
+        "symbol": "taster_no",
+        "bez": "-SJ2",
+        "kl": "13/14",
+        "logik": "SJ2"
+      },
+      {
+        "id": "QA1_NO",
+        "text": "-QA1 Selbsthaltekontakt, Schließer (13–14)",
+        "symbol": "schliesser",
+        "bez": "-QA1",
+        "kl": "13/14",
+        "logik": "QA1"
+      },
+      {
+        "id": "QA1_NC",
+        "text": "-QA1 Hilfsöffner (21–22)",
+        "symbol": "oeffner",
+        "bez": "-QA1",
+        "kl": "21/22",
+        "logik": "(not QA1)"
+      },
+      {
+        "id": "BRUECKE",
+        "text": "Drahtbrücke",
+        "symbol": "leitung",
+        "bez": "",
+        "kl": "",
+        "logik": "true"
+      }
+    ],
+    "loesung_belegung": {
+      "L1": "SJ1_NC",
+      "L2": "SJ2_NO",
+      "L3": "QA1_NO"
+    },
+    "logik": {
+      "spule": "QA1",
+      "ausdruck": "{L1} and ({L2} or {L3})",
+      "taster": {
+        "SJ1": "-SJ1 AUS",
+        "SJ2": "-SJ2 EIN"
+      }
+    },
+    "pruefung": [
+      {
+        "SJ1": false,
+        "SJ2": false,
+        "QA1": false,
+        "text": "Grundstellung: Band steht"
+      },
+      {
+        "SJ1": false,
+        "SJ2": true,
+        "QA1": true,
+        "text": "-SJ2 betätigen: Band läuft an"
+      },
+      {
+        "SJ1": false,
+        "SJ2": false,
+        "QA1": true,
+        "text": "-SJ2 loslassen: Band läuft weiter (Selbsthaltung)"
+      },
+      {
+        "SJ1": true,
+        "SJ2": false,
+        "QA1": false,
+        "text": "-SJ1 betätigen: Band stoppt"
+      },
+      {
+        "SJ1": false,
+        "SJ2": false,
+        "QA1": false,
+        "text": "-SJ1 loslassen: Band bleibt aus"
+      },
+      {
+        "SJ1": true,
+        "SJ2": true,
+        "QA1": false,
+        "text": "-SJ1 und -SJ2 gleichzeitig: Vorrang AUS"
+      }
+    ],
+    "tipps": [
+      "Ganz oben in Reihe gehört der AUS-Taster, der den Stromkreis jederzeit unterbrechen muss – als Öffner.",
+      "Darunter zwei parallele Zweige: der EIN-Taster als Schließer und daneben der Selbsthaltekontakt des Schützes."
+    ],
+    "erklaerung": "24 V → -FC1 → -BC1 (95–96) → -SJ1 (Öffner 21–22) → [-SJ2 (13–14) parallel -QA1 (13–14)] → Spule -QA1 (A1–A2) → 0 V. Der AUS-Taster liegt in Reihe vor der Parallelschaltung aus EIN-Taster und Selbsthaltekontakt: Vorrang AUS."
+  },
+  "st_rastend": {
+    "typ": "mc",
+    "titel": "Warum keine Rastung?",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik (Lernunterlagen Schütztechnik Kap. 2.1)",
+    "schwierigkeit": 2,
+    "frage": "Hausmeister Kowalski schlägt vor, statt der Selbsthaltung einfach einen rastenden Schalter einzubauen. Warum ist die Selbsthaltung sicherer?",
+    "optionen": [
+      "Nach einem kurzen Stromausfall bleibt das Band aus, bis jemand bewusst EIN drückt – ein rastender Schalter würde es unerwartet wieder anlaufen lassen",
+      "Die Selbsthaltung braucht weniger Strom als ein rastender Schalter",
+      "Ein rastender Schalter darf nur im Hauptstromkreis verwendet werden",
+      "Mit Selbsthaltung läuft das Band schneller"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Denk an einen kurzen Stromausfall, während das Band läuft.",
+      "Was passiert mit dem Schütz, wenn die Spannung fehlt – und was mit einem eingerasteten Schalter?"
+    ],
+    "erklaerung": "Beim Stromausfall fällt das Schütz ab, die Selbsthaltung ist aufgehoben. Kehrt die Spannung zurück, bleibt das Band stehen, bis jemand bewusst EIN drückt. Ein rastender Schalter bliebe eingeschaltet – das Band liefe unerwartet wieder an (Verletzungsgefahr)."
+  },
+  "st_bc_einstellen": {
+    "typ": "berechnung",
+    "titel": "Motorschutz einstellen",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Technische Unterlagen (Typenschild), Motorschutz (Lernunterlagen Schütztechnik Kap. 3.2)",
+    "schwierigkeit": 2,
+    "frage": "Typenschild des Bandmotors -MA1: Gleichstrommotor · 24 V DC · Bemessungsstrom I = {I} A · n = 3000 1/min · IP54. Auf welchen Strom stellst du das Motorschutzrelais -BC1 ein?",
+    "varianten": [
+      {
+        "I": 7.5
+      },
+      {
+        "I": 8.2
+      },
+      {
+        "I": 9.5
+      }
+    ],
+    "loesung": "I",
+    "einheit": "A",
+    "toleranz": 0.001,
+    "stellen": 2,
+    "tipps": [
+      "Hier musst du nichts rechnen – du musst das Typenschild richtig lesen.",
+      "Das Motorschutzrelais wird auf den Bemessungsstrom des Motors eingestellt."
+    ],
+    "erklaerung": "Das Einstellrad von -BC1 wird auf den Bemessungsstrom vom Typenschild gestellt: {I} A. Ein höherer Wert schützt den Motor nicht mehr, ein niedrigerer führt zu Fehlauslösungen."
+  },
+  "st_95_96": {
+    "typ": "mc",
+    "titel": "Der Hilfskontakt 95–96",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Motorschutz (Lernunterlagen Schütztechnik Kap. 3.2–3.4)",
+    "schwierigkeit": 2,
+    "frage": "Welche Aufgabe hat der Hilfskontakt 95–96 des Motorschutzrelais -BC1 im Steuerstromkreis?",
+    "optionen": [
+      "Er ist ein Öffner: Bei Überlast öffnet er, die Spule von -QA1 wird stromlos und der Motor schaltet ab",
+      "Er ist ein Schließer und schaltet bei Überlast die Störmeldung -PF2 ein",
+      "Er schützt die Steuerleitung vor Kurzschluss",
+      "Er schaltet den Motor nach einer Überlast automatisch wieder ein"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "95–96 ist in Ruhestellung geschlossen.",
+      "Die Störmeldung -PF2 schaltet der andere Hilfskontakt 97–98. Vor Kurzschluss schützt der Leitungsschutzschalter."
+    ],
+    "erklaerung": "95–96 ist ein Öffner: Bei Überlast biegen sich die Bimetalle, -BC1 löst aus, 95–96 öffnet und die Spule -QA1 wird stromlos. Der Schließer 97–98 schaltet die rote Störmeldung -PF2. Mit Rückstellung „Hand“ muss jemand die Störung bewusst quittieren."
+  },
+  "dv_datenschutz": {
+    "typ": "mc",
+    "titel": "Datenschutz oder Datensicherheit?",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Datenschutz und Datensicherheit (Lernunterlagen LtK Kap. 3)",
+    "schwierigkeit": 2,
+    "frage": "Auf der NAS im Netzwerkschrank liegen die Programme der Förderbandsteuerung, die Betriebsdaten des Bandes und die Namen der Schüler, die in der Cafeteria mit Karte bezahlt haben. Was gehört zum Datenschutz?",
+    "optionen": [
+      "Die Namen der Schüler vor unbefugtem Zugriff zu schützen, weil es personenbezogene Daten sind",
+      "Die Programme der Bandsteuerung regelmäßig zu sichern, damit sie nicht verloren gehen",
+      "Die NAS mit einer USV gegen Stromausfall abzusichern",
+      "Die Betriebsdaten des Bandes auf zwei Festplatten zu spiegeln"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Datenschutz schützt Menschen, Datensicherheit schützt Daten.",
+      "Beim Datenschutz geht es um personenbezogene Daten und das Recht jedes Einzelnen auf seine Daten (DSGVO)."
+    ],
+    "erklaerung": "Datensicherheit meint den Schutz aller Daten vor Verlust, Veränderung und unbefugtem Zugriff. Datenschutz meint den Schutz personenbezogener Daten – er schützt nicht die Daten, sondern den Menschen dahinter."
+  },
+  "dv_32110": {
+    "typ": "mc",
+    "titel": "Die 3-2-1-1-0-Regel",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Datenschutz und Datensicherheit (Lernunterlagen LtK Kap. 2.2)",
+    "schwierigkeit": 2,
+    "frage": "Die einzige Sicherung des Bandprogramms lag auf derselben NAS – und ist jetzt weg. Der Lehrer will ein Sicherungskonzept nach der 3-2-1-1-0-Regel. Welche Aussagen gehören zu dieser Regel?",
+    "optionen": [
+      "3 Kopien der Daten (das Original und zwei Sicherungen)",
+      "2 verschiedene Speichermedien",
+      "1 Kopie außer Haus (anderes Gebäude oder Cloud)",
+      "1 Kopie ohne Netzverbindung (offline)",
+      "0 Fehler bei der Rücksicherung – das Backup wird regelmäßig getestet",
+      "3 Passwörter für jeden Benutzer",
+      "2 Jahre Aufbewahrungspflicht für alle Daten"
+    ],
+    "richtig": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "tipps": [
+      "Jede Ziffer steht für eine Anforderung an die Sicherung – Passwörter und Fristen gehören nicht dazu.",
+      "3 Kopien, 2 Medien, 1 außer Haus, 1 offline, 0 Fehler."
+    ],
+    "erklaerung": "3-2-1-1-0: drei Kopien, zwei verschiedene Speichermedien, eine Kopie außer Haus, eine Kopie offline – so kommt Schadsoftware nicht heran – und null Fehler bei der Rücksicherung, weil das Backup regelmäßig getestet wird."
+  },
+  "dv_raid": {
+    "typ": "mc",
+    "titel": "RAID ist kein Backup",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Datenschutz und Datensicherheit (Lernunterlagen LtK Kap. 2.3)",
+    "schwierigkeit": 2,
+    "frage": "Hausmeister Kowalski brummt: „Die NAS hat doch RAID 1 – die Daten sind doppelt da!“ Warum hat das RAID 1 das gelöschte Programm trotzdem nicht gerettet?",
+    "optionen": [
+      "RAID 1 spiegelt jede Änderung sofort auf die zweite Festplatte – auch das Löschen",
+      "RAID 1 speichert die Daten nur, solange die NAS eingeschaltet ist",
+      "RAID 1 funktioniert nur mit SSDs, nicht mit Festplatten",
+      "RAID 1 sichert nur Bilder und Dokumente, keine Programme"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Was passiert auf der zweiten Platte, wenn auf der ersten etwas gelöscht wird?",
+      "RAID schützt vor dem Ausfall einer Festplatte – nicht vor Fehlbedienung, Schadsoftware oder Sabotage."
+    ],
+    "erklaerung": "Bei einem RAID 1 haben zwei Festplatten jederzeit denselben Inhalt. Merke: Ein RAID schützt vor dem Ausfall einer Festplatte – nicht vor versehentlichem Löschen, nicht vor Schadsoftware und nicht vor einem Brand. Ein RAID ersetzt niemals ein Backup."
+  },
+  "dv_schutzziel": {
+    "typ": "mc",
+    "titel": "Schutzziele",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Netzwerk- und Kommunikationssicherheit (Lernunterlagen LtK Kap. 4)",
+    "schwierigkeit": 2,
+    "frage": "Im Protokoll siehst du: Bevor das Programm gelöscht wurde, hat jemand heimlich die Bandgeschwindigkeit darin verstellt. Welches Schutzziel wurde damit verletzt?",
+    "optionen": [
+      "Integrität",
+      "Vertraulichkeit",
+      "Verfügbarkeit",
+      "Authentizität"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Die vier Schutzziele: Verfügbarkeit, Integrität, Vertraulichkeit, Authentizität.",
+      "Hier wurden Daten nicht gelesen, sondern unbemerkt verändert."
+    ],
+    "erklaerung": "Integrität: Daten sind unverändert und vollständig. Verfügbarkeit: Daten und Anlage sind nutzbar, wenn man sie braucht (in der Anlage steht sie an erster Stelle – die wurde durch das Löschen verletzt). Vertraulichkeit: nur Befugte können lesen. Authentizität: Der Partner ist wirklich der, der er vorgibt zu sein."
+  },
+  "dv_rechte": {
+    "typ": "mc",
+    "titel": "Wer darf was?",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Zugriffsrechte, Netzwerk- und Kommunikationssicherheit (Lernunterlagen LtK Kap. 3.2)",
+    "schwierigkeit": 2,
+    "frage": "Im Rechtekonzept der Anlage steht: Das Fernwartungskonto „sb-service“ der Baufirma hat Administratorrechte, ist rund um die Uhr freigeschaltet und hat das Passwort „lincoln123“. Welche Maßnahme ist richtig?",
+    "optionen": [
+      "Prinzip der geringsten Rechte: Fernwartung nur befristet freischalten, nur die nötigen Rechte vergeben und ein sicheres Passwort setzen",
+      "Das Passwort auf einen Zettel am Schaltschrank schreiben, damit es nicht vergessen wird",
+      "Allen Schülern ebenfalls Administratorrechte geben, damit sie Fehler beheben können",
+      "Nichts ändern – die Baufirma hat die Anlage ja eingebaut"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Jeder erhält genau die Rechte, die er für seine Aufgabe braucht – nicht mehr.",
+      "Ein externer Servicetechniker darf Programme nur befristet ändern."
+    ],
+    "erklaerung": "Prinzip der geringsten Rechte: Der externe Servicetechniker darf das Programm nur befristet ändern. Nach dem Auftrag besteht kein Grund mehr für einen Zugang – vergessene Fremdzugänge sind ein häufiges Einfallstor für Angriffe."
+  },
+  "dv_tom": {
+    "typ": "mc",
+    "titel": "Wer hat was wann geändert?",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Datenschutz und Datensicherheit, TOM nach Art. 32 DSGVO (Lernunterlagen LtK Kap. 3.1)",
+    "schwierigkeit": 2,
+    "frage": "Dass sich „sb-service“ um 22:47 Uhr angemeldet hat, verrät die Protokolldatei der NAS. Zu welcher Gruppe der technischen und organisatorischen Maßnahmen (TOM) gehört diese Protokolldatei?",
+    "optionen": [
+      "Eingabekontrolle",
+      "Zutrittskontrolle",
+      "Weitergabekontrolle",
+      "Verschlüsselung"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Die Frage hinter der Maßnahme lautet: Wer hat was wann geändert?",
+      "Zutrittskontrolle fragt: Wer darf in den Raum? Weitergabekontrolle: Wie werden Daten übertragen?"
+    ],
+    "erklaerung": "Eingabekontrolle: Wer hat was wann geändert? – z. B. eine Protokolldatei der Programmänderungen. Zutrittskontrolle regelt den Raum, Zugangskontrolle die Anmeldung, Zugriffskontrolle die Rechte, Weitergabekontrolle die Übertragung."
+  }
+}

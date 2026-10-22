@@ -1,0 +1,128 @@
+{
+  "_info": "Missionen in Spielreihenfolge. 'station' ist die ID eines interaktiven Objekts in der Welt. 'ruf' = Grundbelohnung, je Aufgabe beim ersten Versuch gibt es zusätzlich 'bonus_pro_aufgabe'.",
+  "bonus_pro_aufgabe": 2,
+  "raenge": [
+    {
+      "name": "Laufbursche",
+      "ab": 0
+    },
+    {
+      "name": "Klassensprecher",
+      "ab": 100
+    },
+    {
+      "name": "Schülersprecher",
+      "ab": 160
+    },
+    {
+      "name": "Capo",
+      "ab": 250
+    },
+    {
+      "name": "Consigliere",
+      "ab": 450
+    }
+  ],
+  "quests": [
+    {
+      "id": "q01_licht",
+      "nr": 1,
+      "titel": "Flackerndes Licht",
+      "akt": "Akt 1 – Seltsame Vorfälle",
+      "auftraggeber": "lehrer",
+      "ruf": 30,
+      "dialog_start": "q01_start",
+      "dialog_ende": "q01_ende",
+      "station": "verteiler_licht",
+      "ziel_hin": "Untersuche die Abzweigdose der flackernden Leuchte an der Westwand.",
+      "aufgaben": [
+        "et_kennbuchstabe",
+        "et_vorwiderstand",
+        "et_uebergang_r",
+        "sr_5regeln",
+        "sr_pruefer"
+      ],
+      "beweis": "b_schraubendreher",
+      "fund": [
+        "Die Leuchte brennt wieder ruhig.",
+        "Oben auf dem Kabelkanal liegt ein Schraubendreher. Nicht aus der Schulwerkstatt."
+      ],
+      "ziel_zurueck": "Bring den fremden Schraubendreher zum Lehrer."
+    },
+    {
+      "id": "q02_glocke",
+      "nr": 2,
+      "titel": "Die Glocke lügt",
+      "akt": "Akt 1 – Seltsame Vorfälle",
+      "auftraggeber": "lehrer",
+      "ruf": 35,
+      "dialog_start": "q02_start",
+      "dialog_ende": "q02_ende",
+      "station": "klingel",
+      "ziel_hin": "Untersuche die Klingelsteuerung an der Nordwand.",
+      "aufgaben": [
+        "st_schliesser",
+        "st_ziffern",
+        "st_glocke_fehler",
+        "st_glocke_fix"
+      ],
+      "beweis": "b_schaltplan",
+      "fund": [
+        "Die Glocke schweigt – bis zur nächsten Pause.",
+        "Hinter der Zeitschaltuhr klemmt ein zusammengefalteter Schaltplan. Jemand hat darauf herumgekritzelt."
+      ],
+      "ziel_zurueck": "Zeig dem Lehrer den durchgestrichenen Schaltplan."
+    },
+    {
+      "id": "q03_band",
+      "nr": 3,
+      "titel": "Stillstand",
+      "akt": "Akt 1 – Seltsame Vorfälle",
+      "auftraggeber": "lehrer",
+      "ruf": 40,
+      "dialog_start": "q03_start",
+      "dialog_ende": "q03_ende",
+      "station": "schaltschrank_band",
+      "ziel_hin": "Öffne den Schaltschrank des Förderbands und prüfe den Steuerstromkreis.",
+      "aufgaben": [
+        "st_selbsthaltung_mc",
+        "st_selbsthaltung",
+        "st_rastend",
+        "st_bc_einstellen",
+        "st_95_96"
+      ],
+      "beweis": "b_rose",
+      "fund": [
+        "Das Band läuft wieder. Oben in der Cafeteria jubelt jemand.",
+        "Und an der Hutschiene im Schaltschrank hängt … eine schwarze Rose."
+      ],
+      "ziel_zurueck": "Bring dem Lehrer, was du im Schaltschrank gefunden hast."
+    },
+    {
+      "id": "q04_netz",
+      "nr": 4,
+      "titel": "Gelöschte Spuren",
+      "akt": "Akt 1 – Seltsame Vorfälle",
+      "auftraggeber": "lehrer",
+      "ruf": 55,
+      "dialog_start": "q04_start",
+      "dialog_ende": "q04_ende",
+      "station": "netzwerkschrank",
+      "ziel_hin": "Untersuche den Netzwerkschrank an der Ostwand.",
+      "aufgaben": [
+        "dv_datenschutz",
+        "dv_32110",
+        "dv_raid",
+        "dv_schutzziel",
+        "dv_rechte",
+        "dv_tom"
+      ],
+      "beweis": "b_protokoll",
+      "fund": [
+        "Die Sicherung ist eingerichtet: drei Kopien, zwei Medien, eine außer Haus, eine offline.",
+        "Und im Anmeldeprotokoll der NAS steht ein Name, der hier nichts verloren hat."
+      ],
+      "ziel_zurueck": "Zeig dem Lehrer das Anmeldeprotokoll."
+    }
+  ]
+}

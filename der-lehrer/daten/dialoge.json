@@ -1,0 +1,95 @@
+{
+  "_info": "Dialoge. s = Sprecher (lehrer, spieler, erzaehler), t = Text. {name} = Name der Spielfigur. Ein Eintrag mit 'wahl' bietet Antworten an; ok = true nimmt den Auftrag an.",
+  "sprecher": {
+    "lehrer": { "name": "Der Lehrer", "farbe": "#d4a017" },
+    "spieler": { "name": "{name}", "farbe": "#7fc8ff" },
+    "erzaehler": { "name": "", "farbe": "#bbbbbb" },
+    "radio": { "name": "WLHS-Radio", "farbe": "#ff8a5c" }
+  },
+
+  "intro": [
+    { "s": "erzaehler", "t": "Lincoln High. Frisch saniert. Neue Leitungen, neue Schaltschränke, ein nagelneues Förderband für die Cafeteria." },
+    { "s": "erzaehler", "t": "Und trotzdem: Das Licht flackert. Das Band steht. Die Schulglocke läutet, wann sie will." },
+    { "s": "erzaehler", "t": "Alle reden von Kinderkrankheiten der Sanierung. Nur einer glaubt nicht an Zufälle." },
+    { "s": "lehrer", "t": "Du bist also der Neue in der MT10. Komm her, {name}. Wir haben zu reden." }
+  ],
+
+  "q01_start": [
+    { "s": "lehrer", "t": "Setz dich nicht, Kleiner. Wer bei mir sitzt, der arbeitet nicht." },
+    { "s": "lehrer", "t": "Ich bin der Lehrer der MT10. Ich unterrichte Elektrotechnik. Und ich passe auf diese Schule auf." },
+    { "s": "lehrer", "t": "Die Familie – das sind die Leute, die dafür sorgen, dass hier alles läuft. Licht, Glocke, Förderband. Wer zur Familie gehört, kennt sich aus." },
+    { "s": "spieler", "t": "Und was muss ich tun, um dazuzugehören?" },
+    { "s": "lehrer", "t": "Gute Frage. Du fängst ganz unten an. Als Laufbursche." },
+    { "s": "lehrer", "t": "Siehst du die Leuchte da drüben? Sie flackert seit der Sanierung. Die Baufirma sagt: Kinderkrankheit." },
+    { "s": "lehrer", "t": "Ich sage: Schau dir die Abzweigdose an der Westwand an. Und arbeite sicher – ein Laufbursche mit verbrannten Fingern nützt mir nichts." },
+    { "wahl": [ { "t": "Ich kümmere mich drum.", "ok": true }, { "t": "Gleich. Ich schau mich erst um.", "ok": false } ] }
+  ],
+  "q01_ende": [
+    { "s": "spieler", "t": "Die Klemme in der Abzweigdose war locker. Und das hier lag oben auf dem Kabelkanal." },
+    { "s": "erzaehler", "t": "Du zeigst ihm den Schraubendreher. Am Griff klebt ein kleiner schwarzer Aufkleber." },
+    { "s": "lehrer", "t": "Ein Schraubendreher. Nicht unserer. Unsere haben einen roten Isoliergriff mit Lincoln-Gravur." },
+    { "s": "lehrer", "t": "Eine Klemme löst sich nicht von allein, Kleiner. Merk dir das." },
+    { "s": "lehrer", "t": "Gute Arbeit. Die Familie vergisst nicht." }
+  ],
+
+  "q02_start": [
+    { "s": "lehrer", "t": "Hörst du das? Die Glocke. Mitten in der dritten Stunde." },
+    { "s": "lehrer", "t": "Direktor Hayes hat mich schon zweimal angerufen. Er meint, die Schüler machen das." },
+    { "s": "lehrer", "t": "Ich meine: Schüler sind froh, wenn die Glocke NICHT läutet." },
+    { "s": "lehrer", "t": "Die Klingelsteuerung hängt an der Nordwand. Zeitschaltuhr, Taster, Glocke. Finde heraus, warum sie lügt." },
+    { "wahl": [ { "t": "Ich finde es raus.", "ok": true }, { "t": "Später.", "ok": false } ] }
+  ],
+  "q02_ende": [
+    { "s": "spieler", "t": "Jemand hat die Leitung an der Zeitschaltuhr auf den Öffner umgeklemmt. Deshalb hat die Glocke alles verkehrt herum gemacht." },
+    { "s": "spieler", "t": "Im Klingelkasten lag ein Schaltplan. Jemand hat den Schließer durchgestrichen. Unten steht „B.R.“." },
+    { "s": "lehrer", "t": "B.R. …" },
+    { "s": "lehrer", "t": "Wer immer das war, kennt sich aus. Das ist kein Lausbubenstreich. Das ist Handwerk." },
+    { "s": "lehrer", "t": "Du machst dich, Kleiner. Noch ein Auftrag – dann reden wir über deine Zukunft in der MT10." }
+  ],
+
+  "q03_start": [
+    { "s": "lehrer", "t": "Die Cafeteria hat angerufen. Keine Kisten. Kein Pudding. Da oben liegt ein Aufstand in der Luft." },
+    { "s": "lehrer", "t": "Das Förderband läuft nur, solange jemand den Ein-Taster festhält. Hausmeister Kowalski steht seit einer Stunde oben und drückt." },
+    { "s": "lehrer", "t": "Öffne den Schaltschrank und schau dir den Steuerstromkreis an. Ich will, dass das Band wieder von allein läuft." },
+    { "s": "lehrer", "t": "Und, Kleiner: Wenn du etwas findest, das da nicht hingehört – bring es mir." },
+    { "wahl": [ { "t": "Das Band läuft gleich wieder.", "ok": true }, { "t": "Moment noch.", "ok": false } ] }
+  ],
+  "q03_ende": [
+    { "s": "spieler", "t": "Das Band läuft. Die Kontakte im Steuerstromkreis waren abgeklemmt. Und im Schaltschrank war … das hier." },
+    { "s": "erzaehler", "t": "Eine schwarze Rose. Frisch. Mit einem Kabelbinder an die Hutschiene gebunden." },
+    { "s": "lehrer", "t": "…" },
+    { "s": "lehrer", "t": "Eine schwarze Rose. Ich hatte gehofft, dass ich mich irre." },
+    { "s": "spieler", "t": "Wer steckt dahinter?" },
+    { "s": "lehrer", "t": "Noch nicht, Kleiner. Erst brauchen wir Beweise. Jemand will mir diese Schule wegnehmen – Stück für Stück, Leitung für Leitung." },
+    { "s": "lehrer", "t": "Ab heute bist du kein Laufbursche mehr. Die MT10 braucht jemanden, der für sie spricht: Du bist jetzt Klassensprecher." }
+  ],
+
+  "q04_start": [
+    { "s": "lehrer", "t": "Noch nicht nach Hause, Klassensprecher. Ich habe eine Frage an dich: Wo liegt das Programm für das Förderband?" },
+    { "s": "spieler", "t": "In der Steuerung. Und eine Kopie auf der NAS im Netzwerkschrank, oder?" },
+    { "s": "lehrer", "t": "Lag. Kowalski wollte heute Abend die Sicherung einspielen. Die Datei ist weg. Gelöscht. Um 22:47 Uhr." },
+    { "s": "lehrer", "t": "Den Netzwerkschrank hat die Baufirma eingebaut. Förderband, Kasse, Klingel – alles hängt jetzt am Netz. Modern, sagen sie." },
+    { "s": "lehrer", "t": "Bring Ordnung in die Datensicherung. Und finde heraus, wer um 22:47 Uhr am Schrank war. Die Familie mag keine Geister." },
+    { "wahl": [ { "t": "Ich sehe mir den Schrank an.", "ok": true }, { "t": "Später.", "ok": false } ] }
+  ],
+  "q04_ende": [
+    { "s": "spieler", "t": "Die Datensicherung läuft jetzt nach der 3-2-1-1-0-Regel. Und das Fernwartungskonto ist gesperrt." },
+    { "s": "spieler", "t": "Um 22:47 Uhr hat sich „sb-service“ angemeldet. Das Konto gehört Sterling Bau – der Firma, die die Schule saniert hat." },
+    { "s": "lehrer", "t": "Sterling Bau. Die bauen uns neue Leitungen ein … und behalten den Schlüssel zum Keller." },
+    { "s": "lehrer", "t": "Ein Konto ist noch kein Täter. Jeder, der das Passwort kennt, kann es benutzen. Und „lincoln123“ errät sogar Kowalski." },
+    { "s": "lehrer", "t": "Aber jetzt wissen wir, wo wir suchen müssen." },
+    { "s": "lehrer", "t": "Du hast heute für die ganze Schule gearbeitet, nicht nur für die MT10. Ab heute bist du Schülersprecher. Die Familie vergisst nicht." }
+  ],
+
+  "lehrer_abgelehnt": [ { "s": "lehrer", "t": "Die Familie wartet. Aber nicht ewig." } ],
+  "lehrer_aktiv": [ { "s": "lehrer", "t": "Du hast einen Auftrag, Kleiner. Dein Ziel steht oben. Und auf der Karte ist es gelb markiert." } ],
+  "lehrer_leerlauf": [
+    { "s": "lehrer", "t": "Ein guter Mechatroniker misst zweimal und klemmt einmal." },
+    { "s": "lehrer", "t": "Erst denken, dann klemmen." },
+    { "s": "lehrer", "t": "In dieser Schule passiert nichts, ohne dass ich davon erfahre. Fast nichts." }
+  ],
+  "lehrer_ende": [
+    { "s": "lehrer", "t": "Für heute ist Feierabend, Schülersprecher. Aber die Rosen kommen wieder. Darauf wette ich meinen Hut." },
+    { "s": "erzaehler", "t": "Ende des Prototyps. Die Geschichte geht weiter – mit Turnhalle, Cafeteria, Werkstatt und einer rivalisierenden Familie." }
+  ]
+}
