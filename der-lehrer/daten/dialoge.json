@@ -4,7 +4,9 @@
     "lehrer": { "name": "Der Lehrer", "farbe": "#d4a017" },
     "spieler": { "name": "{name}", "farbe": "#7fc8ff" },
     "erzaehler": { "name": "", "farbe": "#bbbbbb" },
-    "radio": { "name": "WLHS-Radio", "farbe": "#ff8a5c" }
+    "radio": { "name": "WLHS-Radio", "farbe": "#ff8a5c" },
+    "kowalski": { "name": "Hausmeister Kowalski", "farbe": "#6fa8dc" },
+    "rosalita": { "name": "Rosalita", "farbe": "#e8829f" }
   },
 
   "intro": [
@@ -78,7 +80,58 @@
     { "s": "lehrer", "t": "Sterling Bau. Die bauen uns neue Leitungen ein … und behalten den Schlüssel zum Keller." },
     { "s": "lehrer", "t": "Ein Konto ist noch kein Täter. Jeder, der das Passwort kennt, kann es benutzen. Und „lincoln123“ errät sogar Kowalski." },
     { "s": "lehrer", "t": "Aber jetzt wissen wir, wo wir suchen müssen." },
-    { "s": "lehrer", "t": "Du hast heute für die ganze Schule gearbeitet, nicht nur für die MT10. Ab heute bist du Schülersprecher. Die Familie vergisst nicht." }
+    { "s": "lehrer", "t": "Du hast heute für die ganze Schule gearbeitet, nicht nur für die MT10. Ab heute bist du Schülersprecher. Die Familie vergisst nicht." },
+    { "s": "lehrer", "t": "Und noch etwas: Die Kellertür ist ab jetzt für dich offen. Hausmeister Kowalski wartet oben im Flur. Er hat Ärger mit den neuen Leitungen." }
+  ],
+
+  "q05_start": [
+    { "s": "kowalski", "t": "Du bist also der Neue, von dem der Lehrer so schwärmt. Kowalski. Hausmeister. Seit einunddreißig Jahren." },
+    { "s": "kowalski", "t": "Siehst du den Snackautomaten? Seit der Sanierung geht er alle zwanzig Minuten aus. Und die Leitung ist so warm, dass ich mir die Hände daran wärmen könnte." },
+    { "s": "spieler", "t": "Wer hat die Leitung verlegt?" },
+    { "s": "kowalski", "t": "Sterling Bau. Wer sonst. Die haben den ganzen Flur neu verkabelt – und mich nicht mal reingelassen." },
+    { "s": "kowalski", "t": "Die Zuleitung kommt aus der Unterverteilung neben dem Automaten. Schau sie dir an. Aber vorher: freischalten! Ich will hier keinen gegrillten Schülersprecher." },
+    { "wahl": [ { "t": "Ich schau mir die Leitung an.", "ok": true }, { "t": "Später, Mr. Kowalski.", "ok": false } ] }
+  ],
+  "q05_ende": [
+    { "s": "spieler", "t": "Die haben eine Fernmeldeleitung als Zuleitung eingebaut. J-Y(ST)Y mit 0,8 mm² – viel zu dünn für den Automaten." },
+    { "s": "spieler", "t": "Jetzt ist eine NYM 3 × 2,5 mm² drin, sauber angeklemmt. Und das hier lag im Verteilerschrank." },
+    { "s": "erzaehler", "t": "Ein Lieferschein von Sterling Bau: „J-Y(ST)Y 2×2×0,8 – Energieleitung Automaten“. Daneben ein Stempel – eine kleine schwarze Rose." },
+    { "s": "kowalski", "t": "Eine Telefonleitung für den Automaten. Das ist kein Versehen, das ist Absicht. Und schon wieder diese Rosen." },
+    { "s": "kowalski", "t": "Der Lehrer hatte recht mit dir. Ich hätte da noch was – aber erst einen Kaffee. Der Automat geht ja wieder." }
+  ],
+
+  "q06_start": [
+    { "s": "kowalski", "t": "Nächstes Problem. Der neue Infoscreen am Ostende des Flurs. Soll den Vertretungsplan zeigen." },
+    { "s": "kowalski", "t": "Zeigt aber nur Bildsalat. Immer dann, wenn in der Cafeteria das Band läuft. Rosalita schwört, das ist Zauberei." },
+    { "s": "spieler", "t": "Zauberei gibt es nicht. Nur Störfelder." },
+    { "s": "kowalski", "t": "Siehst du, deshalb mag dich der Lehrer. Schau dir die Leitung und den Access Point an. Ich halte dir die Leiter." },
+    { "wahl": [ { "t": "Ich finde die Störung.", "ok": true }, { "t": "Gleich.", "ok": false } ] }
+  ],
+  "q06_ende": [
+    { "s": "spieler", "t": "Die Datenleitung lag ungeschirmt direkt neben der Motorleitung von Band 2. Und sie war 120 Meter lang – viel zu lang für ein Segment." },
+    { "s": "spieler", "t": "Und über der Deckenplatte hing das hier: ein Router, der ein offenes Funknetz sendet. BLACK_ROSE." },
+    { "s": "kowalski", "t": "Ein offenes Funknetz … und darüber kommt man an die Steuerung von Band 2?" },
+    { "s": "spieler", "t": "Jetzt nicht mehr. Ausgesteckt." },
+    { "s": "kowalski", "t": "Dann war das neulich kein Zufall, als das Band mitten in der Pause losgerast ist. Jemand hat es von außen geschaltet." },
+    { "s": "kowalski", "t": "Geh rüber in die Cafeteria. Rosalita hat Ärger mit ihrer Bedienstelle – und von mir lässt sie sich nicht helfen. Sagt, ich hätte zwei linke Hände." }
+  ],
+
+  "q07_start": [
+    { "s": "rosalita", "t": "Du bist also der Schülersprecher? Bueno. Hör zu, cariño, ich habe keine Zeit." },
+    { "s": "rosalita", "t": "Das Band bringt die Kisten aus dem Keller zu mir hoch. Die Baufirma hat hier oben eine zweite Bedienstelle eingebaut. EIN, AUS, Not-Halt, grüne Lampe. Sehr modern." },
+    { "s": "rosalita", "t": "Gestern wollte ich das Band ausschalten. Nichts! Es lief einfach weiter. Fünfzig Becher Schokopudding auf dem Boden. Erst der rote Pilz hat geholfen." },
+    { "s": "rosalita", "t": "Und die grüne Lampe leuchtet, wenn das Band steht. Wenn es läuft, ist sie aus. Die Lampe lügt mich an!" },
+    { "s": "spieler", "t": "Lampen lügen nicht. Aber wer sie anschließt, vielleicht schon." },
+    { "s": "rosalita", "t": "Ay, du redest schon wie der Lehrer. Mach es richtig – im Keller und hier oben." },
+    { "wahl": [ { "t": "Ich bringe die Bedienstelle in Ordnung.", "ok": true }, { "t": "Ich komme gleich wieder.", "ok": false } ] }
+  ],
+  "q07_ende": [
+    { "s": "spieler", "t": "Der AUS-Taster hier oben war als Schließer über ein Hilfsschütz angeschlossen. Als die Leitung gebrochen ist, war er wirkungslos." },
+    { "s": "spieler", "t": "Jetzt liegen beide AUS-Taster als Öffner in Reihe, beide EIN-Taster parallel. Und die Lampe hängt am Hilfskontakt 43–44 statt am Öffner." },
+    { "s": "rosalita", "t": "Und was ist das für ein Foto?" },
+    { "s": "erzaehler", "t": "Ein Polaroid: Vor dem Schultor schüttelt Vince Moretti aus der Abschlussklasse einem Mann im grauen Anzug die Hand. Auf dem Anzug: das Logo von Sterling Bau. Am Rand klebt eine schwarze Rose." },
+    { "s": "rosalita", "t": "Vince Moretti … der Junge mit der schwarzen Lederjacke. Er isst nie etwas. Er sitzt immer nur da und schaut auf das Band." },
+    { "s": "rosalita", "t": "Hier, cariño – ein Pudding. Der erste, der heute heil angekommen ist. Den hast du dir verdient." }
   ],
 
   "lehrer_abgelehnt": [ { "s": "lehrer", "t": "Die Familie wartet. Aber nicht ewig." } ],
@@ -88,8 +141,29 @@
     { "s": "lehrer", "t": "Erst denken, dann klemmen." },
     { "s": "lehrer", "t": "In dieser Schule passiert nichts, ohne dass ich davon erfahre. Fast nichts." }
   ],
+  "lehrer_verweis": [ { "s": "lehrer", "t": "Was stehst du hier unten herum? Oben wartet Arbeit auf dich. Schau auf die Karte – wer dich braucht, ist markiert." } ],
   "lehrer_ende": [
-    { "s": "lehrer", "t": "Für heute ist Feierabend, Schülersprecher. Aber die Rosen kommen wieder. Darauf wette ich meinen Hut." },
-    { "s": "erzaehler", "t": "Ende des Prototyps. Die Geschichte geht weiter – mit Turnhalle, Cafeteria, Werkstatt und einer rivalisierenden Familie." }
+    { "s": "erzaehler", "t": "Es knackt in der Sprechanlage." },
+    { "s": "lehrer", "t": "Hier spricht der Lehrer. Kowalski hat mir alles erzählt. Leitungen, Funk, Bedienstelle – saubere Arbeit." },
+    { "s": "lehrer", "t": "Vince Moretti und Sterling Bau. Die schwarzen Rosen haben jetzt ein Gesicht." },
+    { "s": "lehrer", "t": "Wer so arbeitet, ist kein Schülersprecher mehr. Ab heute bist du Capo. Die Familie vergisst nicht." },
+    { "s": "erzaehler", "t": "Ende von Akt 2. Die Geschichte geht weiter – mit Turnhalle, Werkstatt und dem Finale: der Prüfung." }
+  ],
+
+  "kowalski_aktiv": [ { "s": "kowalski", "t": "Na los, die Leitung repariert sich nicht von allein. Dein Ziel ist auf der Karte markiert." } ],
+  "kowalski_abgelehnt": [ { "s": "kowalski", "t": "Gut, gut. Ich halte solange den Automaten fest." } ],
+  "kowalski_verweis": [ { "s": "kowalski", "t": "Ich hab gerade nichts für dich. Aber jemand anderes schon – schau auf deine Karte." } ],
+  "kowalski_leerlauf": [
+    { "s": "kowalski", "t": "Die Schule ist alt, aber sie hat ein gutes Herz. Und gute Leitungen. Inzwischen." },
+    { "s": "kowalski", "t": "Wenn du jemanden von Sterling Bau siehst, sag mir Bescheid." },
+    { "s": "kowalski", "t": "Freischalten, sichern, prüfen. Das hab ich schon gemacht, da ging der Lehrer noch selbst zur Schule." }
+  ],
+  "rosalita_aktiv": [ { "s": "rosalita", "t": "Die Bedienstelle ist gleich da drüben am Band. ¡Ándale!" } ],
+  "rosalita_abgelehnt": [ { "s": "rosalita", "t": "Gut. Ich koche solange. Aber nicht ewig." } ],
+  "rosalita_verweis": [ { "s": "rosalita", "t": "Ich habe gerade nichts für dich, cariño. Aber jemand anderes in dieser Schule bestimmt." } ],
+  "rosalita_leerlauf": [
+    { "s": "rosalita", "t": "Pudding gibt es erst, wenn das Band läuft. Das ist Gesetz." },
+    { "s": "rosalita", "t": "Hast du Hunger, cariño? Nein? Dann arbeite." },
+    { "s": "rosalita", "t": "In meiner Küche bin ich der Lehrer." }
   ]
 }

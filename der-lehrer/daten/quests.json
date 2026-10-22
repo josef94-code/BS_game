@@ -1,5 +1,5 @@
 {
-  "_info": "Missionen in Spielreihenfolge. 'station' ist die ID eines interaktiven Objekts in der Welt. 'ruf' = Grundbelohnung, je Aufgabe beim ersten Versuch gibt es zusätzlich 'bonus_pro_aufgabe'.",
+  "_info": "Missionen in Spielreihenfolge. 'auftraggeber' ist die Figur, die den Auftrag vergibt und abnimmt (lehrer, kowalski, rosalita). 'station' ist die ID eines interaktiven Objekts in der Welt. 'ruf' = Grundbelohnung, je Aufgabe beim ersten Versuch gibt es zusätzlich 'bonus_pro_aufgabe'.",
   "bonus_pro_aufgabe": 2,
   "raenge": [
     {
@@ -16,7 +16,7 @@
     },
     {
       "name": "Capo",
-      "ab": 250
+      "ab": 300
     },
     {
       "name": "Consigliere",
@@ -123,6 +123,83 @@
         "Und im Anmeldeprotokoll der NAS steht ein Name, der hier nichts verloren hat."
       ],
       "ziel_zurueck": "Zeig dem Lehrer das Anmeldeprotokoll."
+    },
+    {
+      "id": "q05_leitung",
+      "nr": 5,
+      "titel": "Leitungssalat",
+      "akt": "Akt 2 – Die schwarzen Rosen",
+      "auftraggeber": "kowalski",
+      "ruf": 35,
+      "dialog_start": "q05_start",
+      "dialog_ende": "q05_ende",
+      "station": "unterverteilung",
+      "ziel_hin": "Untersuche die Zuleitung des Snackautomaten an der Unterverteilung im Flur.",
+      "aufgaben": [
+        "et_stromdichte",
+        "et_belastbarkeit",
+        "et_nym",
+        "et_aderfarben",
+        "et_spannungsfall"
+      ],
+      "beweis": "b_lieferschein",
+      "fund": [
+        "Neue Zuleitung, sauber angeklemmt. Der Snackautomat summt zufrieden.",
+        "Im Verteilerschrank steckt noch der Lieferschein von Sterling Bau – mit einem merkwürdigen Stempel."
+      ],
+      "ziel_zurueck": "Bring Kowalski den Lieferschein."
+    },
+    {
+      "id": "q06_funk",
+      "nr": 6,
+      "titel": "Funkstille",
+      "akt": "Akt 2 – Die schwarzen Rosen",
+      "auftraggeber": "kowalski",
+      "ruf": 40,
+      "dialog_start": "q06_start",
+      "dialog_ende": "q06_ende",
+      "station": "infoscreen",
+      "ziel_hin": "Untersuche den Infoscreen und den Access Point am Ostende des Flurs.",
+      "aufgaben": [
+        "lt_stoerquelle",
+        "lt_schirm",
+        "lt_segment",
+        "lt_poe",
+        "lt_wlan",
+        "lt_funknetz"
+      ],
+      "beweis": "b_router",
+      "fund": [
+        "Der Infoscreen zeigt wieder den Vertretungsplan.",
+        "Über der Deckenplatte blinkt ein kleiner fremder Router. Er sendet das Funknetz BLACK_ROSE."
+      ],
+      "ziel_zurueck": "Zeig Kowalski den versteckten Router."
+    },
+    {
+      "id": "q07_bedienstelle",
+      "nr": 7,
+      "titel": "Zwei Bedienstellen",
+      "akt": "Akt 2 – Die schwarzen Rosen",
+      "auftraggeber": "rosalita",
+      "ruf": 70,
+      "dialog_start": "q07_start",
+      "dialog_ende": "q07_ende",
+      "station": "bedienstelle",
+      "ziel_hin": "Prüfe die Bedienstelle an der Bandübergabe in der Cafeteria.",
+      "aufgaben": [
+        "st_drahtbruch",
+        "st_nothalt",
+        "st_zwei_stellen",
+        "st_pf1",
+        "st_pf1_fehler"
+      ],
+      "beweis": "b_foto",
+      "fund": [
+        "Band 1 lässt sich jetzt im Keller und in der Cafeteria schalten. Die grüne Lampe sagt die Wahrheit.",
+        "Hinter der Abdeckung der Bedienstelle klemmt ein Foto. Darauf: zwei Männer vor der Schule – und eine schwarze Rose."
+      ],
+      "ziel_zurueck": "Zeig Rosalita das Foto."
     }
-  ]
+  ],
+  "tuer_offen_nach": "q04_netz"
 }

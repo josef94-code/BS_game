@@ -826,5 +826,874 @@
       "Zutrittskontrolle fragt: Wer darf in den Raum? Weitergabekontrolle: Wie werden Daten übertragen?"
     ],
     "erklaerung": "Eingabekontrolle: Wer hat was wann geändert? – z. B. eine Protokolldatei der Programmänderungen. Zutrittskontrolle regelt den Raum, Zugangskontrolle die Anmeldung, Zugriffskontrolle die Rechte, Weitergabekontrolle die Übertragung."
+  },
+  "et_stromdichte": {
+    "typ": "berechnung",
+    "titel": "Die heiße Leitung",
+    "thema": "Elektrotechnik",
+    "lehrplan": "LF 3 – Auswahl von Kabeln und Leitungen für die Energie- und Informationsübertragung (Lernunterlagen ET Kap. 4)",
+    "schwierigkeit": 2,
+    "frage": "Der Snackautomat im Flur fällt immer wieder aus, seine Zuleitung ist auffällig warm. Auf dem Mantel steht: J-Y(ST)Y 2×2×0,8 mm². Der Automat nimmt im Betrieb I = {I} A auf. Berechne die Stromdichte J in einer Ader (A = 0,8 mm²).",
+    "varianten": [
+      {
+        "I": 6
+      },
+      {
+        "I": 5
+      },
+      {
+        "I": 7.2
+      }
+    ],
+    "loesung": "I / 0.8",
+    "einheit": "A/mm²",
+    "toleranz": 0.02,
+    "stellen": 3,
+    "tipps": [
+      "Die Stromdichte gibt an, wie viel Strom sich auf welche Fläche verteilt.",
+      "J = I / A – Strom in A durch Querschnitt in mm² ergibt A/mm²."
+    ],
+    "erklaerung": "J = I / A = {I} A / 0,8 mm² ≈ {ERG} A/mm². Die Leitung ist deutlich überlastet und erwärmt sich unzulässig: Die Isolierung altert, wird spröde und kann schmelzen – Brandgefahr. J-Y(ST)Y ist eine Fernmeldeleitung für Signale, keine Energieleitung. Nach der Tabelle ist 0,8 mm² für diesen Zweck gar nicht zulässig."
+  },
+  "et_belastbarkeit": {
+    "typ": "mc",
+    "titel": "Der richtige Querschnitt",
+    "thema": "Elektrotechnik",
+    "lehrplan": "LF 3 – Auswahl von Kabeln und Leitungen für die Energie- und Informationsübertragung (Lernunterlagen ET Kap. 4)",
+    "schwierigkeit": 2,
+    "frage": "Die neue Zuleitung versorgt Snack- und Kaffeeautomat gemeinsam und führt dauerhaft 22 A. Auszug aus der Tabelle (Verlegeart C, 30 °C, 2 belastete Adern): 0,8 mm² nicht zulässig · 1,5 mm² 19,5 A · 2,5 mm² 27 A · 4 mm² 36 A · 6 mm² 46 A. Welchen Querschnitt brauchst du mindestens?",
+    "optionen": [
+      "2,5 mm²",
+      "1,5 mm²",
+      "0,8 mm²",
+      "6 mm²"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Die Strombelastbarkeit ist der höchste Strom, den eine Leitung dauerhaft führen darf.",
+      "Suche den kleinsten Querschnitt, dessen Strombelastbarkeit mindestens 22 A beträgt. 19,5 A reichen nicht."
+    ],
+    "erklaerung": "1,5 mm² darf nur 19,5 A dauerhaft führen – zu wenig für 22 A. 2,5 mm² verträgt 27 A und ist der kleinste passende Querschnitt. 6 mm² ginge auch, ist aber unnötig teuer und schwer zu verlegen. Die Werte hängen von Verlegeart, Umgebungstemperatur und Aderzahl ab – deshalb immer die Bedingungen der Tabelle beachten."
+  },
+  "et_nym": {
+    "typ": "mc",
+    "titel": "Was steht auf der Rolle?",
+    "thema": "Elektrotechnik",
+    "lehrplan": "LF 3 – Auswahl von Kabeln und Leitungen für die Energie- und Informationsübertragung (Lernunterlagen ET Kap. 4)",
+    "schwierigkeit": 1,
+    "frage": "Hausmeister Kowalski rollt eine neue Leitung aus. Auf dem Mantel steht: NYM 3 × 2,5 mm². Was bedeutet diese Kurzbezeichnung?",
+    "optionen": [
+      "Normleitung nach VDE-Bestimmung, Isolierung aus PVC, Mantelleitung, 3 Adern mit je 2,5 mm² Querschnitt",
+      "Neutralleiter, Y-Schaltung, Motorleitung, 3 Adern mit zusammen 2,5 mm² Querschnitt",
+      "Harmonisierte Leitung, Gummiisolierung, Metallmantel, 3 m lang, 2,5 mm² Querschnitt",
+      "Normleitung, Isolierung aus PVC, Mantelleitung, 3 Adern mit je 2,5 mm Durchmesser"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Die Kurzbezeichnung wird von links nach rechts gelesen: Bestimmungszeichen, Isolierwerkstoff, Mantelwerkstoff, Aderzahl und Querschnitt.",
+      "N = Normleitung nach VDE, Y = PVC, M = Mantelleitung. Die letzte Zahl ist ein Querschnitt in mm², kein Durchmesser."
+    ],
+    "erklaerung": "N: Normleitung nach VDE-Bestimmung · Y: Isolierung aus PVC (Thermoplast) · M: Mantelleitung mit PVC-Mantel · 3: drei Adern (L, N, PE) · 2,5 mm²: Querschnitt je Ader. Steht vorne ein H, ist es eine harmonisierte Leitung nach europäischer Norm. NYM ist eine Leitung für Gebäude – für die Verlegung direkt in der Erde braucht man ein Kabel."
+  },
+  "et_aderfarben": {
+    "typ": "mc",
+    "titel": "Grün-gelb ist heilig",
+    "thema": "Elektrotechnik",
+    "lehrplan": "LF 3 – Auswahl von Kabeln und Leitungen für die Energie- und Informationsübertragung (Lernunterlagen ET Kap. 4)",
+    "schwierigkeit": 1,
+    "frage": "Am Automaten hat jemand die Adern wild angeklemmt. Welche Zuordnungen von Leiter und Kennfarbe sind richtig?",
+    "optionen": [
+      "PE (Schutzleiter): grün-gelb",
+      "N (Neutralleiter): blau",
+      "L1 (Außenleiter): grün-gelb",
+      "N (Neutralleiter): braun",
+      "PE (Schutzleiter): blau"
+    ],
+    "richtig": [
+      0,
+      1
+    ],
+    "tipps": [
+      "Eine Farbkombination ist ausschließlich für den Schutzleiter reserviert.",
+      "Außenleiter L1, L2, L3 sind braun, schwarz oder grau. Der Neutralleiter ist blau."
+    ],
+    "erklaerung": "PE – Schutzleiter, grün-gelb, leitet Fehlerströme ab. N – Neutralleiter, blau, führt den Betriebsstrom zurück. L1, L2, L3 – Außenleiter, braun/schwarz/grau. Grün-gelb darf für nichts anderes als den Schutzleiter (bzw. PEN) verwendet werden."
+  },
+  "et_spannungsfall": {
+    "typ": "berechnung",
+    "titel": "Spannungsfall im Flur",
+    "thema": "Elektrotechnik",
+    "lehrplan": "LF 3 – Auswahl von Kabeln und Leitungen für die Energie- und Informationsübertragung (Lernunterlagen ET Kap. 4)",
+    "schwierigkeit": 3,
+    "frage": "Die neue Zuleitung NYM 3 × 2,5 mm² (Kupfer, ρ = 0,0178 Ω·mm²/m) ist von der Unterverteilung bis zu den Automaten l = {l} m lang und führt I = {I} A bei U = 230 V. Berechne den Spannungsfall ΔU in Prozent.",
+    "varianten": [
+      {
+        "l": 25,
+        "I": 16
+      },
+      {
+        "l": 18,
+        "I": 22
+      },
+      {
+        "l": 30,
+        "I": 20
+      }
+    ],
+    "loesung": "0.0178 * 2 * l * I / 2.5 / 230 * 100",
+    "einheit": "%",
+    "toleranz": 0.02,
+    "stellen": 3,
+    "tipps": [
+      "Der Strom fließt hin und zurück – setze die doppelte Leitungslänge 2 · l ein.",
+      "ΔU = ρ · 2 · l · I / A, danach ΔU% = ΔU / U · 100 %."
+    ],
+    "erklaerung": "ΔU = ρ · 2 · l · I / A = 0,0178 Ω·mm²/m · 2 · {l} m · {I} A / 2,5 mm²; ΔU% = ΔU / 230 V · 100 % ≈ {ERG} %. Zulässig sind in der Regel 3 %. Ist es mehr, hilft ein größerer Querschnitt, eine kürzere Leitung oder ein Werkstoff mit kleinerem spezifischem Widerstand."
+  },
+  "lt_stoerquelle": {
+    "typ": "mc",
+    "titel": "Wer stört?",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Netzwerksysteme, -komponenten und -topologien (Lernunterlagen LtK 02 Datenübertragung, Kap. 1, 2.1)",
+    "schwierigkeit": 1,
+    "frage": "Der Server im Keller schickt den Vertretungsplan über eine Twisted-Pair-Leitung an den Infoscreen im Flur. Immer wenn Band 2 in der Cafeteria läuft, zeigt der Bildschirm nur Bildsalat. Was ist im Sender-Empfänger-Modell die Störquelle?",
+    "optionen": [
+      "Der Frequenzumrichter des Bandmotors, dessen Motorleitung in derselben Kabeltrasse liegt",
+      "Der Server im Keller",
+      "Der Infoscreen im Flur",
+      "Das Datenpaket auf der Twisted-Pair-Leitung"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Sender, Übertragungsweg, Empfänger – und etwas, das von außen auf den Übertragungsweg einwirkt.",
+      "Ein Frequenzumrichter schaltet die Motorspannung sehr schnell ein und aus."
+    ],
+    "erklaerung": "Sender: Server · Nachricht auf dem Übertragungsweg: Datenpaket auf der Twisted-Pair-Leitung · Empfänger: Infoscreen · Störquelle: der Frequenzumrichter. Sein schnelles Schalten erzeugt starke hochfrequente Störfelder, die in parallel verlegte Datenleitungen einkoppeln und die Bits verfälschen."
+  },
+  "lt_schirm": {
+    "typ": "mc",
+    "titel": "S/FTP statt U/UTP",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Netzwerksysteme, -komponenten und -topologien (Lernunterlagen LtK 02 Datenübertragung, Kap. 2.1)",
+    "schwierigkeit": 2,
+    "frage": "Sterling Bau hat eine U/UTP-Leitung direkt neben die Motorleitung gelegt. Kowalski hat noch eine Rolle S/FTP. Welche Aussagen sind richtig?",
+    "optionen": [
+      "U bedeutet ungeschirmt, F Folienschirm, S Geflechtschirm – die S/FTP-Leitung ist geschirmt",
+      "Die Datenleitung muss geschirmt und getrennt von der Motorleitung verlegt werden",
+      "U/UTP ist für diese Stelle besser, weil es keinen Schirm braucht",
+      "S steht für „schnell“ – mit S/FTP wird die Leitung schneller, an den Störungen ändert sich nichts"
+    ],
+    "richtig": [
+      0,
+      1
+    ],
+    "tipps": [
+      "Ein Schirm aus Folie oder Geflecht hält äußere Felder ab.",
+      "Abstand hilft zusätzlich: getrennte Kabelpritsche für Daten- und Motorleitung."
+    ],
+    "erklaerung": "In U/UTP und S/FTP stehen U für ungeschirmt, F für Folienschirm und S für Geflechtschirm. Neben einem Frequenzumrichter gehört die Datenleitung geschirmt und getrennt von der Motorleitung verlegt – Schirm und getrennte Kabelpritsche halten die Störungen von den Daten fern."
+  },
+  "lt_segment": {
+    "typ": "mc",
+    "titel": "120 Meter",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Netzwerksysteme, -komponenten und -topologien (Lernunterlagen LtK 02 Datenübertragung, Kap. 2.1)",
+    "schwierigkeit": 2,
+    "frage": "Laut Plan von Sterling Bau führt eine einzige Twisted-Pair-Leitung 120 m weit vom Switch im Keller bis zum Infoscreen. Was sagst du dazu?",
+    "optionen": [
+      "Zu lang: Ein Segment darf höchstens 100 m lang sein (90 m fest verlegt + 2 × 5 m Anschlusskabel)",
+      "Kein Problem: Twisted Pair reicht bei Cat 6A bis 1 km",
+      "Kein Problem, solange die Leitung geschirmt ist",
+      "Zu lang: Twisted Pair darf höchstens 10 m lang sein"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Die übliche Topologie ist ein Stern: Jeder Teilnehmer hängt an einem Switch.",
+      "Maximale Länge eines Abschnitts: 90 m fest verlegt plus zwei Anschlusskabel."
+    ],
+    "erklaerung": "Ein Twisted-Pair-Segment darf höchstens 100 m lang sein: 90 m fest verlegt plus 2 × 5 m Anschlusskabel. Für 120 m braucht man einen Switch dazwischen – oder einen Lichtwellenleiter, der einige hundert Meter bis mehrere Kilometer überbrückt. Der Schirm ändert an der Längengrenze nichts."
+  },
+  "lt_poe": {
+    "typ": "mc",
+    "titel": "Strom über das Netzwerkkabel",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Netzwerksysteme, -komponenten und -topologien (Lernunterlagen LtK 02 Datenübertragung, Kap. 2.2)",
+    "schwierigkeit": 2,
+    "frage": "Der neue WLAN-Access-Point hängt an der Flurdecke, weit weg von jeder Steckdose. Wie wird er am einfachsten versorgt?",
+    "optionen": [
+      "Mit Power over Ethernet: Daten und Versorgungsspannung kommen über dieselbe Leitung (bis 90 W je Anschluss, 48 V)",
+      "Mit Single Pair Ethernet: Es liefert 230 V über ein einziges Adernpaar",
+      "Mit einem Lichtwellenleiter: Das Licht versorgt den Access Point mit Energie",
+      "Gar nicht – ein Access Point bekommt seine Energie über Funk"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Es gibt ein Verfahren, bei dem ein Gerät nur noch ein einziges Kabel braucht.",
+      "PoE = Power over Ethernet. SPE dagegen ist Ethernet über nur ein Adernpaar, z. B. bis zum einzelnen Sensor."
+    ],
+    "erklaerung": "Bei Power over Ethernet (PoE) werden Daten und Versorgungsspannung über dieselbe Leitung übertragen – bis 90 W je Anschluss bei 48 V. Praktisch für Kameras oder Funkzugangspunkte an schwer erreichbaren Stellen. Single Pair Ethernet (SPE) kommt mit einem Adernpaar aus (10 Mbit/s bis 1 km) und bringt Ethernet bis zum Sensor."
+  },
+  "lt_wlan": {
+    "typ": "sortieren",
+    "titel": "WLAN-Generationen",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Netzwerksysteme, -komponenten und -topologien (Lernunterlagen LtK 02 Datenübertragung, Kap. 3.1)",
+    "schwierigkeit": 2,
+    "frage": "Kowalski findet im Lager vier alte Access Points. Sortiere sie nach der Generation – oben die älteste, unten die neueste.",
+    "elemente": [
+      "Wi-Fi 4 – 802.11n – max. 600 Mbit/s",
+      "Wi-Fi 5 – 802.11ac – max. 6,9 Gbit/s",
+      "Wi-Fi 6 – 802.11ax – max. 9,6 Gbit/s",
+      "Wi-Fi 7 – 802.11be – ca. 46 Gbit/s"
+    ],
+    "tipps": [
+      "Die Generationen werden seit einigen Jahren durchnummeriert: Wi-Fi 4, 5, 6 und 7.",
+      "Je neuer die Generation, desto höher die mögliche Datenrate."
+    ],
+    "erklaerung": "Wi-Fi 4 (802.11n, 2009, 600 Mbit/s) → Wi-Fi 5 (802.11ac, 2014, 6,9 Gbit/s) → Wi-Fi 6 (802.11ax, 2019, 9,6 Gbit/s) → Wi-Fi 7 (802.11be, 2024, ca. 46 Gbit/s). Je neuer, desto höher die Datenrate und desto besser die Verteilung auf viele Geräte."
+  },
+  "lt_funknetz": {
+    "typ": "mc",
+    "titel": "Das fremde Funknetz",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Netzwerksysteme, -komponenten und -topologien (Lernunterlagen LtK 02 Datenübertragung, Kap. 3.1)",
+    "schwierigkeit": 2,
+    "frage": "Auf deinem Handy taucht im Flur ein offenes Funknetz „BLACK_ROSE“ auf – ohne Passwort. Über dieses Netz erreicht man die Steuerung von Band 2. Welche Aussagen sind richtig?",
+    "optionen": [
+      "Funk ist grundsätzlich abhörbar: Jeder in Reichweite kann mitlesen",
+      "Ein Anlagennetz darf nie ungeschützt über WLAN erreichbar sein – mindestens WPA3 und ein eigenes, vom Gästenetz getrenntes Funknetz",
+      "Ein offenes WLAN ist sicher, solange niemand den Namen des Netzes kennt",
+      "Die Steuerung von Band 2 sollte am besten nur noch über WLAN laufen, dann spart man Leitungen"
+    ],
+    "richtig": [
+      0,
+      1
+    ],
+    "tipps": [
+      "Das Übertragungsmedium bei Funk ist die Luft – wer kann alles mithören?",
+      "WPA3 ist das aktuelle Verschlüsselungsverfahren für WLAN. Für Steuerungen gilt: feste Verkabelung, WLAN nur für Service und Anzeige."
+    ],
+    "erklaerung": "Funk ist grundsätzlich abhörbar. Ein Anlagennetz darf deshalb nie ungeschützt über WLAN erreichbar sein – mindestens WPA3 und ein eigenes, vom Gästenetz getrenntes Funknetz. Steuerungen werden fest verkabelt: Ein NOT-HALT muss jederzeit sicher und in fester Zeit ankommen."
+  },
+  "st_drahtbruch": {
+    "typ": "mc",
+    "titel": "Der gebrochene Draht",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik (Lernunterlagen Schütztechnik Kap. 2.3)",
+    "schwierigkeit": 2,
+    "frage": "Sterling Bau hat den AUS-Taster der Cafeteria als Schließer angeschlossen: Er schaltet ein Hilfsschütz -KF1 ein, dessen Öffner die Selbsthaltung unterbricht. Gestern ist die Leitung zum Taster gebrochen, während Band 2 lief. Was ist passiert – und was ist richtig?",
+    "optionen": [
+      "Zunächst nichts: Das Band lief weiter, und der AUS-Taster war wirkungslos – nur noch der Not-Halt half",
+      "Mit einem AUS-Taster als Öffner (Ruhestromprinzip) wäre die Spule beim Drahtbruch sofort stromlos geworden – das Band hätte im sicheren Zustand gestanden",
+      "Das Band blieb sofort stehen, weil der Schließer beim Drahtbruch schließt",
+      "Es macht keinen Unterschied, ob der AUS-Taster ein Öffner oder ein Schließer ist"
+    ],
+    "richtig": [
+      0,
+      1
+    ],
+    "tipps": [
+      "Wird ein Schließer durch einen Drahtbruch abgetrennt, kann er nie mehr etwas einschalten – auch nicht das Hilfsschütz zum Ausschalten.",
+      "Drahtbruchsicherheit (Ruhestromprinzip): Im Ruhezustand fließt Strom über den AUS-Taster. Bricht der Draht, fällt das Schütz ab."
+    ],
+    "erklaerung": "Mit einem Schließer als AUS-Befehl bleibt ein Drahtbruch unbemerkt: Das Band läuft weiter, und erst wenn jemand ausschalten will, merkt er, dass -SJ3 wirkungslos ist. Ein AUS-Taster als Öffner ist drahtbruchsicher: Bricht die Leitung, wird -QA1 sofort stromlos, das Band steht und lässt sich nicht mehr starten – der Fehler fällt sofort auf."
+  },
+  "st_nothalt": {
+    "typ": "mc",
+    "titel": "Der rote Pilz",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik (Lernunterlagen Schütztechnik Kap. 2.3)",
+    "schwierigkeit": 2,
+    "frage": "Rosalita schlägt mit der Faust auf den Not-Halt-Taster -SG0. Er ist ein Öffner mit Zwangsöffnung. Welchen Vorteil bietet die Zwangsöffnung?",
+    "optionen": [
+      "Der Kontakt wird mechanisch zwangsweise aufgerissen – auch wenn er verschweißt ist oder die Feder bricht. Der Not-Halt schaltet in jedem Fall ab",
+      "Der Not-Halt schaltet das Band nach einer Minute automatisch wieder ein",
+      "Der Kontakt öffnet nur, wenn die Spannung ausfällt",
+      "Mit Zwangsöffnung braucht man keinen AUS-Taster mehr"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Was passiert bei einem normalen Öffner, wenn die Kontakte zusammengeschweißt sind?",
+      "„Zwangsweise“ bedeutet: Die Betätigung reißt den Kontakt mechanisch auf."
+    ],
+    "erklaerung": "Bei der Zwangsöffnung wird der Kontakt mechanisch zwangsweise aufgerissen, auch wenn er verschweißt ist oder die Feder bricht. Der Not-Halt schaltet damit in jedem Fall ab. Ist -SG0 gerastet, lässt sich das Band nicht einschalten."
+  },
+  "st_zwei_stellen": {
+    "typ": "schaltung",
+    "titel": "Zwei Bedienstellen für Band 1",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik (Lernunterlagen Schütztechnik Kap. 2.4)",
+    "schwierigkeit": 3,
+    "frage": "Band 1 soll im Keller (-SJ1 AUS, -SJ2 EIN) und an der Übergabe in der Cafeteria (-SJ3 AUS, -SJ4 EIN) bedient werden. Setze die Betriebsmittel in die fünf Lücken. Regel: AUS-Taster in Reihe, EIN-Taster parallel – mit Selbsthaltung und Vorrang AUS. Teste im Probelauf.",
+    "schaltplan": {
+      "breite": 9,
+      "hoehe": 8,
+      "schienen": [
+        {
+          "y": 0,
+          "text": "24 V"
+        },
+        {
+          "y": 8,
+          "text": "0 V"
+        }
+      ],
+      "elemente": [
+        {
+          "id": "FC1",
+          "typ": "sicherung",
+          "x": 2,
+          "y": 0,
+          "bez": "-FC1",
+          "kl": "B 2 A"
+        },
+        {
+          "id": "SG0",
+          "typ": "nothalt_nc",
+          "x": 2,
+          "y": 1,
+          "bez": "-SG0",
+          "kl": "11/12"
+        },
+        {
+          "id": "L1",
+          "typ": "luecke",
+          "x": 2,
+          "y": 2
+        },
+        {
+          "id": "L2",
+          "typ": "luecke",
+          "x": 2,
+          "y": 3
+        },
+        {
+          "id": "L3",
+          "typ": "luecke",
+          "x": 2,
+          "y": 4.5
+        },
+        {
+          "id": "L4",
+          "typ": "luecke",
+          "x": 4.5,
+          "y": 4.5
+        },
+        {
+          "id": "L5",
+          "typ": "luecke",
+          "x": 7,
+          "y": 4.5
+        },
+        {
+          "id": "QA1",
+          "typ": "spule",
+          "x": 2,
+          "y": 6,
+          "bez": "-QA1",
+          "kl": "A1/A2"
+        }
+      ],
+      "leitungen": [
+        [
+          [
+            2,
+            4
+          ],
+          [
+            2,
+            4.5
+          ]
+        ],
+        [
+          [
+            2,
+            4.5
+          ],
+          [
+            4.5,
+            4.5
+          ]
+        ],
+        [
+          [
+            4.5,
+            4.5
+          ],
+          [
+            7,
+            4.5
+          ]
+        ],
+        [
+          [
+            2,
+            5.5
+          ],
+          [
+            4.5,
+            5.5
+          ]
+        ],
+        [
+          [
+            4.5,
+            5.5
+          ],
+          [
+            7,
+            5.5
+          ]
+        ],
+        [
+          [
+            2,
+            5.5
+          ],
+          [
+            2,
+            6
+          ]
+        ],
+        [
+          [
+            2,
+            7
+          ],
+          [
+            2,
+            8
+          ]
+        ]
+      ]
+    },
+    "optionen": [
+      {
+        "id": "SJ1_NC",
+        "text": "-SJ1 AUS Keller, Öffner (21–22)",
+        "symbol": "taster_nc",
+        "bez": "-SJ1",
+        "kl": "21/22",
+        "logik": "(not SJ1)"
+      },
+      {
+        "id": "SJ3_NC",
+        "text": "-SJ3 AUS Cafeteria, Öffner (21–22)",
+        "symbol": "taster_nc",
+        "bez": "-SJ3",
+        "kl": "21/22",
+        "logik": "(not SJ3)"
+      },
+      {
+        "id": "SJ3_NO",
+        "text": "-SJ3 AUS Cafeteria, als Schließer (13–14)",
+        "symbol": "taster_no",
+        "bez": "-SJ3",
+        "kl": "13/14",
+        "logik": "SJ3"
+      },
+      {
+        "id": "SJ2_NO",
+        "text": "-SJ2 EIN Keller, Schließer (13–14)",
+        "symbol": "taster_no",
+        "bez": "-SJ2",
+        "kl": "13/14",
+        "logik": "SJ2"
+      },
+      {
+        "id": "SJ4_NO",
+        "text": "-SJ4 EIN Cafeteria, Schließer (13–14)",
+        "symbol": "taster_no",
+        "bez": "-SJ4",
+        "kl": "13/14",
+        "logik": "SJ4"
+      },
+      {
+        "id": "QA1_NO",
+        "text": "-QA1 Selbsthaltekontakt, Schließer (13–14)",
+        "symbol": "schliesser",
+        "bez": "-QA1",
+        "kl": "13/14",
+        "logik": "QA1"
+      },
+      {
+        "id": "BRUECKE",
+        "text": "Drahtbrücke",
+        "symbol": "leitung",
+        "bez": "",
+        "kl": "",
+        "logik": "true"
+      }
+    ],
+    "loesung_belegung": {
+      "L1": "SJ1_NC",
+      "L2": "SJ3_NC",
+      "L3": "SJ2_NO",
+      "L4": "SJ4_NO",
+      "L5": "QA1_NO"
+    },
+    "logik": {
+      "spule": "QA1",
+      "ausdruck": "{L1} and {L2} and ({L3} or {L4} or {L5})",
+      "taster": {
+        "SJ1": "-SJ1 AUS",
+        "SJ2": "-SJ2 EIN",
+        "SJ3": "-SJ3 AUS",
+        "SJ4": "-SJ4 EIN"
+      }
+    },
+    "pruefung": [
+      {
+        "SJ1": false,
+        "SJ2": false,
+        "SJ3": false,
+        "SJ4": false,
+        "QA1": false,
+        "text": "Grundstellung: Band steht"
+      },
+      {
+        "SJ1": false,
+        "SJ2": true,
+        "SJ3": false,
+        "SJ4": false,
+        "QA1": true,
+        "text": "-SJ2 (Keller) betätigen: Band läuft an"
+      },
+      {
+        "SJ1": false,
+        "SJ2": false,
+        "SJ3": false,
+        "SJ4": false,
+        "QA1": true,
+        "text": "-SJ2 loslassen: Band läuft weiter (Selbsthaltung)"
+      },
+      {
+        "SJ1": false,
+        "SJ2": false,
+        "SJ3": true,
+        "SJ4": false,
+        "QA1": false,
+        "text": "-SJ3 (Cafeteria) betätigen: Band stoppt"
+      },
+      {
+        "SJ1": false,
+        "SJ2": false,
+        "SJ3": false,
+        "SJ4": false,
+        "QA1": false,
+        "text": "-SJ3 loslassen: Band bleibt aus"
+      },
+      {
+        "SJ1": false,
+        "SJ2": false,
+        "SJ3": false,
+        "SJ4": true,
+        "QA1": true,
+        "text": "-SJ4 (Cafeteria) betätigen: Band läuft an"
+      },
+      {
+        "SJ1": false,
+        "SJ2": false,
+        "SJ3": false,
+        "SJ4": false,
+        "QA1": true,
+        "text": "-SJ4 loslassen: Band läuft weiter"
+      },
+      {
+        "SJ1": true,
+        "SJ2": false,
+        "SJ3": false,
+        "SJ4": false,
+        "QA1": false,
+        "text": "-SJ1 (Keller) betätigen: Band stoppt"
+      },
+      {
+        "SJ1": false,
+        "SJ2": false,
+        "SJ3": false,
+        "SJ4": false,
+        "QA1": false,
+        "text": "-SJ1 loslassen: Band bleibt aus"
+      },
+      {
+        "SJ1": false,
+        "SJ2": false,
+        "SJ3": true,
+        "SJ4": true,
+        "QA1": false,
+        "text": "-SJ3 und -SJ4 gleichzeitig: Vorrang AUS"
+      },
+      {
+        "SJ1": true,
+        "SJ2": true,
+        "SJ3": false,
+        "SJ4": false,
+        "QA1": false,
+        "text": "-SJ1 und -SJ2 gleichzeitig: Vorrang AUS"
+      }
+    ],
+    "tipps": [
+      "Jeder AUS-Taster muss den Stromkreis allein unterbrechen können – also beide als Öffner in Reihe.",
+      "Unten drei parallele Zweige: beide EIN-Taster als Schließer und daneben der Selbsthaltekontakt von -QA1."
+    ],
+    "erklaerung": "24 V → -FC1 → -SG0 (11–12) → -SJ1 (21–22) → -SJ3 (21–22) → [-SJ2 (13–14) ∥ -SJ4 (13–14) ∥ -QA1 (13–14)] → Spule -QA1 (A1–A2) → 0 V. AUS-Taster in Reihe, EIN-Taster parallel: Jede Bedienstelle kann ein- und ausschalten, AUS hat Vorrang. Der Selbsthaltekontakt liegt parallel zu beiden EIN-Tastern."
+  },
+  "st_pf1": {
+    "typ": "mc",
+    "titel": "Die grüne Lampe",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik (Lernunterlagen Schütztechnik Kap. 2.4)",
+    "schwierigkeit": 2,
+    "frage": "Die grüne Meldeleuchte -PF1 an der Bedienstelle soll zeigen, dass Band 1 läuft. Ein Monteur von Sterling Bau hat sie direkt parallel zur Spule von -QA1 angeschlossen. Wie beurteilst du das?",
+    "optionen": [
+      "Falsch: Die Leuchte zeigt nur, dass an der Spule Spannung anliegt. Klemmt das Schütz oder ist die Spule defekt, leuchtet -PF1 trotzdem, obwohl das Band steht – richtig ist ein eigener Strompfad über den Hilfskontakt 43–44",
+      "Richtig: Parallel zur Spule ist die sicherste Lösung, weil man keinen Hilfskontakt braucht",
+      "Richtig, aber nur mit dem Öffner 21–22 statt der Spule",
+      "Falsch: Die Leuchte muss in Reihe zur Spule geschaltet werden"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Was genau „misst“ eine Leuchte, die parallel zur Spule hängt?",
+      "Ein freier Hilfskontakt des Schützes meldet den tatsächlichen Schaltzustand."
+    ],
+    "erklaerung": "-PF1 liegt in einem eigenen Strompfad hinter -FC1 und wird über einen freien Hilfskontakt des Schützes geschaltet – am Laborschütz 43–44, nicht über den Selbsthaltekontakt. Parallel zur Spule zeigt die Leuchte nur die Spannung an der Spule, nicht den tatsächlichen Schaltzustand."
+  },
+  "st_pf1_fehler": {
+    "typ": "fehlersuche",
+    "titel": "Die Leuchte lügt",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik (Lernunterlagen Schütztechnik Kap. 2.4, 2.5)",
+    "schwierigkeit": 3,
+    "frage": "Band 1 steht, das Schütz -QA1 ist abgefallen – aber die grüne Meldeleuchte -PF1 leuchtet. Klicke die Betriebsmittel an, um die Messergebnisse zu sehen. Wähle dann das fehlerhafte Betriebsmittel.",
+    "schaltplan": {
+      "breite": 7.5,
+      "hoehe": 6,
+      "schienen": [
+        {
+          "y": 0,
+          "text": "24 V"
+        },
+        {
+          "y": 6,
+          "text": "0 V"
+        }
+      ],
+      "elemente": [
+        {
+          "id": "FC1",
+          "typ": "sicherung",
+          "x": 2,
+          "y": 0,
+          "bez": "-FC1",
+          "kl": "B 2 A"
+        },
+        {
+          "id": "SJ1",
+          "typ": "taster_nc",
+          "x": 2,
+          "y": 1.5,
+          "bez": "-SJ1",
+          "kl": "21/22"
+        },
+        {
+          "id": "SJ2",
+          "typ": "taster_no",
+          "x": 2,
+          "y": 3,
+          "bez": "-SJ2",
+          "kl": "13/14"
+        },
+        {
+          "id": "QA1_13",
+          "typ": "schliesser",
+          "x": 3.5,
+          "y": 3,
+          "bez": "-QA1",
+          "kl": "13/14"
+        },
+        {
+          "id": "QA1",
+          "typ": "spule",
+          "x": 2,
+          "y": 4.5,
+          "bez": "-QA1",
+          "kl": "A1/A2"
+        },
+        {
+          "id": "QA1_43",
+          "typ": "schliesser",
+          "x": 6,
+          "y": 1.5,
+          "bez": "-QA1",
+          "kl": "43/44"
+        },
+        {
+          "id": "PF1",
+          "typ": "leuchte",
+          "x": 6,
+          "y": 4.5,
+          "bez": "-PF1",
+          "kl": "X1/X2"
+        }
+      ],
+      "leitungen": [
+        [
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            1.5
+          ]
+        ],
+        [
+          [
+            2,
+            1
+          ],
+          [
+            6,
+            1
+          ]
+        ],
+        [
+          [
+            6,
+            1
+          ],
+          [
+            6,
+            1.5
+          ]
+        ],
+        [
+          [
+            2,
+            2.5
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        [
+          [
+            2,
+            3
+          ],
+          [
+            3.5,
+            3
+          ]
+        ],
+        [
+          [
+            2,
+            4
+          ],
+          [
+            3.5,
+            4
+          ]
+        ],
+        [
+          [
+            2,
+            4
+          ],
+          [
+            2,
+            4.5
+          ]
+        ],
+        [
+          [
+            2,
+            5.5
+          ],
+          [
+            2,
+            6
+          ]
+        ],
+        [
+          [
+            6,
+            2.5
+          ],
+          [
+            6,
+            4.5
+          ]
+        ],
+        [
+          [
+            6,
+            5.5
+          ],
+          [
+            6,
+            6
+          ]
+        ]
+      ]
+    },
+    "bauteile": {
+      "FC1": {
+        "name": "Leitungsschutzschalter -FC1",
+        "messung": "Spannungsmessung über -FC1: 0 V. Der Leitungsschutzschalter ist eingeschaltet und in Ordnung.",
+        "fehler": false
+      },
+      "SJ1": {
+        "name": "AUS-Taster -SJ1",
+        "messung": "Freigeschaltet und abgeklemmt, Widerstandsmessung: unbetätigt 0,1 Ω (geschlossen), betätigt ∞ Ω (offen). Verhält sich wie ein Öffner – in Ordnung.",
+        "fehler": false
+      },
+      "SJ2": {
+        "name": "EIN-Taster -SJ2",
+        "messung": "Freigeschaltet und abgeklemmt, Widerstandsmessung: unbetätigt ∞ Ω (offen), betätigt 0,1 Ω (geschlossen). Verhält sich wie ein Schließer – in Ordnung.",
+        "fehler": false
+      },
+      "QA1_13": {
+        "name": "Selbsthaltekontakt -QA1 13–14",
+        "messung": "Schütz abgefallen: ∞ Ω (offen). Schütz von Hand betätigt: 0,1 Ω (geschlossen). Angeschlossen an 13 und 14 – in Ordnung.",
+        "fehler": false
+      },
+      "QA1": {
+        "name": "Spule -QA1",
+        "messung": "An A1–A2 liegen 0 V an, das Schütz ist abgefallen. Das Band steht – so wie es soll.",
+        "fehler": false
+      },
+      "QA1_43": {
+        "name": "Hilfskontakt für -PF1",
+        "messung": "Freigeschaltet und abgeklemmt: Schütz abgefallen → 0,1 Ω (geschlossen)! Schütz von Hand betätigt → ∞ Ω (offen). Die Leitungen stecken an den Klemmen 21 und 22.",
+        "fehler": true
+      },
+      "PF1": {
+        "name": "Meldeleuchte -PF1 (grün)",
+        "messung": "An X1–X2 liegen 24 V an, die Leuchte brennt. Die Leuchte selbst ist in Ordnung.",
+        "fehler": false
+      }
+    },
+    "tipps": [
+      "Im Plan ist der Kontakt für -PF1 als Schließer 43–44 gezeichnet. Wie müsste er sich bei abgefallenem Schütz verhalten?",
+      "Ein Kontakt, der bei abgefallenem Schütz geschlossen ist, ist ein Öffner."
+    ],
+    "erklaerung": "Für -PF1 wurde der Öffner 21–22 statt des Schließers 43–44 angeklemmt. Deshalb leuchtet -PF1 genau dann, wenn das Band steht. Richtig: freischalten, auf 43–44 umklemmen, dann prüfen: -PF1 leuchtet genau dann, wenn -MA1 läuft."
   }
 }

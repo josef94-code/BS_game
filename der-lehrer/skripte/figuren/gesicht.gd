@@ -8,7 +8,8 @@ const H := 256
 static var _cache := {}
 
 
-## stil: haut, haare, augenfarbe, lippen, bart (0..1), haaransatz (v vorne), wangen (0..1)
+## stil: haut, haare, augenfarbe, lippen, bart (0..1), haaransatz (v vorne), wangen (0..2),
+## schnurrbart (bool), wimpern (bool)
 static func textur(stil: Dictionary, augen_zu: bool = false) -> ImageTexture:
 	var key := "%s_%s" % [str(stil), augen_zu]
 	if _cache.has(key):
@@ -78,8 +79,14 @@ static func textur(stil: Dictionary, augen_zu: bool = false) -> ImageTexture:
 			var t := float(i) / 27.0
 			var px := -13.0 + t * 26.0
 			var py := -sqrt(maxf(0.0, 1.0 - pow(px / 13.0, 2.0))) * 5.5
-			_punkt(img, m + Vector2(px, py - 0.5), 1.5, Color(0.12, 0.08, 0.06))
+			_punkt(img, m + Vector2(px, py - 0.5), 2.3 if stil.get("wimpern", false) else 1.5, Color(0.12, 0.08, 0.06))
 			_punkt(img, m + Vector2(px * 0.9, -py + 1.5), 0.8, haut.darkened(0.25))
+		if stil.get("wimpern", false):
+			for i in 3:
+				var w := 0.5 + i * 0.35
+				var start := m + Vector2(seite * (9.0 + i * 2.0), -4.5 + i * 1.2)
+				for j in 5:
+					_punkt(img, start + Vector2(seite * j * 0.9, -j * 0.9 * w), 0.9, Color(0.1, 0.06, 0.05))
 	# Nase: Schattenlinie und Nasenlöcher
 	for i in 22:
 		_punkt(img, Vector2(mx + 4.0, ey + 6.0 + i), 1.3, haut.darkened(0.12))
@@ -96,6 +103,14 @@ static func textur(stil: Dictionary, augen_zu: bool = false) -> ImageTexture:
 		_punkt(img, Vector2(mx + px, my + kurve), 1.0, lippen.darkened(0.55))
 	for i in 10:
 		_punkt(img, Vector2(mx - 2.0 + i * 0.4, my + 7.5 + i * 0.05), 1.0, haut.darkened(0.15))
+	# Schnurrbart
+	if stil.get("schnurrbart", false):
+		var bartfarbe := haare.darkened(0.1)
+		for i in 44:
+			var t := float(i) / 43.0
+			var px := -22.0 + t * 44.0
+			var dicke := 4.5 - absf(px) / 22.0 * 2.5
+			_punkt(img, Vector2(mx + px, my - 7.0 + absf(px) * 0.12), dicke, bartfarbe)
 	# Lachfalten
 	for seite: float in [-1.0, 1.0]:
 		for i in 10:

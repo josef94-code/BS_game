@@ -24,6 +24,24 @@
       "text": "22:47 Uhr: Benutzer „sb-service“ (Fernwartung Sterling Bau) angemeldet, Bandgeschwindigkeit geändert, Datei band_steuerung gelöscht. Passwort: lincoln123.",
       "ort": "Keller, Netzwerkschrank +N1",
       "farbe": "#1e7a46"
+    },
+    "b_lieferschein": {
+      "titel": "Lieferschein Sterling Bau",
+      "text": "„J-Y(ST)Y 2×2×0,8 mm² – 200 m – Energieleitung Automaten EG“. Eine Fernmeldeleitung, bestellt als Energieleitung. Stempel: eine kleine schwarze Rose.",
+      "ort": "Flur, Unterverteilung",
+      "farbe": "#b9770e"
+    },
+    "b_router": {
+      "titel": "Versteckter Router",
+      "text": "Lag über einer Deckenplatte im Flur und sendete das offene Funknetz „BLACK_ROSE“ – ohne Passwort, mit Zugriff auf die Steuerung von Band 2. Aufkleber: Sterling Bau – Baustellen-IT.",
+      "ort": "Flur, Decke am Infoscreen",
+      "farbe": "#6c3483"
+    },
+    "b_foto": {
+      "titel": "Polaroid-Foto",
+      "text": "Vince Moretti aus der Abschlussklasse schüttelt vor dem Schultor einem Mann im Sterling-Bau-Anzug die Hand. Am Rand klebt eine schwarze Rose.",
+      "ort": "Cafeteria, Bedienstelle",
+      "farbe": "#7b241c"
     }
   },
   "fragen": [
@@ -32,7 +50,10 @@
     { "text": "Wer hat abends Zugang zum Keller?", "ab": "b_schaltplan" },
     { "text": "Wer schickt dem Lehrer schwarze Rosen – und warum?", "ab": "b_rose" },
     { "text": "Wer kannte das Passwort von „sb-service“?", "ab": "b_protokoll" },
-    { "text": "Was hat Sterling Bau davon, wenn in der Schule alles kaputtgeht?", "ab": "b_protokoll" }
+    { "text": "Was hat Sterling Bau davon, wenn in der Schule alles kaputtgeht?", "ab": "b_protokoll" },
+    { "text": "Warum bestellt eine Baufirma Telefonleitungen als Energieleitung?", "ab": "b_lieferschein" },
+    { "text": "Wer hat über das Funknetz BLACK_ROSE das Band geschaltet?", "ab": "b_router" },
+    { "text": "Wer ist Vince Moretti – und was verbindet ihn mit Sterling Bau?", "ab": "b_foto" }
   ],
   "sammel": {
     "s_widerstand": {
@@ -46,6 +67,18 @@
     "s_hilfsschalter": {
       "titel": "Hilfsschalterblock 1S/1Ö",
       "text": "Wird auf ein Schütz gesteckt und liefert zusätzlich einen Schließer (13–14) und einen Öffner (21–22) – z. B. für Selbsthaltung oder Verriegelung."
+    },
+    "s_nym": {
+      "titel": "Reststück NYM 3 × 1,5 mm²",
+      "text": "Normleitung nach VDE, PVC-Isolierung, Mantelleitung, drei Adern mit je 1,5 mm². Strombelastbarkeit laut Tabelle (Verlegeart C): 19,5 A."
+    },
+    "s_rj45": {
+      "titel": "RJ45-Stecker",
+      "text": "Achtpoliger Stecker für Twisted-Pair-Leitungen im Büro. In der Industrie nimmt man M12 – geschirmt und verriegelt."
+    },
+    "s_lwl": {
+      "titel": "LWL-Patchkabel mit LC-Stecker",
+      "text": "Im Lichtwellenleiter überträgt Licht die Information: unempfindlich gegen Störfelder, große Reichweite, keine elektrische Verbindung zwischen den Enden."
     }
   }
 }

@@ -14,8 +14,14 @@ Nebel, Lichtinseln aus Glühbirnen und Leuchtstoffröhren, weicher PS2-Filter mi
 Ruf-Ziffern, Hilfe-Box oben links, Untertitel, Missionstitel unten rechts. Menü und Ladebildschirm zeigen den Lehrer
 als Porträt mit kräftigen Konturen.
 
-**Stand: Prototyp v0.6** – ein Raum (Hausmeisterkeller mit Büro des Lehrers) und vier Missionen aus Akt 1.
-Seit v0.5 sind die Aufgaben mit den Lernunterlagen (ET, Schütztechnik, LtK) abgeglichen. Der Gesamtplan (drei Akte, 24 Missionen) steht in [`PLAN.md`](PLAN.md).
+**Stand: v0.7** – drei Räume und sieben Missionen:
+- **Akt 1 – Seltsame Vorfälle** im Hausmeisterkeller (Büro des Lehrers), vier Missionen beim Lehrer.
+- **Akt 2 – Die schwarzen Rosen** im Erdgeschoss: **Flur** mit Spinden, Pokalvitrine, Fensterband im Mondlicht,
+  Unterverteilung und Infoscreen; **Cafeteria** mit Essensausgabe, Tischreihen, Getränkeautomaten und dem Ende
+  von Band 1. Neue Auftraggeber: **Hausmeister Kowalski** (Flur) und **Rosalita** (Cafeteria). Die Kellertür
+  öffnet sich nach Mission 4.
+
+Die Aufgaben sind mit den Lernunterlagen (ET, Schütztechnik, LtK) abgeglichen. Der Gesamtplan (drei Akte, 24 Missionen) steht in [`PLAN.md`](PLAN.md).
 
 ## Starten
 
@@ -46,24 +52,30 @@ etwa ein Fünftel der früheren Zeichenaufrufe.
 |---|---|
 | W A S D | laufen (Shift = rennen, Leertaste = springen) |
 | Maus | umsehen, Mausrad = Kamera-Abstand |
-| E | benutzen, mit dem Lehrer sprechen, Dialog weiter |
+| E | benutzen, mit Personen sprechen, Türen öffnen, Dialog weiter |
 | B oder Tab | Beweisbrett (Hinweise, offene Fragen, Sammelobjekte) |
 | Esc | Pause: Speichern, Laden, Steuerung, Ton, Hauptmenü |
 
 ## Spielablauf (GTA-Stil)
 
-1. Der **Hut auf der Minimap** zeigt den Lehrer, der **gelbe Punkt** und der **gelbe Lichtkegel** am Boden zeigen das Ziel.
-2. Beim Lehrer den Auftrag annehmen → **Missionstitel** wird groß eingeblendet.
+1. Auf der Minimap zeigt der **Hut** den Lehrer, **K** und **R** zeigen Kowalski und Rosalita (groß und farbig,
+   wenn sie einen Auftrag haben). Der **gelbe Punkt** und der **gelbe Lichtkegel** am Boden zeigen das Ziel –
+   liegt es in einem anderen Stockwerk, stehen sie an der Treppe.
+2. Beim Auftraggeber den Auftrag annehmen → **Missionstitel** wird groß eingeblendet.
 3. Zur Anlage gehen, mit **E** untersuchen → Fachaufgaben lösen.
 4. Die Anlage läuft wieder, ein **Beweisstück** taucht auf (Zwischensequenz mit Letterbox und Untertiteln).
-5. Zurück zum Lehrer → **MISSION PASSED** mit Ruf-Belohnung.
+5. Zurück zum Auftraggeber → **MISSION PASSED** mit Ruf-Belohnung.
 
-**Ruf statt Geld:** Laufbursche (0) → Klassensprecher (100) → Schülersprecher (160) → Capo (250) → Consigliere (450).
+Beim Betreten eines Raums erscheint unten rechts sein Name (KELLER, FLUR, CAFETERIA).
+
+**Ruf statt Geld:** Laufbursche (0) → Klassensprecher (100) → Schülersprecher (160) → Capo (300) → Consigliere (450).
+Die Schwellen sind so gewählt, dass die Beförderungen genau nach Mission 3, 4 und 7 kommen – egal wie viel Bonus jemand sammelt.
 Jede gelöste Aufgabe beim ersten Versuch gibt +2 Bonus-Ruf. Nach drei Fehlversuchen kann man sich die Lösung zeigen lassen
 (kein Bonus, wird in der Statistik vermerkt). Falsche Antworten kosten nichts – es gibt gestufte Tipps vom Lehrer.
 
-Außerdem: **Schulradio WLHS 88.3** mit Sprüchen und Durchsagen, **drei versteckte Bauteile** im Keller,
-am Ende eine **Bilanz** (gelöste Aufgaben, davon beim ersten Versuch, Spielzeit).
+Außerdem: **Schulradio WLHS 88.3** mit Sprüchen und Durchsagen (je Akt eigene), **sechs versteckte Bauteile**
+(drei im Keller, drei im Erdgeschoss), verschlossene Klassenzimmer mit kleinen Hinweisen und am Ende von Akt 2
+eine **Bilanz** (gelöste Aufgaben, davon beim ersten Versuch, Spielzeit).
 
 ## Speichern und Laden
 
@@ -71,7 +83,7 @@ Esc → **Spiel speichern …** öffnet den Windows-Dateidialog. Der Schüler w�
 Netzlaufwerk. Der Spielstand ist eine kleine Textdatei (`lehrer_<name>.lehrer`, ca. 2 KB) mit Ruf, Missionsstand,
 Beweisen, Position und der Statistik je Aufgabe. Laden über das Hauptmenü oder das Pausenmenü.
 
-## Missionen und Lehrplanbezug (Prototyp)
+## Missionen und Lehrplanbezug
 
 | # | Mission | Anlage | Fachaufgaben | Lernfeld |
 |---|---|---|---|---|
@@ -79,6 +91,9 @@ Beweisen, Position und der Statistik je Aufgabe. Laden über das Hauptmenü oder
 | 2 | Die Glocke lügt | Klingelanlage: -FC1, -SJ3, -KF1, -PB1 (24 V) | Schließer/Öffner, Anschlussbezeichnungen (13–14, 21–22), Fehlersuche am Stromlaufplan mit Messwerten, fachgerechtes Vorgehen | LF 4 (Att) |
 | 3 | Stillstand | Förderband, Schaltschrank +S1 | Selbsthaltung mit Vorrang AUS (-SJ1, -SJ2, -QA1), im Probelauf testen, Selbsthaltung statt Rastung, Motorschutzrelais -BC1 nach Typenschild, Hilfskontakte 95–96 / 97–98 | LF 4 (Att) |
 | 4 | Gelöschte Spuren | Netzwerkschrank +N1 (Switch, Router, Firewall, NAS) | Datenschutz vs. Datensicherheit, 3-2-1-1-0-Regel, RAID ist kein Backup, Schutzziele, Prinzip der geringsten Rechte, TOM (Eingabekontrolle) | LF 5 (LtK) |
+| 5 | Leitungssalat (Kowalski, Flur) | Unterverteilung UV-EG, Snackautomat mit Fernmeldeleitung J-Y(ST)Y | Stromdichte J = I/A, Strombelastbarkeit nach Tabelle, NYM 3 × 2,5 mm² entschlüsseln, Aderfarben PE/N/L, Spannungsfall in % | LF 3 (ET) |
+| 6 | Funkstille (Kowalski, Flur) | Infoscreen, Access Point, Kabelpritsche neben Motorleitung, versteckter Router | Sender-Empfänger-Modell/Störquelle, U/UTP vs. S/FTP, Segmentlänge 100 m, PoE, WLAN-Generationen (Sortieren), Funknetz absichern (WPA3) | LF 5 (LtK) |
+| 7 | Zwei Bedienstellen (Rosalita, Cafeteria) | Bedienstelle an der Bandübergabe: -SG0, -SJ3, -SJ4, -PF1 | Drahtbruchsicherheit, Not-Halt mit Zwangsöffnung, Steuerstromkreis mit zwei Bedienstellen (5 Lücken, Probelauf), -PF1 über 43–44, Fehlersuche „-PF1 leuchtet, obwohl das Band steht“ | LF 4 (Att) |
 
 Betriebsmittelkennzeichnung wie in den Lernunterlagen nach DIN EN 81346-2: -FC Leitungsschutzschalter, -SJ Drucktaster,
 -SG0 Not-Halt, -QA Schütz, -BC Motorschutzrelais, -KF Hilfsschütz/Relais/Zeitrelais, -PF Meldeleuchte, -MA Motor;
@@ -115,6 +130,22 @@ Rechenaufgaben haben Zufallswerte (je Spielstand andere Zahlen). Ergebnisse wie 
 | Schutzziele | Integrität |
 | Wer darf was? | Prinzip der geringsten Rechte, Fernwartung nur befristet |
 | Wer hat was wann geändert? | Eingabekontrolle |
+| Die heiße Leitung | J = I / A mit A = 0,8 mm² (z. B. 6 A / 0,8 mm² = 7,50 A/mm²) – unzulässig |
+| Der richtige Querschnitt | 2,5 mm² (27 A ≥ 22 A; 1,5 mm² nur 19,5 A) |
+| Was steht auf der Rolle? | N Normleitung, Y PVC-Isolierung, M Mantelleitung, 3 Adern je 2,5 mm² |
+| Grün-gelb ist heilig | PE grün-gelb, N blau |
+| Spannungsfall im Flur | ΔU% = ρ · 2 · l · I / A / U · 100 % (z. B. 25 m, 16 A: 2,48 %) |
+| Wer stört? | Frequenzumrichter des Bandmotors (Motorleitung in derselben Trasse) |
+| S/FTP statt U/UTP | U ungeschirmt, F Folie, S Geflecht; geschirmt und getrennt von der Motorleitung verlegen |
+| 120 Meter | höchstens 100 m je Segment (90 m + 2 × 5 m) |
+| Strom über das Netzwerkkabel | Power over Ethernet (bis 90 W, 48 V) |
+| WLAN-Generationen | Wi-Fi 4 (802.11n) – Wi-Fi 5 (802.11ac) – Wi-Fi 6 (802.11ax) – Wi-Fi 7 (802.11be) |
+| Das fremde Funknetz | Funk ist abhörbar; Anlagennetz nie ungeschützt über WLAN, mindestens WPA3, eigenes Netz |
+| Der gebrochene Draht | AUS als Schließer: Band läuft weiter, AUS wirkungslos; als Öffner (Ruhestromprinzip) sicherer Zustand |
+| Der rote Pilz | Zwangsöffnung reißt den Kontakt auch verschweißt oder bei Federbruch auf |
+| Zwei Bedienstellen | -SJ1 und -SJ3 (Öffner) in Reihe, -SJ2, -SJ4 und -QA1 13–14 (Schließer) parallel; Reihenfolge egal |
+| Die grüne Lampe | -PF1 nicht parallel zur Spule, sondern über Hilfskontakt 43–44 |
+| Die Leuchte lügt | Hilfskontakt für -PF1 an 21–22 (Öffner) statt 43–44 angeschlossen |
 
 ## Für die Lehrkraft
 
@@ -136,8 +167,9 @@ der-lehrer/
 ├─ szenen/           hauptmenue.tscn, welt/spiel.tscn
 ├─ skripte/
 │  ├─ autoload/      Daten, Spielstand (Speichern/Laden), Audio (Klangsynthese), AufgabenLogik
-│  ├─ welt/          Bau (Grundkörper, Materialien, prozedurale Texturen), Keller (Raum + Anlagen)
-│  ├─ figuren/       Figur (Comic-Figur aus Grundkörpern), Spieler (Third-Person), Lehrer
+│  ├─ welt/          Bau (Grundkörper, Materialien, prozedurale Texturen), Bereich (gemeinsame Grundlage),
+│  │                 Keller, Erdgeschoss (Flur + Cafeteria), Zielmarker
+│  ├─ figuren/       Figur (Figur aus Grundkörpern), Person (ansprechbar), Lehrer, Nebenfiguren, Spieler
 │  ├─ ui/            HUD, Minimap, Dialoge, Aufgabenfenster, Beweisbrett, Pausenmenü, Zwischensequenzen
 │  │  └─ aufgaben/   Multiple Choice, Berechnung, Sortieren, Fehlersuche, Schützschaltung, Stromlaufplan-Zeichner
 │  ├─ spiel.gd       Spielablauf (Missionen)
@@ -149,11 +181,13 @@ der-lehrer/
 
 - Alle 3D-Modelle, Texturen, Klänge und die Musik werden im Code erzeugt – keine fremden Assets, Logos oder Namen aus GTA.
 - **Selbst bauen:** Godot 4.5.1 mit Windows-Exportvorlagen, dann `godot --headless --export-release "Windows portable" ../build/DerLehrer.exe`.
-- **Komplett-Test:** `godot -- --autotest --shots=<ordner>` spielt alle Missionen automatisch durch, speichert/lädt und legt Bildschirmfotos ab.
+- **Komplett-Test:** `godot -- --autotest --shots=<ordner>` spielt alle Missionen automatisch durch (auch die Türen
+  zwischen Keller und Erdgeschoss), speichert/lädt und legt Bildschirmfotos ab.
+- **Bereiche:** Keller und Erdgeschoss liegen in derselben Welt weit auseinander. Eine Tür blendet schwarz über und
+  versetzt die Spielfigur; der nicht besuchte Bereich wird ausgeblendet (keine Zeichenkosten).
 
 ## Nächste Schritte
 
-1. Unterlagen in `/unterlagen` einarbeiten (Aufgaben ohne Vorgriffe)
-2. Weitere Räume (Flur mit Spinden, Cafeteria, Turnhalle, Werkstatt) und der Rest von Akt 1
-3. Akt 2 mit Verdächtigen, falschen Fährten und Überläuferin; Akt 3 mit Finale
-4. Weitere Figuren (Hausmeister Kowalski, Sekretärin, Rivalen), Ladebildschirme je Akt
+1. Akt 2 fortsetzen: Turnhalle und Werkstatt, Folgeschaltung Band 1/Band 2 (Schütztechnik Kap. 4), Netzwerktopologien (LtK 03)
+2. Akt 3 mit Finale als Prüfung
+3. Weitere Figuren (Sekretärin, Vince Moretti und die „Black Roses“), Ladebildschirme je Akt

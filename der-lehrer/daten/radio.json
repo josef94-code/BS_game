@@ -1,5 +1,5 @@
 {
-  "_info": "Schulradio WLHS 88.3 – Sprüche und Durchsagen. Werden der Reihe nach abgespielt.",
+  "_info": "Schulradio WLHS 88.3 – Sprüche und Durchsagen je Akt. Werden der Reihe nach abgespielt.",
   "sender": "WLHS 88.3 – Lincoln High Radio",
   "akt1": [
     "Guten Abend, Lincoln High! Hier ist WLHS 88.3 – das Radio, das nie schläft. Im Gegensatz zu euch in der ersten Stunde.",
@@ -10,5 +10,15 @@
     "Die Cafeteria meldet: Der Pudding steckt im Keller fest. Bitte bewahrt Ruhe.",
     "Merke für die nächste Prüfung: Freischalten, sichern, prüfen, erden, abdecken. Wer’s vergisst, hört von uns.",
     "Kurz vor den Nachrichten noch ein Gruß an die Familie. Ihr wisst schon, welche."
+  ],
+  "akt2": [
+    "Hier ist WLHS 88.3. Gute Nachrichten aus der Cafeteria: Der Pudding ist unterwegs. Schlechte Nachrichten: Er steckt noch im Keller.",
+    "Durchsage: Der Snackautomat im Erdgeschoss ist außer Betrieb. Bitte nicht dagegen treten. Hausmeister Kowalski hört alles.",
+    "Das Wetter: Funkstille im Flur, Bildsalat auf dem Infoscreen. Später auffrischender Wind aus Richtung Sterling Bau.",
+    "Ein Musikwunsch von Rosalita aus der Küche: etwas Schnelles. Für das Band. Damit es endlich läuft.",
+    "Merke: AUS-Taster in Reihe, EIN-Taster parallel. Wer es andersherum macht, wischt Pudding auf.",
+    "Gerücht der Woche: Die Black Roses aus der Abschlussklasse haben einen neuen Sponsor. Wer, das sagt keiner.",
+    "Erinnerung an alle: Grün-gelb ist für den Schutzleiter. Nicht für eure Schnürsenkel.",
+    "Und jetzt ein Gruß an den neuen Schülersprecher. Die Familie hört mit."
   ]
 }

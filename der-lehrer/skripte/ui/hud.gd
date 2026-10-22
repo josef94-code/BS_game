@@ -33,6 +33,8 @@ var _radio_text: Label
 var _hilfe_tween: Tween
 var _radio_tween: Tween
 var _untertitel_tween: Tween
+var _ort: Label
+var _ort_tween: Tween
 var _letztes_ziel := ""
 var _titel_aktiv := false
 var _wartender_untertitel := ""
@@ -117,6 +119,13 @@ func _ready() -> void:
 	tasten.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_wurzel.add_child(tasten)
 	Stil.setze(tasten, Control.PRESET_BOTTOM_RIGHT, -620, -38, -24, -12)
+
+	# --- Ortsname unten rechts (beim Betreten eines Raums, wie die Stadtteile in GTA III)
+	_ort = Stil.label("", 46, Color(0.72, 0.84, 1.0), 10, Stil.titel_schrift())
+	_ort.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_ort.visible = false
+	_wurzel.add_child(_ort)
+	Stil.setze(_ort, Control.PRESET_BOTTOM_RIGHT, -800, -120, -44, -50)
 
 	# --- Untertitel unten Mitte (neues Ziel)
 	_untertitel = Stil.label("", 30, Color.WHITE, 8, hud_schrift)
@@ -233,6 +242,19 @@ func _untertitel_zeigen(text: String) -> void:
 	_untertitel_tween.tween_interval(6.0)
 	_untertitel_tween.tween_property(_untertitel, "modulate:a", 0.0, 0.8)
 	_untertitel_tween.tween_callback(func(): _untertitel.visible = false)
+
+
+func ort(text: String) -> void:
+	_ort.text = text.to_upper()
+	_ort.visible = true
+	_ort.modulate.a = 0.0
+	if _ort_tween:
+		_ort_tween.kill()
+	_ort_tween = create_tween()
+	_ort_tween.tween_property(_ort, "modulate:a", 1.0, 0.4)
+	_ort_tween.tween_interval(2.6)
+	_ort_tween.tween_property(_ort, "modulate:a", 0.0, 0.8)
+	_ort_tween.tween_callback(func(): _ort.visible = false)
 
 
 func prompt(text: String) -> void:

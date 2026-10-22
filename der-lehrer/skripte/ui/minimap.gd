@@ -1,14 +1,18 @@
 class_name Minimap
 extends Control
-## Runder Radar unten links (wie bei GTA III): dreht sich mit der Kamera, zeigt den Auftraggeber
-## (Hut-Symbol) und das aktuelle Ziel (gelbes Quadrat).
+## Runder Radar unten links (wie bei GTA III): dreht sich mit der Kamera, zeigt die Auftraggeber
+## (Hut für den Lehrer, Buchstaben für die anderen) und das aktuelle Ziel (gelbes Quadrat).
 
 const GROESSE := 230.0
 const SKALA := 9.5   # Pixel pro Meter
 
-var welt: Keller
+const FARBEN := {"kowalski": Color(0.45, 0.68, 0.95), "rosalita": Color(0.95, 0.5, 0.65)}
+
+var bereich: Bereich
 var spieler: Spieler
-var lehrer_hat_auftrag := false
+var marker: Zielmarker
+## [{"pos": Vector3, "art": String, "aktiv": bool}]
+var personen: Array = []
 var _zeit := 0.0
 
 
@@ -36,42 +40,55 @@ func _abb(p: Vector3) -> Vector2:
 	return Vector2(GROESSE, GROESSE) * 0.5 + Vector2(rel.dot(rechts), -rel.dot(vorne)) * SKALA
 
 
+func _rechteck(r: Rect2, o: Vector3) -> PackedVector2Array:
+	return PackedVector2Array([
+		_abb(o + Vector3(r.position.x, 0, r.position.y)),
+		_abb(o + Vector3(r.end.x, 0, r.position.y)),
+		_abb(o + Vector3(r.end.x, 0, r.end.y)),
+		_abb(o + Vector3(r.position.x, 0, r.end.y))])
+
+
 func _draw() -> void:
-	if welt == null or spieler == null:
+	if bereich == null or spieler == null:
 		return
 	var mitte := Vector2(GROESSE, GROESSE) * 0.5
 	var r := GROESSE * 0.5
 	draw_circle(mitte, r, Color(0.16, 0.19, 0.16, 0.9))
-	# Raum
-	var ecken := [Vector3(-Keller.B, 0, -Keller.T), Vector3(Keller.B, 0, -Keller.T),
-		Vector3(Keller.B, 0, Keller.T), Vector3(-Keller.B, 0, Keller.T)]
-	var poly := PackedVector2Array()
-	for e in ecken:
-		poly.append(_abb(e))
-	draw_colored_polygon(poly, Color(0.42, 0.44, 0.42, 0.95))
-	poly.append(poly[0])
-	draw_polyline(poly, Color(0.9, 0.9, 0.85), 3.0)
+	var o := bereich.position
+	# Räume
+	for b in bereich.boeden:
+		draw_colored_polygon(_rechteck(b["r"], o), Color(b["f"]))
+	for b in bereich.boeden:
+		var poly := _rechteck(b["r"], o)
+		poly.append(poly[0])
+		draw_polyline(poly, Color(0.9, 0.9, 0.85), 3.0)
 	# Einrichtung
-	for f in welt.formen:
-		var rect: Rect2 = f["r"]
-		var p := PackedVector2Array([
-			_abb(Vector3(rect.position.x, 0, rect.position.y)),
-			_abb(Vector3(rect.end.x, 0, rect.position.y)),
-			_abb(Vector3(rect.end.x, 0, rect.end.y)),
-			_abb(Vector3(rect.position.x, 0, rect.end.y))])
-		draw_colored_polygon(p, Color(f["f"]).darkened(0.15))
-	# Tür
-	_symbol_text(_abb(Vector3(-Keller.B + 0.4, 0, 7.0)), "↑", Color(0.3, 1.0, 0.5))
+	for f in bereich.formen:
+		draw_colored_polygon(_rechteck(f["r"], o), Color(f["f"]).darkened(0.15))
+	# Türen und Treppen
+	for sy in bereich.symbole:
+		_symbol_text(_abb(o + Vector3(sy["p"])), sy["t"], sy["f"])
 	# Ziel-Markierung
-	var ziel = welt.marker_pos()
+	var ziel = marker.ziel() if marker else null
 	if ziel != null:
 		var zp := _begrenzen(_abb(ziel))
 		var puls := 1.0 + sin(_zeit * 5.0) * 0.15
 		draw_rect(Rect2(zp - Vector2(8, 8) * puls, Vector2(16, 16) * puls), Color(0, 0, 0))
 		draw_rect(Rect2(zp - Vector2(6, 6) * puls, Vector2(12, 12) * puls), Color(1.0, 0.82, 0.1))
-	# Lehrer (Hut-Symbol); größer und gold, wenn er einen Auftrag hat
-	var pp := _begrenzen(_abb(welt.lehrer_pos))
-	_hut(pp, 1.25 if lehrer_hat_auftrag else 0.85, Stil.GOLD_HELL if lehrer_hat_auftrag else Color(0.85, 0.85, 0.85))
+	# Auftraggeber: größer und farbig, wenn sie einen Auftrag haben (nur im selben Bereich)
+	for p in personen:
+		if not bereich.enthaelt(p["pos"]):
+			continue
+		var pp := _begrenzen(_abb(p["pos"]))
+		var aktiv: bool = p["aktiv"]
+		if p["art"] == "lehrer":
+			_hut(pp, 1.25 if aktiv else 0.85, Stil.GOLD_HELL if aktiv else Color(0.85, 0.85, 0.85))
+		else:
+			var s := 1.25 if aktiv else 0.85
+			var farbe: Color = FARBEN.get(p["art"], Color.WHITE) if aktiv else Color(0.8, 0.8, 0.8)
+			draw_circle(pp, 12.0 * s, Color(0, 0, 0, 0.8))
+			draw_circle(pp, 9.5 * s, farbe)
+			_symbol_text(pp, String(p["art"]).substr(0, 1).to_upper(), Color(0.05, 0.05, 0.05))
 	# Spieler-Pfeil (zeigt Blickrichtung der Figur relativ zur Kamera)
 	var winkel := -(spieler.figur.rotation.y - spieler.blick())
 	var pfeil := PackedVector2Array([Vector2(0, -11), Vector2(8, 8), Vector2(0, 4), Vector2(-8, 8)])

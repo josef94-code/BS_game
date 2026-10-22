@@ -5,6 +5,7 @@ extends Node
 var spiel
 var _ordner := "user://autotest"
 var _nr := 0
+var _fehler_bereiche := 0
 
 
 func _ready() -> void:
@@ -65,12 +66,14 @@ func _ablauf() -> void:
 	await _foto("keller_ueberblick")
 
 	for q in Daten.quests:
-		# Auftrag beim Lehrer annehmen
-		spiel.spieler.global_position = spiel.lehrer_vorne()
-		spiel.spieler.setze_blick(PI)
-		await _warte(0.4)
-		await _foto(q["id"] + "_buero")
-		spiel.interagieren("lehrer")
+		var geber: String = q.get("auftraggeber", "lehrer")
+		if q["id"] == "q05_leitung":
+			await _bereiche_testen()
+		# Auftrag beim Auftraggeber annehmen
+		_vor_person(geber)
+		await _warte(0.5)
+		await _foto(q["id"] + "_auftraggeber")
+		spiel.interagieren(geber)
 		await _warte(1.2)
 		await _foto(q["id"] + "_dialog")
 		while spiel.dialog.ist_aktiv():
@@ -83,9 +86,10 @@ func _ablauf() -> void:
 			push_error("Quest nicht aktiv: " + q["id"])
 			fehler += 1
 		# Zur Station
-		var st: Interaktiv = spiel.keller.stationen[q["station"]]
-		var richtung: Vector3 = (st.global_position - spiel.keller.lehrer_pos).normalized()
+		var st: Interaktiv = spiel.station_finden(q["station"])
+		var richtung: Vector3 = (st.global_position - spiel.person_vorne(geber)).normalized()
 		spiel.spieler.global_position = st.global_position - richtung * 0.6
+		spiel.spieler.setze_blick(atan2(-richtung.x, -richtung.z))
 		await _warte(0.5)
 		await _foto(q["id"] + "_station")
 		spiel.interagieren(q["station"])
@@ -112,8 +116,9 @@ func _ablauf() -> void:
 			push_error("Quest nicht gelöst: " + q["id"])
 			fehler += 1
 		# Melden
-		spiel.spieler.global_position = spiel.lehrer_vorne()
-		spiel.interagieren("lehrer")
+		_vor_person(geber)
+		await _warte(0.2)
+		spiel.interagieren(geber)
 		var m := 0
 		while spiel.dialog.ist_aktiv() or m == 0:
 			m += 1
@@ -126,6 +131,12 @@ func _ablauf() -> void:
 			push_error("Quest nicht erledigt: " + q["id"])
 			fehler += 1
 
+	# Zurück in den Keller
+	spiel.interagieren("treppe")
+	await _warte(1.5)
+	if spiel.aktueller_bereich != spiel.keller:
+		push_error("Treppe in den Keller funktioniert nicht")
+		fehler += 1
 	# Sammelobjekt, Beweisbrett, Pause
 	spiel.interagieren("sammel:s_diode")
 	await _warte(0.5)
@@ -147,5 +158,37 @@ func _ablauf() -> void:
 	if f != "" or l != "" or Spielstand.ruf() != ruf:
 		push_error("Speichern/Laden fehlerhaft: %s %s" % [f, l])
 		fehler += 1
+	fehler += _fehler_bereiche
 	print("AUTOTEST ENDE – Ruf %d, Rang %s, Fehler: %d" % [Spielstand.ruf(), Spielstand.rang(), fehler])
 	get_tree().quit(1 if fehler > 0 else 0)
+
+
+## Spielfigur vor eine Person stellen, Blick zur Person
+func _vor_person(id: String) -> void:
+	var vorne: Vector3 = spiel.person_vorne(id)
+	var p: Vector3 = (spiel.personen[id]["node"] as Node3D).global_position
+	spiel.spieler.global_position = vorne
+	var d := p - vorne
+	spiel.spieler.setze_blick(atan2(-d.x, -d.z))
+
+
+## Tür nach oben, Flur und Cafeteria ansehen
+func _bereiche_testen() -> void:
+	spiel.spieler.global_position = spiel.keller.ausgang.global_position + Vector3(1.0, 0, 0)
+	spiel.spieler.setze_blick(PI / 2.0)
+	await _warte(0.6)
+	await _foto("keller_tuer_offen")
+	spiel.interagieren("tuer")
+	await _warte(1.6)
+	if spiel.aktueller_bereich != spiel.erdgeschoss:
+		push_error("Tür nach oben führt nicht ins Erdgeschoss")
+		_fehler_bereiche += 1
+	await _foto("flur_ankunft")
+	var eg: Node3D = spiel.erdgeschoss
+	for ansicht in [["flur_west", Vector3(-12.0, 0, 0.0), -PI / 2.0], ["flur_ost", Vector3(4.0, 0, 0.5), -PI / 2.0],
+			["flur_rueck", Vector3(6.0, 0, -0.5), PI / 2.0], ["cafeteria", Vector3(16.0, 0, 0.0), -PI / 2.0 - 0.3],
+			["cafeteria_band", Vector3(22.0, 0, -1.5), -PI / 2.0 + 0.5], ["cafeteria_theke", Vector3(26.0, 0, 1.5), -PI / 2.0 + 0.2]]:
+		spiel.spieler.global_position = eg.to_global(ansicht[1])
+		spiel.spieler.setze_blick(ansicht[2])
+		await _warte(0.8)
+		await _foto(ansicht[0])

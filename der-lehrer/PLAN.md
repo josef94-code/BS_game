@@ -76,8 +76,8 @@ der-lehrer/
 |---|---|---|---|
 | Laufbursche | 0–99 | Grundbegriffe, einfache Rechnungen | Flur, Büro des Lehrers, Cafeteria |
 | Klassensprecher | 100–159 | mehrstufige Rechnungen, einfache Schützschaltungen | Werkstatt |
-| Schülersprecher | 160–249 | Netzwerk, Datensicherheit, Schützschaltungen mit Motorschutz | Turnhalle |
-| Capo | 250–449 | Verriegelungen, Logik, Fehlersuche mit Messgerät | Hausmeisterkeller |
+| Schülersprecher | 160–299 | Netzwerk, Datensicherheit, Schützschaltungen mit Motorschutz | Turnhalle |
+| Capo | 300–449 | Verriegelungen, Logik, Fehlersuche mit Messgerät | Hausmeisterkeller |
 | Consigliere | 450+ | Abschlussprüfung, kombinierte Aufgaben | Ende |
 
 **HUD:** Minimap unten links (Auftraggeber-Icons, Marker, Ziel), Ruf-Anzeige mit Stufe, aktuelles Ziel oben,
@@ -102,6 +102,12 @@ Interaktionshinweis "[E]". Taste `B` = Beweisbrett/Notizbuch, `Esc` = Pause/Spei
 | **Drahtzieher (Überraschung)** | Mr. Sterling, Projektleiter der Sanierungsfirma – will den Wartungsvertrag und lässt die Rivalen sabotieren |
 
 ## 5. Quest-Liste (vorläufig, wird an `/unterlagen` angepasst)
+
+> **Umgesetzt (v0.7):** Akt 1 im Keller (Missionen 1–4 beim Lehrer) und der Anfang von Akt 2 im Erdgeschoss:
+> 5 *Leitungssalat* (Kowalski, Flur, ET Kap. 4), 6 *Funkstille* (Kowalski, Flur, LtK 02),
+> 7 *Zwei Bedienstellen* (Rosalita, Cafeteria, Schütztechnik Kap. 2.3–2.5). Neue Figuren: Hausmeister Kowalski,
+> Cafeteria-Chefin Rosalita; Vince Moretti taucht als Spur auf (Spind, Polaroid). Die Liste unten ist der
+> ursprüngliche Gesamtplan und wird beim weiteren Ausbau an die Unterlagen angepasst.
 
 Fächer gemischt: **ET** Elektrotechnik, **AT-S** Automatisierung/Schütztechnik, **AT-D** Digitaltechnik, **LtK**.
 

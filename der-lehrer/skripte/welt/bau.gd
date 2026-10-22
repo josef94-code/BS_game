@@ -13,7 +13,8 @@ static var _normalen := {}
 static var _materialien := {}
 static var _normalmaps_an := true
 ## Texturen mit Normal-Map (Relief für Fugen, Poren, Maserung)
-const RELIEF := {"beton": 1.5, "beton_dunkel": 1.5, "ziegel": 5.0, "metall": 0.8, "holz": 1.2, "kork": 2.0, "karton": 0.8}
+const RELIEF := {"beton": 1.5, "beton_dunkel": 1.5, "ziegel": 5.0, "metall": 0.8, "holz": 1.2, "kork": 2.0, "karton": 0.8,
+	"fliesen": 1.2, "fliesen_rot": 1.2, "deckenplatten": 1.5, "wandfliesen": 2.0, "putz": 1.0, "bloecke": 3.0}
 static var _konturen := {}
 
 
@@ -356,6 +357,12 @@ static func tex(name: String) -> Texture2D:
 		"metall": img = _schmutz(_metall(), 0.2, 8, false)
 		"karton": img = _beton(Color(0.66, 0.5, 0.32), 0.12, 9.0)
 		"kork": img = _beton(Color(0.62, 0.45, 0.27), 0.3, 22.0)
+		"fliesen": img = _schmutz(_fliesen(Color(0.86, 0.84, 0.76), Color(0.56, 0.6, 0.55), 4, 0), 0.25, 12, false)
+		"fliesen_rot": img = _schmutz(_fliesen(Color(0.88, 0.85, 0.76), Color(0.6, 0.12, 0.1), 4, 0), 0.22, 13, false)
+		"wandfliesen": img = _fliesen(Color(0.2, 0.52, 0.5), Color(0.24, 0.56, 0.54), 8, 1)
+		"deckenplatten": img = _deckenplatten()
+		"putz": img = _schmutz(_beton(Color(0.84, 0.8, 0.7), 0.08, 14.0), 0.18, 14, false)
+		"bloecke": img = _schmutz(_bloecke(), 0.2, 15, false)
 		_: img = _beton(Color(0.6, 0.6, 0.6), 0.1, 3.0)
 	img.generate_mipmaps()
 	var t := ImageTexture.create_from_image(img)
@@ -562,4 +569,63 @@ static func _maschendraht() -> Image:
 			var draht := minf(absf(a - 16.0), absf(b - 16.0))
 			var alpha := clampf(2.2 - draht, 0.0, 1.0)
 			img.set_pixel(x, y, Color(0.7, 0.72, 0.7, alpha))
+	return img
+
+
+## Schachbrett-Fliesen mit Fugen (n × n Fliesen je Textur); muster 1 = gleichfarbig mit Glanzfleck
+static func _fliesen(a: Color, b: Color, n: int, muster: int) -> Image:
+	var rausch := _rauschen(25.0, 17).get_seamless_image(256, 256)
+	var img := Image.create(256, 256, false, Image.FORMAT_RGB8)
+	var g := 256 / n
+	for y in 256:
+		for x in 256:
+			var fx := x / g
+			var fy := y / g
+			var c := a if (fx + fy) % 2 == 0 else b
+			var v := rausch.get_pixel(x, y).r - 0.5
+			c = c.darkened(v * 0.12)
+			if muster == 1:
+				var lx := float(x % g) / g
+				var ly := float(y % g) / g
+				c = c.lightened(clampf(0.25 - Vector2(lx - 0.3, ly - 0.3).length(), 0.0, 1.0) * 0.8)
+			if x % g < 2 or y % g < 2:
+				c = Color(0.35, 0.34, 0.31).darkened(v * 0.3)
+			img.set_pixel(x, y, c)
+	return img
+
+
+## Akustik-Deckenplatten im Rasterrahmen (2 × 2 je Textur)
+static func _deckenplatten() -> Image:
+	var rausch := _rauschen(50.0, 19).get_seamless_image(256, 256)
+	var img := Image.create(256, 256, false, Image.FORMAT_RGB8)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 5
+	for y in 256:
+		for x in 256:
+			var v := 0.84 + (rausch.get_pixel(x, y).r - 0.5) * 0.08
+			var c := Color(v, v * 0.99, v * 0.95)
+			if x % 128 < 4 or y % 128 < 4:
+				c = Color(0.72, 0.72, 0.7)
+			img.set_pixel(x, y, c)
+	for i in 900:
+		var px := rng.randi_range(0, 255)
+		var py := rng.randi_range(0, 255)
+		if px % 128 > 5 and py % 128 > 5:
+			img.set_pixel(px, py, Color(0.55, 0.54, 0.5))
+	return img
+
+
+## Gestrichene Betonsteine (typische Flurwand amerikanischer Schulen), 4 × 8 Steine je Textur
+static func _bloecke() -> Image:
+	var rausch := _rauschen(40.0, 23).get_seamless_image(256, 256)
+	var img := Image.create(256, 256, false, Image.FORMAT_RGB8)
+	for y in 256:
+		var reihe := y / 32
+		var versatz := 32 if reihe % 2 == 1 else 0
+		for x in 256:
+			var v := rausch.get_pixel(x, y).r - 0.5
+			var c := Color(0.86, 0.83, 0.74).darkened(v * 0.1)
+			if (x + versatz) % 64 < 3 or y % 32 < 3:
+				c = Color(0.74, 0.71, 0.63).darkened(v * 0.2)
+			img.set_pixel(x, y, c)
 	return img

@@ -120,7 +120,7 @@ func _draw() -> void:
 		_symbol(typ, oben, unten, zu)
 		if bez != "":
 			var bs := f.get_string_size(bez, HORIZONTAL_ALIGNMENT_LEFT, -1, 19)
-			var mit_antrieb := typ.begins_with("taster") or typ in ["zeit_no", "mschutz_nc"]
+			var mit_antrieb := typ.begins_with("taster") or typ in ["zeit_no", "mschutz_nc", "nothalt_nc"]
 			var links := 50.0 if mit_antrieb else 22.0
 			var hoehe := 0.3 if mit_antrieb else 0.55
 			draw_string(f, Vector2(oben.x - links - bs.x, oben.y + (unten.y - oben.y) * hoehe + 6), bez, HORIZONTAL_ALIGNMENT_LEFT, -1, 19, Color(0.1, 0.15, 0.45))
@@ -151,7 +151,7 @@ func _ist_geschlossen(id: String, typ: String) -> bool:
 	match typ:
 		"schliesser", "taster_no", "zeit_no":
 			return b
-		"oeffner", "taster_nc", "mschutz_nc":
+		"oeffner", "taster_nc", "mschutz_nc", "nothalt_nc":
 			return not b
 	return true
 
@@ -215,7 +215,7 @@ func _symbol(typ: String, oben: Vector2, unten: Vector2, zu: bool) -> void:
 			var spitze := a if zu else Vector2(cx - 15, a.y + 2)
 			draw_line(b, spitze, LINIE, BREITE)
 			_betaetiger(typ, (b + spitze) * 0.5)
-		"oeffner", "taster_nc", "mschutz_nc":
+		"oeffner", "taster_nc", "mschutz_nc", "nothalt_nc":
 			draw_line(oben, a, LINIE, BREITE)
 			draw_line(a, a + Vector2(13, 0), LINIE, BREITE)
 			draw_line(b, unten, LINIE, BREITE)
@@ -242,6 +242,10 @@ func _betaetiger(typ: String, mitte: Vector2) -> void:
 			draw_arc(m, 9.0, 0, TAU, 20, LINIE, 1.8)
 			draw_line(m, m + Vector2(0, -6), LINIE, 1.6)
 			draw_line(m, m + Vector2(5, 0), LINIE, 1.6)
+		"nothalt_nc":
+			# Not-Halt: Pilztaster
+			draw_arc(links + Vector2(-1, 0), 9.0, PI * 0.5, PI * 1.5, 14, LINIE, 2.2)
+			draw_line(links + Vector2(-1, -9), links + Vector2(-1, 9), LINIE, 2.2)
 		"mschutz_nc":
 			# thermischer Auslöser
 			var p := links + Vector2(-14, -7)

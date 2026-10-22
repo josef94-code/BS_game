@@ -57,13 +57,14 @@ func _bauen() -> void:
 	var pv := VBoxContainer.new()
 	probe.add_child(pv)
 	pv.add_child(Stil.label("PROBELAUF – Taster gedrückt halten", 17, Color(1.0, 0.85, 0.3), 0, Stil.fett()))
-	var ph := HBoxContainer.new()
-	ph.add_theme_constant_override("separation", 10)
+	var ph := GridContainer.new()
+	ph.columns = 2
+	ph.add_theme_constant_override("h_separation", 10)
+	ph.add_theme_constant_override("v_separation", 6)
 	pv.add_child(ph)
 	var taster: Dictionary = a["logik"].get("taster", {})
 	var namen := taster.keys()
 	namen.sort()
-	namen.reverse()
 	for t in namen:
 		_gedrueckt[t] = false
 		var b := Button.new()

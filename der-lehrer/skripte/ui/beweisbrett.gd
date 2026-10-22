@@ -80,6 +80,10 @@ func _aufbauen() -> void:
 	_karten.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var gefunden: Array = Spielstand.d["beweise"]
 	var positionen := [Vector2(10, 10), Vector2(370, 60), Vector2(130, 330), Vector2(500, 360), Vector2(20, 560)]
+	var kompakt := gefunden.size() > positionen.size()
+	if kompakt:
+		positionen = [Vector2(0, 0), Vector2(300, 30), Vector2(600, 0), Vector2(20, 225), Vector2(320, 250),
+			Vector2(620, 220), Vector2(0, 450), Vector2(300, 470), Vector2(600, 440)]
 	var mitten := []
 	if gefunden.is_empty():
 		var leer := Stil.label("Noch keine Beweise.\nErledige Aufträge für den Lehrer …", 26, Color(0.2, 0.1, 0.05), 0, Stil.schreibmaschine())
@@ -87,11 +91,11 @@ func _aufbauen() -> void:
 		_karten.add_child(leer)
 	for i in gefunden.size():
 		var b := Daten.beweis(gefunden[i])
-		var k := _karte(b, i)
+		var k := _karte(b, i, kompakt)
 		k.position = positionen[i % positionen.size()]
 		k.rotation = deg_to_rad([-3.0, 2.5, -1.5, 3.0, -2.0][i % 5])
 		_karten.add_child(k)
-		mitten.append(k.position + Vector2(160, 24))
+		mitten.append(k.position + Vector2(140 if kompakt else 160, 20))
 	# Roter Faden zwischen den Karten
 	_faeden = Control.new()
 	_faeden.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -121,6 +125,8 @@ func _aufbauen() -> void:
 		verdaechtige = "Eine rivalisierende „Familie“? Ihr Zeichen: die schwarze Rose."
 	if Spielstand.hat_beweis("b_protokoll"):
 		verdaechtige += "\nSterling Bau? Ihr Fernwartungskonto war um 22:47 Uhr aktiv."
+	if Spielstand.hat_beweis("b_foto"):
+		verdaechtige += "\nVince Moretti (Abschlussklasse) – Kopf der „Black Roses“? Er trifft sich mit Sterling Bau."
 	_rechts.add_child(_zettel("VERDÄCHTIGE", verdaechtige, Color(0.75, 0.88, 1.0)))
 	var teile := []
 	for id in Daten.beweise.get("sammel", {}):
@@ -133,27 +139,28 @@ func _aufbauen() -> void:
 	_rechts.add_child(_zettel(String(Spielstand.d["name"]).to_upper(), rang, Color(0.98, 0.98, 0.95)))
 
 
-func _karte(b: Dictionary, i: int) -> Control:
+func _karte(b: Dictionary, i: int, kompakt: bool = false) -> Control:
+	var breite := 280.0 if kompakt else 330.0
 	var p := PanelContainer.new()
 	p.add_theme_stylebox_override("panel", Stil.box(Stil.PAPIER, Color(0.5, 0.4, 0.3), 1, 2))
-	p.custom_minimum_size = Vector2(330, 0)
+	p.custom_minimum_size = Vector2(breite, 0)
 	var v := VBoxContainer.new()
-	v.add_theme_constant_override("separation", 6)
+	v.add_theme_constant_override("separation", 3 if kompakt else 6)
 	p.add_child(v)
 	var foto := ColorRect.new()
 	foto.color = Stil.farbe(b.get("farbe", "#444444")).darkened(0.1)
-	foto.custom_minimum_size = Vector2(300, 70)
-	var nr := Stil.label("BEWEIS #%d" % (i + 1), 22, Color.WHITE, 4, Stil.fett())
-	nr.position = Vector2(10, 18)
+	foto.custom_minimum_size = Vector2(breite - 30.0, 38 if kompakt else 70)
+	var nr := Stil.label("BEWEIS #%d" % (i + 1), 19 if kompakt else 22, Color.WHITE, 4, Stil.fett())
+	nr.position = Vector2(10, 6 if kompakt else 18)
 	foto.add_child(nr)
 	v.add_child(foto)
-	var t := Stil.label(b.get("titel", ""), 22, Color(0.1, 0.05, 0.03), 0, Stil.schreibmaschine())
+	var t := Stil.label(b.get("titel", ""), 19 if kompakt else 22, Color(0.1, 0.05, 0.03), 0, Stil.schreibmaschine())
 	v.add_child(t)
-	var txt := Stil.label(b.get("text", ""), 17, Color(0.15, 0.1, 0.08))
+	var txt := Stil.label(b.get("text", ""), 14 if kompakt else 17, Color(0.15, 0.1, 0.08))
 	txt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	txt.custom_minimum_size.x = 300
+	txt.custom_minimum_size.x = breite - 30.0
 	v.add_child(txt)
-	v.add_child(Stil.label("Fundort: " + b.get("ort", ""), 15, Color(0.4, 0.3, 0.25)))
+	v.add_child(Stil.label("Fundort: " + b.get("ort", ""), 13 if kompakt else 15, Color(0.4, 0.3, 0.25)))
 	return p
 
 

@@ -7,7 +7,7 @@ extends Node3D
 var stil := {
 	"haut": Color(0.92, 0.74, 0.6),
 	"haare": Color(0.27, 0.16, 0.08),
-	"frisur": "tolle",          # tolle, kurz
+	"frisur": "tolle",          # tolle, kurz, dutt
 	"jacke": Color(0.17, 0.18, 0.21),
 	"jacke_textur": "",
 	"hose": Color(0.15, 0.16, 0.19),
@@ -154,6 +154,15 @@ func _bauen() -> void:
 		Bau.box(_rumpf, Vector3(0.05, 0.02, 0.01), Vector3(-0.11, 0.45, -0.122), weiss)
 		for i in 2:
 			Bau.kugel(_rumpf, 0.009, Vector3(0, 0.27 - i * 0.08, -0.124), _m(Color(0.05, 0.05, 0.05)))
+	if stil.has("schuerze"):
+		var schuerze := _m(stil["schuerze"])
+		var s1 := Bau.box(_rumpf, Vector3(0.3 * br, 0.62, 0.012), Vector3(0, -0.02, -0.128), schuerze)
+		s1.rotation.x = 0.06
+		Bau.box(_rumpf, Vector3(0.2 * br, 0.2, 0.012), Vector3(0, 0.42, -0.13), schuerze)
+		Bau.box(_rumpf, Vector3(0.34 * br, 0.04, 0.2), Vector3(0, 0.1, 0), schuerze)
+		for seite in [-1, 1]:
+			var band := Bau.box(_rumpf, Vector3(0.015, 0.16, 0.012), Vector3(0.07 * seite, 0.58, -0.105), schuerze)
+			band.rotation.z = -0.35 * seite
 	if stil["kapuze"]:
 		_kug(_rumpf, 0.13, Vector3(0, 0.6, 0.085), jacke, Vector3(1.35, 0.55, 0.85))
 		for seite in [-1, 1]:
@@ -200,6 +209,9 @@ func _kopf_bauen(haut: StandardMaterial3D) -> void:
 		"haut": stil["haut"], "haare": stil["haare"], "augenfarbe": stil.get("augenfarbe", Color(0.35, 0.25, 0.15)),
 		"bart": stil.get("bart", 0.0), "haaransatz": stil.get("haaransatz", 0.3),
 	}
+	for eigenschaft in ["lippen", "wangen", "schnurrbart", "wimpern"]:
+		if stil.has(eigenschaft):
+			gesicht_stil[eigenschaft] = stil[eigenschaft]
 	_gesicht_offen = Gesicht.textur(gesicht_stil, false)
 	_gesicht_zu = Gesicht.textur(gesicht_stil, true)
 	_gesicht_mat = _m(Color.WHITE).duplicate()
@@ -222,9 +234,21 @@ func _kopf_bauen(haut: StandardMaterial3D) -> void:
 			var tolle := _kug(k, 0.07, Vector3(0, 0.1, -0.045), haar, Vector3(1.25, 0.55, 1.0))
 			tolle.rotation.x = -0.35
 			_kug(k, 0.05, Vector3(0.015, 0.118, -0.068), haar, Vector3(1.4, 0.45, 0.9))
+		"dutt":
+			# glatt nach hinten, Knoten am Hinterkopf
+			_kug(k, 0.058, Vector3(0, 0.07, 0.1), haar, Vector3(1.0, 0.95, 0.9))
+			_kug(k, 0.03, Vector3(0, 0.09, 0.075), haar)
 		_:
 			var pony := _kug(k, 0.07, Vector3(0, 0.085, -0.05), haar, Vector3(1.3, 0.45, 1.0))
 			pony.rotation.x = -0.2
+	if stil.has("muetze"):
+		# Schirmmütze: Kappe über den Haaren, Schirm nach vorne
+		var muetze := _m(stil["muetze"])
+		var kappe2 := _kug(k, 0.116, Vector3(0, 0.045, 0.004), muetze, Vector3(0.95, 0.85, 1.02), true)
+		kappe2.rotation.x = 0.12
+		var schirm := Bau.box(k, Vector3(0.17, 0.012, 0.09), Vector3(0, 0.05, -0.135), muetze)
+		schirm.rotation.x = 0.18
+		Bau.kugel(k, 0.012, Vector3(0, 0.16, 0.0), muetze)
 
 
 func _process(delta: float) -> void:

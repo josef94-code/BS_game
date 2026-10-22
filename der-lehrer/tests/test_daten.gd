@@ -7,6 +7,35 @@ const DatenSkript := preload("res://skripte/autoload/daten.gd")
 
 var fehler := 0
 
+## Testfälle je Schaltungsaufgabe: gleichwertige richtige Belegungen und typische Fehler
+const SCHALTUNG_VARIANTEN := {
+	"st_selbsthaltung": {
+		"richtig": [{"L1": "SJ1_NC", "L2": "QA1_NO", "L3": "SJ2_NO"}],
+		"falsch": [
+			{"L1": "SJ1_NC", "L2": "SJ2_NO", "L3": "BRUECKE"},
+			{"L1": "SJ1_NC", "L2": "SJ2_NO", "L3": "QA1_NC"},
+			{"L1": "SJ2_NO", "L2": "SJ1_NC", "L3": "QA1_NO"},
+			{"L1": "BRUECKE", "L2": "SJ2_NO", "L3": "QA1_NO"},
+		],
+	},
+	"st_zwei_stellen": {
+		"richtig": [
+			{"L1": "SJ3_NC", "L2": "SJ1_NC", "L3": "SJ2_NO", "L4": "SJ4_NO", "L5": "QA1_NO"},
+			{"L1": "SJ1_NC", "L2": "SJ3_NC", "L3": "QA1_NO", "L4": "SJ2_NO", "L5": "SJ4_NO"},
+			{"L1": "SJ1_NC", "L2": "SJ3_NC", "L3": "SJ4_NO", "L4": "QA1_NO", "L5": "SJ2_NO"},
+		],
+		"falsch": [
+			{"L1": "SJ1_NC", "L2": "SJ3_NO", "L3": "SJ2_NO", "L4": "SJ4_NO", "L5": "QA1_NO"},
+			{"L1": "SJ1_NC", "L2": "BRUECKE", "L3": "SJ2_NO", "L4": "SJ4_NO", "L5": "QA1_NO"},
+			{"L1": "SJ1_NC", "L2": "SJ3_NC", "L3": "SJ2_NO", "L4": "SJ4_NO", "L5": "BRUECKE"},
+			{"L1": "SJ1_NC", "L2": "SJ3_NC", "L3": "SJ2_NO", "L4": "SJ4_NO", "L5": "SJ3_NO"},
+			{"L1": "SJ1_NC", "L2": "SJ3_NC", "L3": "SJ2_NO", "L4": "BRUECKE", "L5": "QA1_NO"},
+			{"L1": "SJ2_NO", "L2": "SJ4_NO", "L3": "SJ1_NC", "L4": "SJ3_NC", "L5": "QA1_NO"},
+			{"L1": "SJ1_NC", "L2": "QA1_NO", "L3": "SJ2_NO", "L4": "SJ4_NO", "L5": "SJ3_NC"},
+		],
+	},
+}
+
 
 func pruefe(bedingung: bool, text: String) -> void:
 	if not bedingung:
@@ -21,7 +50,13 @@ func _init() -> void:
 	var dialoge: Dictionary = DatenSkript.lade("res://daten/dialoge.json")
 	var beweise: Dictionary = DatenSkript.lade("res://daten/beweise.json")
 
+	var personen := ["lehrer", "kowalski", "rosalita"]
 	for q in quests["quests"]:
+		var geber: String = q.get("auftraggeber", "lehrer")
+		pruefe(geber in personen, "%s: unbekannter Auftraggeber %s" % [q["id"], geber])
+		pruefe(dialoge.get("sprecher", {}).has(geber), "%s: Sprecher %s fehlt" % [q["id"], geber])
+		for k in ["_aktiv", "_abgelehnt", "_leerlauf"]:
+			pruefe(dialoge.has(geber + k), "%s: Dialog %s fehlt" % [q["id"], geber + k])
 		for k in ["dialog_start", "dialog_ende"]:
 			pruefe(dialoge.has(q[k]), "%s: Dialog %s fehlt" % [q["id"], q[k]])
 		pruefe(beweise["beweise"].has(q["beweis"]), "%s: Beweis fehlt" % q["id"])
@@ -58,17 +93,13 @@ func _init() -> void:
 				pruefe(n == 1, id + ": genau ein Fehler erwartet")
 			"schaltung":
 				pruefe(Logik.schaltung_richtig(a, a["loesung_belegung"]), id + ": Musterlösung besteht Prüfung nicht")
-				# vertauschte Parallelzweige sind ebenfalls richtig
-				var tausch := {"L1": "SJ1_NC", "L2": "QA1_NO", "L3": "SJ2_NO"}
-				pruefe(Logik.schaltung_richtig(a, tausch), id + ": vertauschte Parallelzweige abgelehnt")
+				var v: Dictionary = SCHALTUNG_VARIANTEN.get(id, {})
+				pruefe(not v.is_empty(), id + ": keine Testvarianten in SCHALTUNG_VARIANTEN")
+				# gleichwertige Lösungen (vertauschte Reihen- oder Parallelzweige) sind ebenfalls richtig
+				for b in v.get("richtig", []):
+					pruefe(Logik.schaltung_richtig(a, b), "%s: richtige Variante abgelehnt: %s" % [id, b])
 				# typische Fehler müssen erkannt werden
-				var falsch := [
-					{"L1": "SJ1_NC", "L2": "SJ2_NO", "L3": "BRUECKE"},
-					{"L1": "SJ1_NC", "L2": "SJ2_NO", "L3": "QA1_NC"},
-					{"L1": "SJ2_NO", "L2": "SJ1_NC", "L3": "QA1_NO"},
-					{"L1": "BRUECKE", "L2": "SJ2_NO", "L3": "QA1_NO"},
-				]
-				for b in falsch:
+				for b in v.get("falsch", []):
 					pruefe(not Logik.schaltung_richtig(a, b), "%s: falsche Schaltung akzeptiert: %s" % [id, b])
 
 	# Zahlen lesen

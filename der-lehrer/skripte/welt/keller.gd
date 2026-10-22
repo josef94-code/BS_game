@@ -1,5 +1,5 @@
 class_name Keller
-extends Node3D
+extends Bereich
 ## Hausmeisterkeller der Lincoln High mit Büro-Ecke des Lehrers.
 ## Wird komplett aus Grundkörpern gebaut. Enthält die drei Anlagen des Prototyps:
 ## flackernde Leuchte (Abzweigdose), Klingelanlage, Förderband mit Schaltschrank.
@@ -8,9 +8,6 @@ const B := 12.0   # halbe Breite (x)
 const T := 9.0    # halbe Tiefe (z)
 const H := 4.2    # Raumhöhe
 
-## Für die Minimap: Liste aus {"r": Rect2(x, z, breite, tiefe), "f": Color}
-var formen: Array = []
-var stationen := {}
 var spawn := Vector3(-10.0, 0.0, 6.8)
 var spawn_blick := -PI / 2.0
 var lehrer_pos := Vector3(9.0, 0.0, 7.25)
@@ -39,14 +36,8 @@ var _lampe_stoerung: StandardMaterial3D
 var _schranktuer: Node3D
 var _rose: Node3D
 var _schraubendreher: Node3D
-var _marker: Node3D
-var _sammel := {}
 var _zeit := 0.0
 var _led_mats: Array[StandardMaterial3D] = []
-## Lichter, die je nach Grafikstufe Schatten werfen (wichtigste zuerst)
-var _schatten_lichter: Array[Light3D] = []
-var _staub: Array[CPUParticles3D] = []
-var _umwelt: Environment
 var _nas_alarm: StandardMaterial3D
 var _led_takt := 0.0
 var _uhr_stunde: Node3D
@@ -65,6 +56,9 @@ var m_karton: StandardMaterial3D
 
 
 func _ready() -> void:
+	titel = "Keller"
+	_boden_form(-B, -T, B, T, Color(0.42, 0.44, 0.42), "Keller")
+	symbole.append({"p": Vector3(-B + 0.4, 0, 7.0), "t": "↑", "f": Color(0.3, 1.0, 0.5)})
 	m_beton = Bau.mat(Color(0.75, 0.75, 0.75), "beton", 0.3, 0.0, false)
 	m_wand = Bau.mat(Color(1, 1, 1), "ziegel", 0.45, 0.0, false)
 	m_wandfarbe = Bau.mat(Color(0.2, 0.42, 0.36), "beton", 0.5, 0.0, false)
@@ -85,16 +79,8 @@ func _ready() -> void:
 	_details()
 	_netzwerkschrank()
 	_sammelobjekte()
-	_marker_bauen()
 	_schattenkanten()
-	var n := Bau.zusammenfassen(self, 12.0)
-	print("Keller: %d Teile zusammengefasst" % n)
-	Grafik.geaendert.connect(_grafik_anwenden)
-	_grafik_anwenden()
-
-
-func _form(mitte_x: float, mitte_z: float, breite: float, tiefe: float, farbe: Color) -> void:
-	formen.append({"r": Rect2(mitte_x - breite * 0.5, mitte_z - tiefe * 0.5, breite, tiefe), "f": farbe})
+	_fertigstellen(12.0)
 
 
 # ---------------------------------------------------------------- Umgebung & Licht
@@ -118,10 +104,7 @@ func _umgebung() -> void:
 	env.adjustment_enabled = true
 	env.adjustment_saturation = 1.05
 	env.adjustment_contrast = 1.1
-	_umwelt = env
-	var we := WorldEnvironment.new()
-	we.environment = env
-	add_child(we)
+	umwelt = env
 
 	# Deckenlampen (warmes Licht, Lichtkegel)
 	var l1 := _lampe(Vector3(-6.0, H, 5.5), Color(1.0, 0.78, 0.5), 1.4, 7.5, false)
@@ -144,80 +127,6 @@ func _umgebung() -> void:
 	add_child(spot)
 	_schatten_lichter.append(spot)
 	Bau.lichtkegel(self, Vector3(8.8, H - 0.1, 5.4), H - 0.1, 2.6, Color(1.0, 0.75, 0.45), 0.08)
-
-
-func _roehre(pos: Vector3) -> void:
-	var gehaeuse := Bau.mat(Color(0.75, 0.75, 0.72), "metall", 1.0, 0.0)
-	Bau.box(self, Vector3(1.4, 0.07, 0.22), pos - Vector3(0, 0.05, 0), gehaeuse)
-	for dz in [-0.05, 0.05]:
-		Bau.zylinder(self, 0.018, 1.3, pos - Vector3(0, 0.1, dz), Bau.leucht(Color(0.85, 1.0, 0.9), 3.0), Vector3(0, 0, PI / 2))
-	var l := OmniLight3D.new()
-	l.position = pos - Vector3(0, 0.35, 0)
-	l.light_color = Color(0.72, 0.95, 0.82)
-	l.light_energy = 1.1
-	l.omni_range = 7.0
-	l.omni_attenuation = 1.4
-	add_child(l)
-	Bau.lichtkegel(self, pos - Vector3(0, 0.12, 0), pos.y - 0.12, 2.3, Color(0.7, 1.0, 0.85), 0.035)
-
-
-## Hängelampe mit Schirm: Spotlicht nach unten (Schatten kosten nur einen Durchgang)
-func _lampe(pos: Vector3, farbe: Color, energie: float, reichweite: float, schatten: bool) -> SpotLight3D:
-	var kabel_laenge := 0.55
-	Bau.zylinder(self, 0.012, kabel_laenge, pos - Vector3(0, kabel_laenge * 0.5, 0), m_dunkel)
-	var schirm_m := Bau.mat(Color(0.12, 0.3, 0.2), "", 1.0, 0.012)
-	Bau.zylinder(self, 0.38, 0.28, pos - Vector3(0, kabel_laenge + 0.12, 0), schirm_m, Vector3.ZERO, false, 0.1)
-	var birne := Bau.leucht(farbe, 4.0)
-	Bau.kugel(self, 0.09, pos - Vector3(0, kabel_laenge + 0.27, 0), birne)
-	var l := SpotLight3D.new()
-	l.position = pos - Vector3(0, kabel_laenge + 0.3, 0)
-	l.rotation.x = -PI / 2
-	l.light_color = farbe
-	l.light_energy = energie * 1.8
-	l.spot_range = reichweite
-	l.spot_angle = 70.0
-	l.spot_angle_attenuation = 0.6
-	l.spot_attenuation = 0.9
-	l.shadow_enabled = schatten
-	l.shadow_bias = 0.04
-	add_child(l)
-	var kegel := Bau.lichtkegel(self, pos - Vector3(0, kabel_laenge + 0.26, 0), pos.y - kabel_laenge - 0.26, 1.9, farbe, 0.065)
-	l.set_meta("kegel", kegel)
-	l.set_meta("birne", birne)
-	_staub_neu(pos - Vector3(0, kabel_laenge + 1.6, 0), farbe)
-	return l
-
-
-## Schwebender Staub im Lichtkegel (nur Mittel/Hoch)
-func _staub_neu(pos: Vector3, farbe: Color) -> void:
-	var p := CPUParticles3D.new()
-	p.position = pos
-	p.amount = 60
-	p.lifetime = 9.0
-	p.preprocess = 9.0
-	p.emission_shape = CPUParticles3D.EMISSION_SHAPE_BOX
-	p.emission_box_extents = Vector3(1.0, 1.4, 1.0)
-	p.gravity = Vector3(0, -0.006, 0)
-	p.direction = Vector3(0, 1, 0)
-	p.spread = 180.0
-	p.initial_velocity_min = 0.01
-	p.initial_velocity_max = 0.05
-	p.scale_amount_min = 0.5
-	p.scale_amount_max = 1.2
-	var q := QuadMesh.new()
-	q.size = Vector2(0.012, 0.012)
-	var m := StandardMaterial3D.new()
-	m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	m.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
-	m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	m.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
-	m.albedo_texture = Bau.fleck_rund_tex()
-	m.albedo_color = Color(farbe.r, farbe.g, farbe.b, 0.55)
-	q.material = m
-	p.mesh = q
-	p.set_meta("dynamisch", true)
-	add_child(p)
-	_staub.append(p)
 
 
 ## Weiche Schattenkanten: dunkle Verläufe am Wandfuß und Schattenflecken unter großen Möbeln
@@ -271,21 +180,6 @@ func _schattenkanten() -> void:
 		mi.position = f[0] + Vector3(0, 0.008, 0)
 		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		add_child(mi)
-
-
-## Grafikstufe: Schatten, Staub und Leuchten anpassen
-func _grafik_anwenden() -> void:
-	var schatten := 0
-	match Grafik.stufe:
-		"mittel": schatten = 2
-		"hoch": schatten = _schatten_lichter.size()
-	for i in _schatten_lichter.size():
-		_schatten_lichter[i].shadow_enabled = i < schatten
-	for p in _staub:
-		p.visible = Grafik.ist("mittel")
-		p.amount = 90 if Grafik.stufe == "hoch" else 45
-	if _umwelt:
-		_umwelt.glow_enabled = Grafik.ist("mittel")
 
 
 # ---------------------------------------------------------------- Raum
@@ -348,6 +242,7 @@ func _raum() -> void:
 	exit_licht.omni_range = 3.0
 	add_child(exit_licht)
 	stationen["tuer"] = Interaktiv.neu(self, "tuer", Vector3(-B + 0.7, 0, 7.0), "Tür nach oben", 1.6)
+	ausgang = stationen["tuer"]
 	# Schilder an den Wänden
 	Bau.schild(self, "LINCOLN HIGH  ·  KELLER / HAUSTECHNIK", Vector3(-3.0, 2.75, -T + 0.02), 56, Color(0.95, 0.85, 0.6), 0.0, 8)
 	Bau.schild(self, "UNBEFUGTEN IST DER ZUTRITT VERBOTEN", Vector3(-B + 0.03, 2.2, 3.5), 34, Color(0.95, 0.2, 0.15), PI / 2, 6)
@@ -1212,81 +1107,6 @@ func _sammelobjekte() -> void:
 	_sammel_neu("s_hilfsschalter", Vector3(-5.25, 0.25, T - 0.3))
 
 
-func _sammel_neu(id: String, pos: Vector3) -> void:
-	var k := Node3D.new()
-	k.position = pos
-	add_child(k)
-	match id:
-		"s_widerstand":
-			Bau.kapsel(k, 0.03, 0.14, Vector3.ZERO, Bau.mat(Color(0.85, 0.75, 0.55)), Vector3(0, 0, PI / 2))
-			var ringe := [Color(0.95, 0.8, 0.1), Color(0.5, 0.15, 0.6), Color(0.45, 0.25, 0.1), Color(0.85, 0.7, 0.2)]
-			for i in 4:
-				Bau.zylinder(k, 0.032, 0.012, Vector3(-0.04 + i * 0.025, 0, 0), Bau.mat(ringe[i]), Vector3(0, 0, PI / 2))
-			Bau.zylinder(k, 0.004, 0.32, Vector3.ZERO, m_metall, Vector3(0, 0, PI / 2))
-		"s_diode":
-			Bau.zylinder(k, 0.025, 0.1, Vector3.ZERO, m_dunkel, Vector3(0, 0, PI / 2))
-			Bau.zylinder(k, 0.026, 0.015, Vector3(0.035, 0, 0), m_metall, Vector3(0, 0, PI / 2))
-			Bau.zylinder(k, 0.004, 0.28, Vector3.ZERO, m_metall, Vector3(0, 0, PI / 2))
-		_:
-			Bau.box(k, Vector3(0.1, 0.12, 0.08), Vector3.ZERO, Bau.mat(Color(0.35, 0.37, 0.4)))
-			Bau.box(k, Vector3(0.06, 0.02, 0.085), Vector3(0, 0.03, 0), Bau.mat(Color(0.9, 0.9, 0.9)))
-	var funkeln := Bau.kugel(k, 0.06, Vector3.ZERO, Bau.leucht(Color(1.0, 0.85, 0.3), 1.2))
-	funkeln.name = "Funkeln"
-	(funkeln.material_override as StandardMaterial3D).transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	(funkeln.material_override as StandardMaterial3D).albedo_color.a = 0.35
-	k.set_meta("dynamisch", true)
-	_sammel[id] = k
-	stationen["sammel:" + id] = Interaktiv.neu(self, "sammel:" + id, Vector3(pos.x, 0, pos.z), "Etwas glitzert hier …", 1.4)
-
-
-func sammel_entfernen(id: String) -> void:
-	if _sammel.has(id):
-		_sammel[id].queue_free()
-		_sammel.erase(id)
-	if stationen.has("sammel:" + id):
-		stationen["sammel:" + id].queue_free()
-		stationen.erase("sammel:" + id)
-
-
-# ---------------------------------------------------------------- Missionsmarker
-
-func _marker_bauen() -> void:
-	_marker = Node3D.new()
-	_marker.set_meta("dynamisch", true)
-	_marker.visible = false
-	add_child(_marker)
-	var s := ShaderMaterial.new()
-	s.shader = preload("res://shader/marker.gdshader")
-	var cm := CylinderMesh.new()
-	cm.top_radius = 0.6
-	cm.bottom_radius = 0.6
-	cm.height = 2.2
-	cm.cap_top = false
-	cm.cap_bottom = false
-	cm.radial_segments = 32
-	var mi := MeshInstance3D.new()
-	mi.mesh = cm
-	mi.material_override = s
-	mi.position.y = 1.1
-	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	_marker.add_child(mi)
-	var ring := Bau.torus(_marker, 0.5, 0.62, Vector3(0, 0.03, 0), Bau.leucht(Color(1.0, 0.8, 0.1), 2.5))
-	ring.name = "Ring"
-	ring.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-
-
-func marker_setzen(pos: Variant) -> void:
-	if pos == null:
-		_marker.visible = false
-	else:
-		_marker.visible = true
-		_marker.position = pos
-
-
-func marker_pos() -> Variant:
-	return _marker.position if _marker.visible else null
-
-
 # ---------------------------------------------------------------- Animation
 
 func _process(delta: float) -> void:
@@ -1335,11 +1155,4 @@ func _process(delta: float) -> void:
 	var minuten := float(Spielstand.d.get("uhrzeit", 1290.0))
 	_uhr_minute.rotation.z = -fmod(minuten, 60.0) / 60.0 * TAU
 	_uhr_stunde.rotation.z = -fmod(minuten / 60.0, 12.0) / 12.0 * TAU
-	# Marker & Sammelobjekte
-	if _marker.visible:
-		_marker.get_node("Ring").scale = Vector3.ONE * (1.0 + sin(_zeit * 3.0) * 0.08)
-	for id in _sammel:
-		var k: Node3D = _sammel[id]
-		k.rotation.y += delta * 1.5
-		var f := k.get_node("Funkeln") as Node3D
-		f.scale = Vector3.ONE * (0.8 + 0.4 * absf(sin(_zeit * 2.0 + k.position.x)))
+	_sammel_animieren(delta)
