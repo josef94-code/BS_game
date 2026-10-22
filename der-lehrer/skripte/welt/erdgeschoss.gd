@@ -594,6 +594,7 @@ func _infoscreen() -> void:
 	var schirm := Bau.box(self, Vector3(1.66, 0.94, 0.01), Vector3(x, 1.75, z + 0.045), _schirm_mat)
 	schirm.set_meta("dynamisch", true)
 	_schirm_text = Bau.schild(self, "VERTRETUNGSPLAN\n\nMT10   1.–2. Std.  ET  →  R 104\nMT10   3.–4. Std.  LtK  →  R 106\nMT11   5. Std.  entfällt\n\nGO LIONS!", Vector3(x, 1.75, z + 0.055), 22, Color(0.9, 0.95, 1.0))
+	_schirm_text.visibility_range_end = 16.0
 	_schirm_text.visible = false
 	Bau.schild(self, "INFOSCREEN", Vector3(x, 2.4, z + 0.04), 18, Color(0.9, 0.9, 0.9), 0.0, 4)
 	# Access Point an der Decke
@@ -778,7 +779,7 @@ func _essensausgabe() -> void:
 		Bau.zylinder(self, 0.08, 0.16, Vector3(CX1 - 0.25, 2.2, -1.2 + i * 0.45), Bau.mat([Color(0.9, 0.3, 0.1), Color(0.95, 0.85, 0.3), Color(0.3, 0.55, 0.25)][i % 3], "", 1.0, 0.0), Vector3.ZERO, false, -1.0, 10)
 	Bau.box(self, Vector3(0.05, 1.3, 2.6), Vector3(CX1 - 0.05, 3.2, 0.5), Bau.mat(Color(0.08, 0.1, 0.08), "beton", 2.0, 0.0))
 	Bau.box(self, Vector3(0.04, 1.42, 2.72), Vector3(CX1 - 0.03, 3.2, 0.5), m_holz)
-	Bau.schild(self, "HEUTE BEI ROSALITA\n\nPizza Margherita ....... 2,50\nTacos de la Casa ..... 3,00\nSchoko-Pudding* ...... 1,00\n\n* wenn das Band läuft", Vector3(CX1 - 0.09, 3.2, 0.5), 20, Color(0.95, 0.95, 0.9), -PI / 2)
+	Bau.schild(self, "HEUTE BEI ROSALITA\n\nPizza Margherita ....... 2,50\nTacos de la Casa ..... 3,00\nSchoko-Pudding* ...... 1,00\n\n* wenn das Band läuft", Vector3(CX1 - 0.09, 3.2, 0.5), 20, Color(0.95, 0.95, 0.9), -PI / 2).visibility_range_end = 22.0
 	_form(CX1 - 0.45, -2.0, 0.8, 3.0, Color(0.7, 0.72, 0.75))
 	_form(CX1 - 0.45, 3.4, 0.8, 2.4, Color(0.7, 0.72, 0.75))
 	# Durchgang in die Küche absperren (die Küche gehört Rosalita)
