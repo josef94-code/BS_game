@@ -20,7 +20,8 @@ func _bauen() -> void:
 	_eingabe.text_submitted.connect(func(_t): absenden.emit())
 	zeile.add_child(_eingabe)
 	zeile.add_child(Stil.label(a.get("einheit", ""), 30, Color.WHITE, 0, Stil.fett()))
-	add_child(Stil.label("Ergebnis mit drei gültigen Stellen, Komma oder Punkt (z. B. 0,157 oder 28,8)." , 17, Color(0.75, 0.75, 0.75)))
+	var hinweis := "Ganze Zahl eingeben." if a.get("ganzzahl", false) else "Ergebnis mit drei gültigen Stellen, Komma oder Punkt (z. B. 0,157 oder 28,8)."
+	add_child(Stil.label(hinweis, 17, Color(0.75, 0.75, 0.75)))
 	_eingabe.grab_focus.call_deferred()
 
 

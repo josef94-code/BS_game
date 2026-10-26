@@ -4268,7 +4268,7 @@
     "typ": "mc",
     "titel": "Wer vergibt die Adresse?",
     "thema": "Logistik und technische Kommunikation",
-    "lehrplan": "LF 5 – Netzwerksysteme und -komponenten, Adressierung (Lernunterlagen LtK 05 Adressierung im Netzwerk, Kap. 1.1)",
+    "lehrplan": "LF 5 – Netzwerksysteme und -komponenten (Lernunterlagen LtK 05 Adressierung im Netzwerk, Kap. 1.1)",
     "schwierigkeit": 1,
     "frage": "Ein Prüfungs-PC in der Aula hat keine Adresse bekommen. Welches Protokoll vergibt automatisch IP-Adresse, Subnetzmaske und Standardgateway?",
     "optionen": [
@@ -4290,7 +4290,7 @@
     "typ": "sortieren",
     "titel": "Die Schichten",
     "thema": "Logistik und technische Kommunikation",
-    "lehrplan": "LF 5 – Netzwerksysteme und -komponenten, Adressierung (Lernunterlagen LtK 05 Adressierung im Netzwerk, Kap. 2)",
+    "lehrplan": "LF 5 – Netzwerksysteme und -komponenten (Lernunterlagen LtK 05 Adressierung im Netzwerk, Kap. 2)",
     "schwierigkeit": 2,
     "frage": "Kowalski hat die Karteikarten zum OSI-Modell fallen lassen (Auszug: fünf der sieben Schichten). Sortiere sie – oben die höchste Schicht, unten die niedrigste.",
     "elemente": [
@@ -4310,7 +4310,7 @@
     "typ": "berechnung",
     "titel": "Binär",
     "thema": "Logistik und technische Kommunikation",
-    "lehrplan": "LF 5 – Netzwerksysteme und -komponenten, Adressierung (Lernunterlagen LtK 05 Adressierung im Netzwerk, Kap. 3.3, 3.4)",
+    "lehrplan": "LF 5 – Netzwerksysteme und -komponenten (Lernunterlagen LtK 05 Adressierung im Netzwerk, Kap. 3.3, 3.4)",
     "schwierigkeit": 2,
     "frage": "Auf dem Etikett des fremden Geräts hinter dem Prüfungsserver steht eine Gerätenummer im Dualsystem: {B}₂. Wandle sie in eine Dezimalzahl um.",
     "varianten": [
@@ -4349,7 +4349,7 @@
     "typ": "berechnung",
     "titel": "Hexadezimal",
     "thema": "Logistik und technische Kommunikation",
-    "lehrplan": "LF 5 – Netzwerksysteme und -komponenten, Adressierung (Lernunterlagen LtK 05 Adressierung im Netzwerk, Kap. 3.6, 3.8)",
+    "lehrplan": "LF 5 – Netzwerksysteme und -komponenten (Lernunterlagen LtK 05 Adressierung im Netzwerk, Kap. 3.6, 3.8)",
     "schwierigkeit": 3,
     "frage": "In der Konfiguration des fremden Geräts steht eine Portnummer hexadezimal: {H}₁₆. Wandle sie in eine Dezimalzahl um.",
     "varianten": [
@@ -4388,7 +4388,7 @@
     "typ": "mc",
     "titel": "An alle",
     "thema": "Logistik und technische Kommunikation",
-    "lehrplan": "LF 5 – Netzwerksysteme und -komponenten, Adressierung (Lernunterlagen LtK 05 Adressierung im Netzwerk, Kap. 5.1)",
+    "lehrplan": "LF 5 – Netzwerksysteme und -komponenten (Lernunterlagen LtK 05 Adressierung im Netzwerk, Kap. 5.1)",
     "schwierigkeit": 2,
     "frage": "Das Prüfungsnetz in der Aula hat die Netzadresse 192.168.10.0 mit der Subnetzmaske 255.255.255.0. Welche Adresse ist die Broadcast-Adresse?",
     "optionen": [
@@ -4411,7 +4411,7 @@
     "typ": "mc",
     "titel": "Doppelt vergeben",
     "thema": "Logistik und technische Kommunikation",
-    "lehrplan": "LF 5 – Netzwerksysteme und -komponenten, Adressierung (Lernunterlagen LtK 05 Adressierung im Netzwerk, Kap. 5.1, 6)",
+    "lehrplan": "LF 5 – Netzwerksysteme und -komponenten (Lernunterlagen LtK 05 Adressierung im Netzwerk, Kap. 5.1, 6)",
     "schwierigkeit": 2,
     "frage": "Kowalskis Adressliste: Router 192.168.10.1 · Prüfungsserver 192.168.10.10 · Prüfungs-PCs .11 bis .19 · Anzeige im Flur .20. Das fremde Gerät hinter dem Server hat sich ebenfalls die Adresse 192.168.10.10 gegeben. Was passiert?",
     "optionen": [
@@ -4573,7 +4573,7 @@
     "typ": "mc",
     "titel": "Prüfung 6: Fest oder automatisch?",
     "thema": "Logistik und technische Kommunikation",
-    "lehrplan": "LF 5 – Netzwerksysteme und -komponenten, Adressierung (Lernunterlagen LtK 05 Adressierung im Netzwerk, Kap. 4.1)",
+    "lehrplan": "LF 5 – Netzwerksysteme und -komponenten (Lernunterlagen LtK 05 Adressierung im Netzwerk, Kap. 4.1)",
     "schwierigkeit": 2,
     "frage": "Welche Geräte im Prüfungsnetz sollten eine statische (fest eingetragene) IP-Adresse bekommen?",
     "optionen": [
@@ -4596,7 +4596,7 @@
     "typ": "mc",
     "titel": "Prüfung 7: MAC und IP",
     "thema": "Logistik und technische Kommunikation",
-    "lehrplan": "LF 5 – Netzwerksysteme und -komponenten, Adressierung (Lernunterlagen LtK 05 Adressierung im Netzwerk, Kap. 4.2)",
+    "lehrplan": "LF 5 – Netzwerksysteme und -komponenten (Lernunterlagen LtK 05 Adressierung im Netzwerk, Kap. 4.2)",
     "schwierigkeit": 2,
     "frage": "Welche Aussagen über MAC-Adresse und IP-Adresse sind richtig?",
     "optionen": [
@@ -4619,7 +4619,7 @@
     "typ": "mc",
     "titel": "Prüfung 8: Höchstens 255",
     "thema": "Logistik und technische Kommunikation",
-    "lehrplan": "LF 5 – Netzwerksysteme und -komponenten, Adressierung (Lernunterlagen LtK 05 Adressierung im Netzwerk, Kap. 4)",
+    "lehrplan": "LF 5 – Netzwerksysteme und -komponenten (Lernunterlagen LtK 05 Adressierung im Netzwerk, Kap. 4)",
     "schwierigkeit": 2,
     "frage": "Warum kann ein Block einer IPv4-Adresse höchstens den Wert 255 haben?",
     "optionen": [

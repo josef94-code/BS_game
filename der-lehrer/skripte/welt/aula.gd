@@ -207,7 +207,7 @@ func _buehne() -> void:
 	var leinwand := Bau.leucht(Color(0.92, 0.94, 0.98), 0.6)
 	Bau.box(self, Vector3(7.4, 3.4, 0.04), Vector3(0, 3.4, -Z + 0.06), leinwand)
 	Bau.box(self, Vector3(7.6, 0.12, 0.12), Vector3(0, 5.15, -Z + 0.08), m_dunkel)
-	_leinwand_text = Bau.schild(self, "ABSCHLUSSPRÜFUNG MT10\n\nElektrotechnik · Steuerungstechnik · Netzwerke\n\nBeginn: 8:00 Uhr", Vector3(0, 3.4, -Z + 0.1), 64, Color(0.1, 0.12, 0.3))
+	_leinwand_text = Bau.schild(self, "ABSCHLUSSPRÜFUNG MT10\n\nElektrotechnik · Steuerungstechnik · Netzwerke\n\nBeginn: 8:00 Uhr", Vector3(0, 3.4, -Z + 0.1), 52, Color(0.1, 0.12, 0.3))
 	_leinwand_text.visibility_range_end = 40.0
 	_leinwand_text.set_meta("dynamisch", true)
 	Bau.box(self, Vector3(0.5, 0.2, 0.4), Vector3(0, H - 0.5, -1.0), m_dunkel)
@@ -291,27 +291,31 @@ func _server() -> void:
 	add_child(r)
 	var schrank := Bau.mat(Color(0.16, 0.17, 0.19), "metall", 1.0, 0.012)
 	Bau.box(r, Vector3(0.6, 2.0, 0.8), Vector3(0, 1.0, 0), schrank)
-	Bau.box(r, Vector3(0.02, 1.9, 0.74), Vector3(0.31, 1.0, 0), Bau.glas(Color(0.3, 0.35, 0.45, 0.25)))
+	Bau.box(r, Vector3(0.02, 1.9, 0.74), Vector3(0.315, 1.0, 0), Bau.glas(Color(0.3, 0.35, 0.45, 0.12)))
 	for i in 6:
 		var y := 0.4 + i * 0.26
-		Bau.box(r, Vector3(0.5, 0.16, 0.7), Vector3(0.02, y, 0), Bau.mat(Color(0.28, 0.3, 0.33), "metall", 1.0, 0.0))
+		Bau.box(r, Vector3(0.5, 0.16, 0.7), Vector3(0.04, y, 0), Bau.mat(Color(0.5, 0.52, 0.56), "metall", 1.0, 0.0))
 		for k in 4:
 			var led := StandardMaterial3D.new()
 			led.albedo_color = Color(0.9, 0.5, 0.1)
 			led.emission_enabled = true
 			led.emission = Color(0.9, 0.5, 0.1)
 			led.emission_energy_multiplier = 2.0
-			Bau.box(r, Vector3(0.01, 0.02, 0.02), Vector3(0.28, y + 0.04, -0.25 + k * 0.12), led)
+			Bau.box(r, Vector3(0.012, 0.035, 0.05), Vector3(0.3, y + 0.03, -0.25 + k * 0.12), led)
 			_server_leds.append(led)
 	Bau.schild(r, "PRÜFUNGSSERVER\n192.168.10.10", Vector3(0.32, 1.85, 0), 22, Color(0.95, 0.95, 0.9), PI / 2, 3)
 	Bau.kollisionsbox(r, Vector3(0.6, 2.0, 0.8), Vector3(0, 1.0, 0))
+	# Arbeitsleuchte über dem Schrank
+	var l := _lampe(Vector3(-X + 1.3, H, -4.0), Color(1.0, 0.9, 0.7), 1.1, 6.0, false, Color(0.2, 0.22, 0.25), 2.4)
+	_lichter.append(l)
+	_energie[l] = l.light_energy
 	_form(-X + 0.45, -4.2, 0.6, 0.8, Color(0.25, 0.27, 0.3))
 	# Patchkabel zum Bodenkanal
 	for k in 4:
 		Bau.zylinder(self, 0.01, 0.9, Vector3(-X + 0.78, 0.45, -3.95 + k * 0.05), Bau.mat([Color(0.2, 0.4, 0.85), Color(0.95, 0.75, 0.1)][k % 2]), Vector3(0, 0, 0.15))
 	# Das fremde Kästchen
 	_klon = Node3D.new()
-	_klon.position = Vector3(-X + 0.42, 1.1, -3.7)
+	_klon.position = Vector3(-X + 0.5, 1.1, -3.72)
 	_klon.set_meta("dynamisch", true)
 	add_child(_klon)
 	Bau.box(_klon, Vector3(0.16, 0.05, 0.12), Vector3.ZERO, Bau.mat(Color(0.05, 0.05, 0.05), "", 1.0, 0.0))

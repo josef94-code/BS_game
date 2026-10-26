@@ -47,6 +47,8 @@ func _ready() -> void:
 	_kopf_titel = Stil.label("", 34, Stil.GOLD_HELL, 6, Stil.fett())
 	kv.add_child(_kopf_titel)
 	_kopf_info = Stil.label("", 18, Color(0.75, 0.75, 0.75))
+	# lange Lehrplanangaben umbrechen, sonst wird das Fenster breiter als der Bildschirm
+	_kopf_info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	kv.add_child(_kopf_info)
 	_schritt = Stil.label("", 24, Color.WHITE, 0, Stil.fett())
 	kopf.add_child(_schritt)
