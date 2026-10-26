@@ -24,6 +24,7 @@ var _env_tag: Environment
 var _himmel_mat: StandardMaterial3D
 var _lichter: Array[Light3D] = []
 var _energie := {}
+var _energie_basis := {}
 var _sonne: Array[Node3D] = []
 var _server_leds: Array[StandardMaterial3D] = []
 var _klon: Node3D
@@ -84,10 +85,13 @@ func _umgebung() -> void:
 	_env_tag = _env_nacht.duplicate()
 	_env_tag.background_color = Color(0.55, 0.7, 0.9)
 	_env_tag.ambient_light_color = Color(0.95, 0.9, 0.8)
-	_env_tag.ambient_light_energy = 0.95
-	_env_tag.fog_light_color = Color(0.75, 0.72, 0.65)
-	_env_tag.fog_density = 0.012
-	_env_tag.adjustment_saturation = 1.12
+	_env_tag.ambient_light_energy = 0.7
+	_env_tag.tonemap_exposure = 0.95
+	_env_tag.fog_light_color = Color(0.6, 0.62, 0.65)
+	_env_tag.fog_density = 0.004
+	_env_tag.glow_intensity = 0.35
+	_env_tag.glow_hdr_threshold = 1.3
+	_env_tag.adjustment_saturation = 1.1
 	umwelt = _env_nacht
 	for x in [-6.0, 0.0, 6.0]:
 		for z in [-3.0, 3.5]:
@@ -108,7 +112,10 @@ func _umgebung() -> void:
 		_lichter.append(s)
 		Bau.zylinder(self, 0.14, 0.32, Vector3(x, H - 0.25, -3.0), m_dunkel, Vector3(-0.75, 0, 0))
 	for l in _lichter:
+		_energie_basis[l] = l.light_energy
 		_energie[l] = l.light_energy
+		if l.has_meta("kegel"):
+			(l.get_meta("kegel") as Node3D).set_meta("dynamisch", true)
 
 
 func _raum() -> void:
@@ -308,6 +315,7 @@ func _server() -> void:
 	# Arbeitsleuchte über dem Schrank
 	var l := _lampe(Vector3(-X + 1.3, H, -4.0), Color(1.0, 0.9, 0.7), 1.1, 6.0, false, Color(0.2, 0.22, 0.25), 2.4)
 	_lichter.append(l)
+	_energie_basis[l] = l.light_energy
 	_energie[l] = l.light_energy
 	_form(-X + 0.45, -4.2, 0.6, 0.8, Color(0.25, 0.27, 0.3))
 	# Patchkabel zum Bodenkanal
@@ -380,6 +388,12 @@ func tageszeit(p_morgen: bool) -> void:
 	_himmel_mat.albedo_texture = _tag_himmel_tex() if morgen else Erdgeschoss._himmel_tex()
 	for s in _sonne:
 		s.visible = morgen
+	# bei Tag sind die Hängelampen gedimmt, ihre Lichtkegel unsichtbar
+	for l in _lichter:
+		_energie[l] = _energie_basis[l] * (0.35 if morgen else 1.0)
+		l.light_energy = _energie[l]
+		if l.has_meta("kegel"):
+			(l.get_meta("kegel") as Node3D).visible = not morgen
 	_uhr_text.text = "7:55" if morgen else "21:45"
 	_grafik_anwenden()
 
