@@ -24,6 +24,7 @@ var rosalita_blick := PI / 2.0
 var leitung_ok := false
 var funk_ok := false
 var bedienstelle_ok := false
+var kochstation_ok := false
 
 var _zeit := 0.0
 var _takt := 0.0
@@ -49,6 +50,12 @@ var _rollen: Array[Node3D] = []
 var _pf1: StandardMaterial3D
 var _abdeckung: Node3D
 var _foto: Node3D
+var _absperrung: Node3D
+var _platten: Array[StandardMaterial3D] = []
+var _waermeplatte: StandardMaterial3D
+var _blende: Node3D
+var _einsatzplan: Node3D
+var _dampf: CPUParticles3D
 
 var m_metall: StandardMaterial3D
 var m_dunkel: StandardMaterial3D
@@ -64,6 +71,7 @@ func _ready() -> void:
 	_boden_form(FX0, -FZ, FX1, FZ, Color(0.5, 0.5, 0.46), "Flur")
 	_boden_form(FX1, -CZ, CX1, CZ, Color(0.5, 0.42, 0.4), "Cafeteria")
 	symbole.append({"p": Vector3(FX0 + 0.4, 0, -1.3), "t": "↓", "f": Color(0.3, 1.0, 0.5)})
+	symbole.append({"p": Vector3(FX0 + 0.4, 0, 1.3), "t": "↑", "f": Color(0.3, 1.0, 0.5)})
 	m_metall = Bau.mat(Color(0.75, 0.77, 0.8), "metall", 1.0, 0.01)
 	m_dunkel = Bau.mat(Color(0.12, 0.12, 0.13), "", 1.0, 0.01)
 	m_weiss = Bau.mat(Color(0.92, 0.92, 0.9), "", 1.0, 0.0)
@@ -83,6 +91,7 @@ func _ready() -> void:
 	_band()
 	_bedienstelle()
 	_automaten()
+	_kochstation()
 	_fenster_licht()
 	_sammelobjekte()
 	_schatten()
@@ -181,14 +190,17 @@ func _flur_raum() -> void:
 	exit_licht.light_energy = 0.7
 	exit_licht.omni_range = 3.0
 	add_child(exit_licht)
-	# Absperrband vor der Treppe nach oben
+	# Absperrband vor der Treppe nach oben (Kowalski entfernt es im Finale)
+	_absperrung = Node3D.new()
+	_absperrung.set_meta("dynamisch", true)
+	add_child(_absperrung)
 	var band_m := Bau.mat(Color(0.95, 0.75, 0.05), "", 1.0, 0.0)
 	for i in 2:
-		var absperr := Bau.box(self, Vector3(0.02, 0.08, 1.3), Vector3(FX0 + 0.35, 0.95 + i * 0.35, 1.3), band_m)
+		var absperr := Bau.box(_absperrung, Vector3(0.02, 0.08, 1.3), Vector3(FX0 + 0.35, 0.95 + i * 0.35, 1.3), band_m)
 		absperr.rotation.x = 0.08 * (1 - i * 2)
-	Bau.schild(self, "BAUSTELLE\nSTERLING BAU", Vector3(FX0 + 0.38, 1.3, 1.3), 22, Color(0.1, 0.1, 0.1), PI / 2)
+	Bau.schild(_absperrung, "BAUSTELLE\nSTERLING BAU", Vector3(FX0 + 0.38, 1.3, 1.3), 22, Color(0.1, 0.1, 0.1), PI / 2)
 	stationen["treppe"] = Interaktiv.neu(self, "treppe", Vector3(FX0 + 0.7, 0, -1.3), "Treppe zum Keller", 1.5)
-	stationen["verschlossen:oben"] = Interaktiv.neu(self, "verschlossen:oben", Vector3(FX0 + 0.8, 0, 1.4), "Treppe nach oben", 1.2)
+	stationen["oben"] = Interaktiv.neu(self, "oben", Vector3(FX0 + 0.8, 0, 1.4), "Treppe nach oben", 1.2)
 	# Ostende: Durchgang in die Cafeteria
 	var schild_bg := Bau.mat(Color(0.5, 0.08, 0.1), "", 1.0, 0.0)
 	Bau.box(self, Vector3(0.06, 0.45, 2.6), Vector3(FX1 - 0.04, 3.1, 0), schild_bg)
@@ -259,8 +271,9 @@ func _spinde() -> void:
 	stationen["werkstatt"] = Interaktiv.neu(self, "werkstatt", Vector3(13.1, 0, FZ - 0.8), "Werkstatt", 1.2)
 	symbole.append({"p": Vector3(12.3, 0, -FZ - 0.4), "t": "T", "f": Color(0.3, 1.0, 0.5)})
 	symbole.append({"p": Vector3(13.1, 0, FZ + 0.4), "t": "W", "f": Color(0.3, 1.0, 0.5)})
-	tueren = {"treppe": "Keller", "turnhalle": "Turnhalle", "werkstatt": "Werkstatt"}
-	ankunft = {"Keller": [spawn, spawn_blick], "Turnhalle": [Vector3(12.3, 0, -FZ + 1.5), PI], "Werkstatt": [Vector3(13.1, 0, FZ - 1.5), 0.0]}
+	tueren = {"treppe": "Keller", "turnhalle": "Turnhalle", "werkstatt": "Werkstatt", "oben": "Aula"}
+	ankunft = {"Keller": [spawn, spawn_blick], "Turnhalle": [Vector3(12.3, 0, -FZ + 1.5), PI], "Werkstatt": [Vector3(13.1, 0, FZ - 1.5), 0.0],
+		"Aula": [Vector3(FX0 + 1.6, 0, 1.3), -PI / 2.0]}
 	stationen["verschlossen:mt10"] = Interaktiv.neu(self, "verschlossen:mt10", Vector3(-10.2, 0, -FZ + 0.8), "Klassenzimmer der MT10", 1.0)
 	stationen["verschlossen:sekretariat"] = Interaktiv.neu(self, "verschlossen:sekretariat", Vector3(-6.8, 0, FZ - 0.8), "Sekretariat", 1.0)
 	# Der Spind von Vince Moretti (mit Rosen-Aufkleber)
@@ -1020,6 +1033,115 @@ func _automaten() -> void:
 	add_child(glanz)
 
 
+# ---------------------------------------------------------------- Kochstation (Akt 4)
+
+## Mobile Kochstation für das Prüfungsfrühstück an der Südwand: drei Kochplatten mit
+## Siebentaktschaltern, daneben eine Wärmeplatte im Dauerbetrieb
+func _kochstation() -> void:
+	var k := Node3D.new()
+	k.position = Vector3(28.9, 0, CZ - 0.5)
+	add_child(k)
+	var gehaeuse := Bau.mat(Color(0.78, 0.8, 0.82), "metall", 1.0, 0.01, false, 0.3)
+	Bau.box(k, Vector3(2.4, 0.86, 0.75), Vector3(0, 0.43, 0), gehaeuse)
+	Bau.box(k, Vector3(2.5, 0.05, 0.8), Vector3(0, 0.885, 0), m_stahl)
+	Bau.box(k, Vector3(2.5, 0.5, 0.05), Vector3(0, 1.15, 0.38), m_stahl)
+	# drei Kochplatten: 145, 180 und 220 mm
+	var radien := [0.13, 0.16, 0.19]
+	for i in 3:
+		var platte := StandardMaterial3D.new()
+		platte.albedo_color = Color(0.08, 0.08, 0.09)
+		platte.emission_enabled = true
+		platte.emission = Color(1.0, 0.25, 0.05)
+		platte.emission_energy_multiplier = 0.0 if i == 1 else 0.9
+		Bau.zylinder(k, radien[i], 0.03, Vector3(-0.75 + i * 0.6, 0.92, -0.05), platte, Vector3.ZERO, false, -1.0, 24)
+		Bau.torus(k, radien[i] - 0.005, radien[i] + 0.012, Vector3(-0.75 + i * 0.6, 0.915, -0.05), m_stahl)
+		_platten.append(platte)
+		# Siebentaktschalter mit Stellungen 0–6
+		Bau.zylinder(k, 0.04, 0.03, Vector3(-0.75 + i * 0.6, 0.62, -0.39), m_dunkel, Vector3(PI / 2, 0, 0))
+		Bau.box(k, Vector3(0.01, 0.05, 0.01), Vector3(-0.75 + i * 0.6, 0.64, -0.41), Bau.mat(Color(0.95, 0.95, 0.95)))
+		Bau.schild(k, "0 1 2 3 4 5 6", Vector3(-0.75 + i * 0.6, 0.7, -0.38), 10, Color(0.1, 0.1, 0.1), PI)
+	Bau.box(k, Vector3(0.36, 0.006, 0.36), Vector3(-0.15, 0.93, -0.05), Bau.mat(Color(0.25, 0.25, 0.27)))
+	# Topf auf der kleinen Platte
+	Bau.zylinder(k, 0.12, 0.16, Vector3(-0.75, 1.02, -0.05), m_stahl, Vector3.ZERO, false, -1.0, 16)
+	_dampf = CPUParticles3D.new()
+	_dampf.position = Vector3(-0.75, 1.12, -0.05)
+	_dampf.amount = 16
+	_dampf.lifetime = 1.6
+	_dampf.direction = Vector3.UP
+	_dampf.spread = 12.0
+	_dampf.initial_velocity_min = 0.2
+	_dampf.initial_velocity_max = 0.35
+	_dampf.gravity = Vector3(0, 0.05, 0)
+	_dampf.scale_amount_min = 0.6
+	_dampf.scale_amount_max = 1.4
+	var dm := QuadMesh.new()
+	dm.size = Vector2(0.12, 0.12)
+	var dmat := StandardMaterial3D.new()
+	dmat.albedo_color = Color(1, 1, 1, 0.25)
+	dmat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	dmat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	dmat.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+	dmat.albedo_texture = Bau.fleck_rund_tex()
+	dm.material = dmat
+	_dampf.mesh = dm
+	_dampf.emitting = false
+	k.add_child(_dampf)
+	# Wärmeplatte im Dauerbetrieb
+	_waermeplatte = StandardMaterial3D.new()
+	_waermeplatte.albedo_color = Color(0.25, 0.1, 0.05)
+	_waermeplatte.emission_enabled = true
+	_waermeplatte.emission = Color(1.0, 0.45, 0.15)
+	_waermeplatte.emission_energy_multiplier = 1.4
+	Bau.box(k, Vector3(0.5, 0.03, 0.45), Vector3(0.95 + 0.0, 0.92, -0.05), m_stahl)
+	Bau.box(k, Vector3(0.44, 0.005, 0.39), Vector3(0.95, 0.94, -0.05), _waermeplatte)
+	Bau.schild(k, "KOCHSTATION · PRÜFUNGSFRÜHSTÜCK", Vector3(0, 1.2, 0.35), 18, Color(0.1, 0.1, 0.1), PI)
+	# Notiz von Rosalita
+	Bau.box(k, Vector3(0.22, 0.16, 0.005), Vector3(-0.98, 1.2, 0.35), Bau.mat(Color(1.0, 0.95, 0.55)))
+	Bau.schild(k, "Große Platte:\nStufe 1 kalt!\n– R.", Vector3(-0.98, 1.2, 0.345), 10, Color(0.2, 0.1, 0.1), PI)
+	# Blende unter dem Kochfeld (dahinter klemmt der Einsatzplan)
+	_blende = Node3D.new()
+	_blende.position = Vector3(0, 0.3, -0.38)
+	_blende.set_meta("dynamisch", true)
+	k.add_child(_blende)
+	Bau.box(_blende, Vector3(2.2, 0.4, 0.02), Vector3.ZERO, gehaeuse)
+	for i in 6:
+		Bau.box(_blende, Vector3(0.25, 0.02, 0.01), Vector3(-0.8 + i * 0.32, 0.0, -0.012), m_dunkel)
+	_einsatzplan = Node3D.new()
+	_einsatzplan.position = Vector3(0.45, 0.42, -0.4)
+	_einsatzplan.set_meta("dynamisch", true)
+	_einsatzplan.visible = false
+	k.add_child(_einsatzplan)
+	Bau.box(_einsatzplan, Vector3(0.21, 0.28, 0.004), Vector3.ZERO, Bau.mat(Color(0.96, 0.95, 0.9)))
+	Bau.schild(_einsatzplan, "7:30 Küche\n8:00 Aula\n8:15 Werkstatt\n8:30 Netz\n9:00 ALLES AUS\n– V.M.", Vector3(0, 0, -0.004), 9, Color(0.15, 0.1, 0.35), PI)
+	for i in 5:
+		var w := i * TAU / 5.0
+		Bau.kugel(_einsatzplan, 0.012, Vector3(0.07 + cos(w) * 0.012, -0.11 + sin(w) * 0.012, -0.004), Bau.mat(Color(0.05, 0.02, 0.03)), Vector3(1, 1, 0.3))
+	Bau.kollisionsbox(k, Vector3(2.5, 1.0, 0.8), Vector3(0, 0.5, 0))
+	_form(28.9, CZ - 0.5, 2.5, 0.8, Color(0.78, 0.8, 0.82))
+	stationen["kochstation"] = Interaktiv.neu(self, "kochstation", Vector3(28.9, 0, CZ - 1.6), "Kochstation untersuchen", 1.5)
+
+
+func kochstation_oeffnen(offen: bool, mit_plan: bool = false) -> void:
+	_blende.rotation.x = -1.2 if offen else 0.0
+	_blende.position.z = -0.5 if offen else -0.38
+	_einsatzplan.visible = mit_plan
+	_einsatzplan.scale = Vector3.ONE * (1.6 if mit_plan else 1.0)
+
+
+func kochstation_reparieren() -> void:
+	kochstation_ok = true
+	for p in _platten:
+		p.emission_energy_multiplier = 0.9
+	_waermeplatte.emission_energy_multiplier = 0.0
+	_dampf.emitting = true
+
+
+## Treppenhaus nach oben: Absperrband weg, sobald die Aula offen ist
+func treppe_oben(frei: bool) -> void:
+	_absperrung.visible = not frei
+	stationen["oben"].hinweis = "Treppe hinauf in die Aula" if frei else "Treppe nach oben"
+
+
 # ---------------------------------------------------------------- Mondlicht auf dem Boden
 
 func _fenster_licht() -> void:
@@ -1126,6 +1248,9 @@ func _process(delta: float) -> void:
 			_schirm_mat.emission_energy_multiplier = randf_range(0.6, 1.8)
 			_ap_led.emission_energy_multiplier = 3.0 if fmod(_zeit, 0.8) < 0.4 else 0.1
 		_router_led.emission_energy_multiplier = 3.0 if fmod(_zeit, 0.5) < 0.25 else 0.2
+		# Die große Kochplatte glimmt nur kurz auf (R1 unterbrochen)
+		if not kochstation_ok:
+			_platten[1].emission_energy_multiplier = 0.25 if fmod(_zeit, 3.0) < 0.3 else 0.0
 		# -PF1 ist falsch angeschlossen: aus, obwohl das Band läuft
 		if not bedienstelle_ok:
 			_pf1.emission_energy_multiplier = 0.05

@@ -80,9 +80,14 @@ func _aufbauen() -> void:
 	_karten.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var gefunden: Array = Spielstand.d["beweise"]
 	var positionen := [Vector2(10, 10), Vector2(370, 60), Vector2(130, 330), Vector2(500, 360), Vector2(20, 560)]
-	# je mehr Beweise, desto kleiner die Karten (0 = groß, 1 = kompakt, 2 = Mini)
+	# je mehr Beweise, desto kleiner die Karten (0 = groß, 1 = kompakt, 2 = Mini, 3 = nur Titel)
 	var stufe := 0
-	if gefunden.size() > 9:
+	if gefunden.size() > 12:
+		stufe = 3
+		positionen = []
+		for i in 16:
+			positionen.append(Vector2((i % 4) * 250 + (i / 4 % 2) * 14, (i / 4) * 172 + (i % 2) * 12))
+	elif gefunden.size() > 9:
 		stufe = 2
 		positionen = []
 		for i in 12:
@@ -102,7 +107,7 @@ func _aufbauen() -> void:
 		k.position = positionen[i % positionen.size()]
 		k.rotation = deg_to_rad([-3.0, 2.5, -1.5, 3.0, -2.0][i % 5])
 		_karten.add_child(k)
-		mitten.append(k.position + Vector2([160, 140, 105][stufe], 20))
+		mitten.append(k.position + Vector2([160, 140, 105, 112][stufe], 20))
 	# Roter Faden zwischen den Karten
 	_faeden = Control.new()
 	_faeden.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -143,6 +148,10 @@ func _aufbauen() -> void:
 		verdaechtige += "\nCoach Bradley? Entlastet – sein Schlüssel hängt noch am Bund. Jemand hat ihn kopiert."
 	if Spielstand.hat_beweis("b_vertrag"):
 		verdaechtige = "Sterling Bau: will einen Wartungsvertrag über 480 000 $ – das Motiv.\nVince Moretti und die „Black Roses“ machen die Drecksarbeit."
+	if Spielstand.hat_beweis("b_klon"):
+		verdaechtige += "\nDer falsche Prüfungsserver ist auf Vince Moretti registriert. Zuschlagen wollen sie am Prüfungstag um 9:00 Uhr."
+	if Spielstand.hat_beweis("b_tablet"):
+		verdaechtige = "ÜBERFÜHRT: Vince Moretti und die „Black Roses“ – im Auftrag von Sterling Bau.\nDer Wartungsvertrag wird nicht unterschrieben. Fall abgeschlossen."
 	_rechts.add_child(_zettel("VERDÄCHTIGE", verdaechtige, Color(0.75, 0.88, 1.0)))
 	var teile := []
 	var fehlen := 0
@@ -160,7 +169,7 @@ func _aufbauen() -> void:
 
 func _karte(b: Dictionary, i: int, stufe: int = 0) -> Control:
 	var kompakt := stufe > 0
-	var breite: float = [330.0, 280.0, 215.0][stufe]
+	var breite: float = [330.0, 280.0, 215.0, 228.0][stufe]
 	var p := PanelContainer.new()
 	p.add_theme_stylebox_override("panel", Stil.box(Stil.PAPIER, Color(0.5, 0.4, 0.3), 1, 2))
 	p.custom_minimum_size = Vector2(breite, 0)
@@ -174,14 +183,16 @@ func _karte(b: Dictionary, i: int, stufe: int = 0) -> Control:
 	nr.position = Vector2(10, 6 if kompakt else 18)
 	foto.add_child(nr)
 	v.add_child(foto)
-	var t := Stil.label(b.get("titel", ""), [22, 19, 15][stufe], Color(0.1, 0.05, 0.03), 0, Stil.schreibmaschine())
+	var t := Stil.label(b.get("titel", ""), [22, 19, 15, 15][stufe], Color(0.1, 0.05, 0.03), 0, Stil.schreibmaschine())
 	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	t.custom_minimum_size.x = breite - 30.0
 	v.add_child(t)
 	var text: String = b.get("text", "")
 	if stufe == 2 and text.length() > 120:
 		text = text.substr(0, 117) + " …"
-	var txt := Stil.label(text, [17, 14, 12][stufe], Color(0.15, 0.1, 0.08))
+	elif stufe == 3 and text.length() > 70:
+		text = text.substr(0, 67) + " …"
+	var txt := Stil.label(text, [17, 14, 12, 11][stufe], Color(0.15, 0.1, 0.08))
 	txt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	txt.custom_minimum_size.x = breite - 30.0
 	v.add_child(txt)

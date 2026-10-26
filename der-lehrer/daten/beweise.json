@@ -27,7 +27,7 @@
     },
     "b_lieferschein": {
       "titel": "Lieferschein Sterling Bau",
-      "text": "„J-Y(ST)Y 2×2×0,8 mm² – 200 m – Energieleitung Automaten EG“. Eine Fernmeldeleitung, bestellt als Energieleitung. Stempel: eine kleine schwarze Rose.",
+      "text": "„J-Y(ST)Y 2×2×0,8 – 200 m – Energieleitung Automaten EG“. Eine Fernmeldeleitung mit 0,8 mm Aderdurchmesser, bestellt als Energieleitung. Stempel: eine kleine schwarze Rose.",
       "ort": "Flur, Unterverteilung",
       "farbe": "#b9770e"
     },
@@ -66,6 +66,36 @@
       "text": "Ein kleiner Rechner am Hub der Werkstatt hat den Netzverkehr mitgeschnitten – auch Anmeldungen am Prüfungsserver. Ordner auf der SD-Karte: „MT10_Abschlusspruefung“.",
       "ort": "Werkstatt, Netzwerkecke",
       "farbe": "#145a32"
+    },
+    "b_einsatzplan": {
+      "titel": "Einsatzplan für den Prüfungstag",
+      "text": "Handschrift wie auf dem USB-Stick: „7:30 Küche. 8:00 Aula – Lüftung. 8:15 Werkstatt – Bänder. 8:30 Prüfungsnetz. 9:00 alles aus. – V.M.“",
+      "ort": "Cafeteria, Kochstation",
+      "farbe": "#a04000"
+    },
+    "b_rechnung": {
+      "titel": "Lieferschein Lüftung Aula",
+      "text": "Sterling Bau: „Lüftungsanlage Aula – geliefert, eingebaut, abgenommen. 38 000 Dollar.“ Geliefert wurde nur ein leerer Karton.",
+      "ort": "Turnhalle, Solarlüfter",
+      "farbe": "#2e86c1"
+    },
+    "b_funkmodul": {
+      "titel": "Funkschaltmodul",
+      "text": "Mit SIM-Karte in den Not-Halt-Kreis der Laborbänder eingeschleift. Programmiert: Prüfungstag, 9:00 Uhr – „Bänder aus“. Rückrufnummer: Sterling Bau, Fernwartung.",
+      "ort": "Werkstatt, Laborbänder",
+      "farbe": "#7d3c98"
+    },
+    "b_klon": {
+      "titel": "Falscher Prüfungsserver",
+      "text": "Ein Minirechner mit derselben IP-Adresse wie der Prüfungsserver (192.168.10.10). Aufkleber: Sterling Bau – Baustellen-IT. Seriennummer registriert auf Vince Moretti.",
+      "ort": "Aula, Prüfungsserver",
+      "farbe": "#117864"
+    },
+    "b_tablet": {
+      "titel": "Vince Morettis Tablet",
+      "text": "Fernwartungs-App von Sterling Bau mit allen Zeitplänen der Black Roses. Letzte Aktion: Prüfungstag, 9:00 Uhr – „Alles aus“. Verbindung fehlgeschlagen.",
+      "ort": "Aula, Hintertür",
+      "farbe": "#1b2631"
     }
   },
   "fragen": [
@@ -81,7 +111,11 @@
     { "text": "Was soll am Tag der Abschlussprüfung passieren?", "ab": "b_usb" },
     { "text": "Wer hat den Kellerschlüssel nachmachen lassen?", "ab": "b_schluessel" },
     { "text": "Warum braucht Sterling Bau eine Schule, in der nichts mehr funktioniert?", "ab": "b_vertrag" },
-    { "text": "Wollen die Black Roses die Abschlussprüfung stehlen – oder sabotieren?", "ab": "b_mitschnitt" }
+    { "text": "Wollen die Black Roses die Abschlussprüfung stehlen – oder sabotieren?", "ab": "b_mitschnitt" },
+    { "text": "Wann genau wollen die Black Roses zuschlagen?", "ab": "b_einsatzplan" },
+    { "text": "Wie viele Arbeiten hat Sterling Bau abgerechnet, die nie gemacht wurden?", "ab": "b_rechnung" },
+    { "text": "Wer hätte um 9:00 Uhr die Bänder abgeschaltet?", "ab": "b_funkmodul" },
+    { "text": "Was passiert mit Vince Moretti – und mit Sterling Bau?", "ab": "b_klon" }
   ],
   "sammel": {
     "s_widerstand": {
@@ -119,6 +153,10 @@
     "s_bimetall": {
       "titel": "Bimetallstreifen",
       "text": "Aus einem Motorschutzrelais: Zwei verbundene Metalle dehnen sich verschieden stark aus. Bei Überlast biegt sich der Streifen und löst aus."
+    },
+    "s_zeitrelais": {
+      "titel": "Zeitrelais, ansprechverzögert",
+      "text": "Bekommt die Spule Spannung, schließt der Kontakt 17–18 erst nach der eingestellten Zeit. Fällt die Spule ab, öffnet er sofort. Einsatz nur im Steuerstromkreis."
     }
   }
 }

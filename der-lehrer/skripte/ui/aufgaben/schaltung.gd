@@ -10,6 +10,8 @@ var _info: Label
 var _band: Label
 var _gedrueckt := {}
 var _spulen := {}
+var _zeit_laeuft := {}    # Zeitrelais, deren Verzögerungszeit gerade läuft
+var _zeit_nr := {}        # Zeitrelais -> Zähler, damit abgebrochene Verzögerungen nichts mehr auslösen
 
 
 func _bauen() -> void:
@@ -126,6 +128,8 @@ func _taster(t: String, an: bool) -> void:
 func _simulieren() -> void:
 	var r := AufgabenLogik.simuliere(a, _belegung, _gedrueckt, _spulen)
 	_spulen = r["spulen"]
+	_zeit_pruefen()
+	var zeiten := AufgabenLogik.zeitrelais(a)
 	_plan.spulen_an = _spulen
 	_plan.betaetigt = {}
 	# Kontakte im Plan entsprechend darstellen (Lücken und fest eingezeichnete Kontakte)
@@ -135,9 +139,12 @@ func _simulieren() -> void:
 			if not _belegung.has(el["id"]):
 				continue
 			geraet = String(_belegung[el["id"]]).get_slice("_", 0)
-		elif el["typ"] == "spule":
+		elif el["typ"] in ["spule", "spule_verz"]:
 			continue
-		if _gedrueckt.has(geraet):
+		if zeiten.has(geraet):
+			# verzögerter Kontakt: schaltet erst nach Ablauf der Zeit
+			_plan.betaetigt[el["id"]] = _spulen.get(geraet, false) and _gedrueckt.get(geraet + "_T", false)
+		elif _gedrueckt.has(geraet):
 			_plan.betaetigt[el["id"]] = _gedrueckt[geraet]
 		elif _spulen.has(geraet):
 			_plan.betaetigt[el["id"]] = _spulen[geraet]
@@ -150,7 +157,9 @@ func _simulieren() -> void:
 	var namen: Array = _spulen.keys()
 	namen.sort()
 	for sp in namen:
-		if _spulen[sp]:
+		if _spulen[sp] and _zeit_laeuft.has(sp):
+			an.append("-%s  →  Zeit läuft (%s s) …" % [sp, AufgabenLogik.zahl_text(float(zeiten[sp]))])
+		elif _spulen[sp]:
 			an.append("-%s  →  %s" % [sp, anzeige.get(sp, "Band LÄUFT")])
 	if an.is_empty():
 		_band.text = "Alle Schütze abgefallen  →  %s" % anzeige.get("aus", "Band steht")
@@ -172,6 +181,35 @@ func _aktualisieren() -> void:
 		if b.has_meta("id"):
 			(b as Button).disabled = _auswahl == ""
 	_spulen = {}
+	for z in AufgabenLogik.zeitrelais(a):
+		_gedrueckt[z + "_T"] = false
+		_zeit_nr[z] = int(_zeit_nr.get(z, 0)) + 1
+	_zeit_laeuft.clear()
+	_simulieren()
+
+
+## Zeitrelais: Zieht die Spule an, läuft die Verzögerungszeit; fällt sie ab, öffnen die verzögerten Kontakte sofort.
+func _zeit_pruefen() -> void:
+	var zeiten := AufgabenLogik.zeitrelais(a)
+	for z in zeiten:
+		if _spulen.get(z, false):
+			if not _gedrueckt.get(z + "_T", false) and not _zeit_laeuft.has(z):
+				_zeit_laeuft[z] = true
+				get_tree().create_timer(float(zeiten[z])).timeout.connect(_zeit_um.bind(z, int(_zeit_nr.get(z, 0))))
+		else:
+			_gedrueckt[z + "_T"] = false
+			if _zeit_laeuft.has(z):
+				_zeit_laeuft.erase(z)
+				_zeit_nr[z] = int(_zeit_nr.get(z, 0)) + 1
+
+
+func _zeit_um(z: String, nr: int) -> void:
+	if not is_inside_tree() or nr != int(_zeit_nr.get(z, 0)):
+		return
+	_zeit_laeuft.erase(z)
+	if _spulen.get(z, false):
+		_gedrueckt[z + "_T"] = true
+		Audio.spiele("klick", -8.0)
 	_simulieren()
 
 

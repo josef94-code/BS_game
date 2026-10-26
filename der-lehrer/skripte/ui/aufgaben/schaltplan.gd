@@ -121,7 +121,7 @@ func _draw() -> void:
 		_symbol(typ, oben, unten, zu, bool(spulen_an.get(el["id"], false)))
 		if bez != "":
 			var bs := f.get_string_size(bez, HORIZONTAL_ALIGNMENT_LEFT, -1, 19)
-			var mit_antrieb := typ.begins_with("taster") or typ in ["zeit_no", "mschutz_nc", "nothalt_nc"]
+			var mit_antrieb := typ.begins_with("taster") or typ in ["zeit_no", "mschutz_nc", "nothalt_nc", "verz_no", "verz_nc", "spule_verz"]
 			var links := 50.0 if mit_antrieb else 22.0
 			var hoehe := 0.3 if mit_antrieb else 0.55
 			draw_string(f, Vector2(oben.x - links - bs.x, oben.y + (unten.y - oben.y) * hoehe + 6), bez, HORIZONTAL_ALIGNMENT_LEFT, -1, 19, Color(0.1, 0.15, 0.45))
@@ -150,9 +150,9 @@ func _ist_geschlossen(id: String, typ: String) -> bool:
 	if typ == "luecke":
 		return false
 	match typ:
-		"schliesser", "taster_no", "zeit_no":
+		"schliesser", "taster_no", "zeit_no", "verz_no":
 			return b
-		"oeffner", "taster_nc", "mschutz_nc", "nothalt_nc":
+		"oeffner", "taster_nc", "mschutz_nc", "nothalt_nc", "verz_nc":
 			return not b
 	return true
 
@@ -190,13 +190,19 @@ func _symbol(typ: String, oben: Vector2, unten: Vector2, zu: bool, spule_an: boo
 			draw_line(Vector2(cx, oben.y + l * 0.75), unten, LINIE, BREITE)
 			draw_rect(Rect2(cx - 8, oben.y + l * 0.25, 16, l * 0.5), LINIE, false, BREITE)
 			draw_line(Vector2(cx, oben.y + l * 0.25), Vector2(cx, oben.y + l * 0.75), LINIE, 1.5)
-		"spule":
+		"spule", "spule_verz":
 			draw_line(oben, Vector2(cx, oben.y + l * 0.3), LINIE, BREITE)
 			draw_line(Vector2(cx, oben.y + l * 0.7), unten, LINIE, BREITE)
 			var r := Rect2(cx - 24, oben.y + l * 0.3, 48, l * 0.4)
 			if spule_an:
 				draw_rect(r, Color(1.0, 0.7, 0.1))
 			draw_rect(r, LINIE, false, BREITE)
+			if typ == "spule_verz":
+				# ansprechverzögerte Spule: Zusatzkästchen mit Kreuz
+				var z := Rect2(r.position.x - r.size.y, r.position.y, r.size.y, r.size.y)
+				draw_rect(z, LINIE, false, BREITE)
+				draw_line(z.position, z.end, LINIE, 1.6)
+				draw_line(Vector2(z.position.x, z.end.y), Vector2(z.end.x, z.position.y), LINIE, 1.6)
 		"glocke":
 			draw_line(oben, Vector2(cx, oben.y + l * 0.35), LINIE, BREITE)
 			var m := Vector2(cx, oben.y + l * 0.62)
@@ -210,13 +216,13 @@ func _symbol(typ: String, oben: Vector2, unten: Vector2, zu: bool, spule_an: boo
 			draw_arc(m, 14.0, 0, TAU, 24, LINIE, BREITE)
 			draw_line(m + Vector2(-10, -10), m + Vector2(10, 10), LINIE, BREITE)
 			draw_line(m + Vector2(-10, 10), m + Vector2(10, -10), LINIE, BREITE)
-		"schliesser", "taster_no", "zeit_no":
+		"schliesser", "taster_no", "zeit_no", "verz_no":
 			draw_line(oben, a, LINIE, BREITE)
 			draw_line(b, unten, LINIE, BREITE)
 			var spitze := a if zu else Vector2(cx - 15, a.y + 2)
 			draw_line(b, spitze, LINIE, BREITE)
 			_betaetiger(typ, (b + spitze) * 0.5)
-		"oeffner", "taster_nc", "mschutz_nc", "nothalt_nc":
+		"oeffner", "taster_nc", "mschutz_nc", "nothalt_nc", "verz_nc":
 			draw_line(oben, a, LINIE, BREITE)
 			draw_line(a, a + Vector2(13, 0), LINIE, BREITE)
 			draw_line(b, unten, LINIE, BREITE)
@@ -238,6 +244,11 @@ func _betaetiger(typ: String, mitte: Vector2) -> void:
 			draw_line(links + Vector2(0, -9), links + Vector2(0, 9), LINIE, 2.0)
 			draw_line(links + Vector2(0, -9), links + Vector2(5, -9), LINIE, 2.0)
 			draw_line(links + Vector2(0, 9), links + Vector2(5, 9), LINIE, 2.0)
+		"verz_no", "verz_nc":
+			# ansprechverzögerter Kontakt: Bogen („Fallschirm“) am Betätigungsweg
+			var m := mitte + Vector2(-14, 0)
+			draw_arc(m + Vector2(-6, 0), 8.0, -PI * 0.5, PI * 0.5, 12, LINIE, 1.8)
+			draw_line(m + Vector2(-6, -8), m + Vector2(-6, 8), LINIE, 1.8)
 		"zeit_no":
 			var m := links + Vector2(-9, 0)
 			draw_arc(m, 9.0, 0, TAU, 20, LINIE, 1.8)

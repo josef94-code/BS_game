@@ -112,7 +112,15 @@ Interaktionshinweis "[E]". Taste `B` = Beweisbrett/Notizbuch, `Esc` = Pause/Spei
 > **v0.8:** Akt 3 – Licht ins Dunkel, Teil 1: 8 *Halbzeit* und 9 *Der Vorhang fällt* (Coach Bradley, Turnhalle,
 > LtK 03 und Schütztechnik Kap. 5), 10 *Dicke Luft* und 11 *Der Lauscher* (Sparky Russo, Werkstatt,
 > Schütztechnik Kap. 4 und LtK 04). Coach Bradley ist entlastet, das Motiv (Wartungsvertrag von Sterling Bau)
-> liegt offen. Es fehlt das Finale (Abschlussprüfung).
+> liegt offen.
+>
+> **v1.0 – das Spiel ist vollständig (16 Missionen):** Akt 4 – *Die Nacht vor der Prüfung*: 12 *Heiße Platten*
+> (Rosalita, Kochstation, ET Kap. 5 und 6.9), 13 *Frische Luft* (Bradley, Solarlüfter, ET Kap. 6.1–6.8),
+> 14 *Der Nachlauf* (Sparky, Laborbänder, Schütztechnik Kap. 6 mit echtem Zeitrelais im Probelauf),
+> 15 *Die falsche Adresse* (Kowalski, Prüfungsnetz in der neuen **Aula**, LtK 05). Finale: 16 *Die Abschlussprüfung*
+> beim Lehrer in der Aula (acht gemischte Aufgaben), Vince Moretti wird überführt, Beförderung zum Consigliere.
+> Gegenüber dem ursprünglichen Plan sind es 16 statt 24 Missionen, weil sich die Aufträge eng an den vorliegenden
+> Lernunterlagen orientieren (keine Vorgriffe); Digitaltechnik (Logik, SPS) ist noch nicht dran.
 
 Fächer gemischt: **ET** Elektrotechnik, **AT-S** Automatisierung/Schütztechnik, **AT-D** Digitaltechnik, **LtK**.
 

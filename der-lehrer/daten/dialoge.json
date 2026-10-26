@@ -8,7 +8,8 @@
     "kowalski": { "name": "Hausmeister Kowalski", "farbe": "#6fa8dc" },
     "rosalita": { "name": "Rosalita", "farbe": "#e8829f" },
     "bradley": { "name": "Coach Bradley", "farbe": "#f0b429" },
-    "sparky": { "name": "Sparky", "farbe": "#ff8c42" }
+    "sparky": { "name": "Sparky", "farbe": "#ff8c42" },
+    "vince": { "name": "Vince Moretti", "farbe": "#c0394b" }
   },
 
   "intro": [
@@ -95,7 +96,7 @@
     { "wahl": [ { "t": "Ich schau mir die Leitung an.", "ok": true }, { "t": "Später, Mr. Kowalski.", "ok": false } ] }
   ],
   "q05_ende": [
-    { "s": "spieler", "t": "Die haben eine Fernmeldeleitung als Zuleitung eingebaut. J-Y(ST)Y mit 0,8 mm² – viel zu dünn für den Automaten." },
+    { "s": "spieler", "t": "Die haben eine Fernmeldeleitung als Zuleitung eingebaut. J-Y(ST)Y mit 0,8 mm Aderdurchmesser – gerade mal 0,5 mm² pro Ader. Viel zu dünn für den Automaten." },
     { "s": "spieler", "t": "Jetzt ist eine NYM 3 × 2,5 mm² drin, sauber angeklemmt. Und das hier lag im Verteilerschrank." },
     { "s": "erzaehler", "t": "Ein Lieferschein von Sterling Bau: „J-Y(ST)Y 2×2×0,8 – Energieleitung Automaten“. Daneben ein Stempel – eine kleine schwarze Rose." },
     { "s": "kowalski", "t": "Eine Telefonleitung für den Automaten. Das ist kein Versehen, das ist Absicht. Und schon wieder diese Rosen." },
@@ -197,7 +198,101 @@
     { "s": "spieler", "t": "Der „Verteiler“ war ein Hub. Er hat jedes Paket an alle Anschlüsse geschickt. Und daran hing dieses kleine Gerät." },
     { "s": "spieler", "t": "Es hat alles mitgeschnitten. Auf der SD-Karte gibt es einen Ordner: „MT10_Abschlusspruefung“." },
     { "s": "sparky", "t": "Die wollen nicht nur die Technik lahmlegen. Die wollen an die Prüfung ran." },
-    { "s": "sparky", "t": "Bring das dem Lehrer, Capo. Und, hey – danke für den Stuhl. Mein Nacken auch." }
+    { "s": "sparky", "t": "Ich bring das sofort zum Lehrer, Capo. Und, hey – danke für den Stuhl. Mein Nacken auch." },
+    { "s": "erzaehler", "t": "Ein paar Minuten später knackt es in der Sprechanlage." },
+    { "s": "lehrer", "t": "Hier spricht der Lehrer. Sparky hat mir das Gerät gebracht. Ein Mitschnitt vom Prüfungsserver." },
+    { "s": "lehrer", "t": "Sterling Bau will den Wartungsvertrag. Die Black Roses machen die Drecksarbeit. Und die Abschlussprüfung der MT10 soll der große Knall werden." },
+    { "s": "lehrer", "t": "Die Prüfung ist morgen früh um acht. Bis dahin muss alles laufen. Rosalita hat Ärger in der Cafeteria – fang dort an." }
+  ],
+
+  "q12_start": [
+    { "s": "rosalita", "t": "Cariño! Morgen früh gibt es Prüfungsfrühstück für die MT10. Rührei, Toast, Kakao. Nervennahrung." },
+    { "s": "rosalita", "t": "Aber meine Kochstation spinnt. Die große Platte bleibt auf Stufe 1 kalt, und auf Stufe 6 wird sie nur langsam warm." },
+    { "s": "rosalita", "t": "Und die Wärmeplatten laufen Tag und Nacht, seit der Monteur von Sterling Bau hier war. Wer bezahlt das eigentlich?" },
+    { "s": "spieler", "t": "Ich schau mir die Kochstation an. Und ich rechne nach, was euch der Dauerbetrieb kostet." },
+    { "s": "rosalita", "t": "Pass auf, die Platten sind heiß. Na ja – die meisten." },
+    { "wahl": [ { "t": "Ich kümmere mich um die Kochstation.", "ok": true }, { "t": "Gleich, Rosalita.", "ok": false } ] }
+  ],
+  "q12_ende": [
+    { "s": "spieler", "t": "Der Heizwiderstand R1 der großen Platte war unterbrochen. Er wirkt nur auf Stufe 1 und 6 – deshalb waren die anderen Stufen normal." },
+    { "s": "spieler", "t": "Die Platte ist getauscht, und die Wärmeplatten laufen nur noch, wenn sie gebraucht werden. Und hinter der Blende steckte dieser Zettel." },
+    { "s": "erzaehler", "t": "Ein Einsatzplan, dieselbe Handschrift wie auf dem USB-Stick: „Prüfungstag. 7:30 Küche. 8:00 Aula – Lüftung. 8:15 Werkstatt – Bänder. 8:30 Prüfungsnetz. 9:00 alles aus. – V.M.“" },
+    { "s": "rosalita", "t": "Die wollen den Kindern das Frühstück kaputt machen? Und dann die ganze Prüfung?" },
+    { "s": "rosalita", "t": "Lauf, cariño. Coach Bradley hat irgendwas für die Aula gebaut. Er braucht dich in der Turnhalle." }
+  ],
+
+  "q13_start": [
+    { "s": "bradley", "t": "Capo! Die Prüfung ist oben in der Aula. Dreißig Leute, Juni, unterm Dach – und keine Lüftung." },
+    { "s": "bradley", "t": "Sterling Bau hat eine Lüftungsanlage abgerechnet. Eingebaut haben sie nichts. Also hab ich Lüfter mit Mini-Solarmodulen gebaut." },
+    { "s": "bradley", "t": "Nur: Die Dinger laufen nicht. Nicht mal unter dem Baustrahler, mit dem ich die Sonne spiele." },
+    { "s": "spieler", "t": "Dann rechne ich das durch. Reihe oder parallel – das ist hier die Frage." },
+    { "s": "bradley", "t": "Ha! Defense wins championships. Und Mathe gewinnt Lüfter." },
+    { "wahl": [ { "t": "Her mit den Lüftern.", "ok": true }, { "t": "Später, Coach.", "ok": false } ] }
+  ],
+  "q13_ende": [
+    { "s": "spieler", "t": "Die Module waren in Reihe geschaltet: 10 V, aber nur 0,1 A. Parallel liefern sie 5 V und 0,2 A – genau richtig für die Motoren." },
+    { "s": "spieler", "t": "Und der alte Akku hatte einen viel zu großen Innenwiderstand. Unter dem Baustrahler laufen jetzt alle Lüfter." },
+    { "s": "bradley", "t": "Was hast du da noch aus der Kiste gezogen?" },
+    { "s": "erzaehler", "t": "Ein Lieferschein von Sterling Bau: „Lüftungsanlage Aula – geliefert, eingebaut, abgenommen. 38 000 Dollar.“ Geliefert wurde nur der Karton, in dem jetzt die Module liegen." },
+    { "s": "bradley", "t": "38 000 Dollar für einen leeren Karton. Den Lieferschein will der Lehrer sehen." },
+    { "s": "bradley", "t": "Und jetzt ab in die Werkstatt. Morgen ist der praktische Teil an den Laborbändern – Sparky sagt, die spinnen auch." }
+  ],
+
+  "q14_start": [
+    { "s": "sparky", "t": "Capo! Die Laborbänder für den praktischen Teil morgen: Band 2 startet, Band 1 soll vier Sekunden später automatisch folgen. Mit Zeitrelais." },
+    { "s": "sparky", "t": "Sterling Bau hat die Steuerung „gewartet“. Seitdem läuft Band 1 sofort los – oder gar nicht." },
+    { "s": "sparky", "t": "Und die werben jetzt mit einem „digitalen Zwilling“ für die Werkstatt. Ich glaub, die wissen selbst nicht, was das ist." },
+    { "s": "spieler", "t": "Ich plane den Steuerstromkreis neu und teste ihn zuerst in der Simulation." },
+    { "s": "sparky", "t": "Wie die Hardwarekonstruktion. Gefällt mir." },
+    { "wahl": [ { "t": "Ich nehme mir die Laborbänder vor.", "ok": true }, { "t": "Später.", "ok": false } ] }
+  ],
+  "q14_ende": [
+    { "s": "spieler", "t": "Folgekontakt von -QA2 vor dem Zeitrelais. Nach 4 s schließt -KF1 17–18, -QA1 hält sich selbst und schaltet -KF1 wieder ab. Die Simulation lief fehlerfrei – und die Bänder auch." },
+    { "s": "spieler", "t": "Aber im Steuerkasten war das hier eingebaut." },
+    { "s": "erzaehler", "t": "Ein Funkschaltmodul mit SIM-Karte, in den Not-Halt-Kreis eingeschleift. Programmiert: Prüfungstag, 9:00 Uhr – „Bänder aus“. Rückrufnummer: Sterling Bau, Fernwartung." },
+    { "s": "sparky", "t": "Die wollten die Anlage mitten in der Prüfung abschalten. Per Handy." },
+    { "s": "sparky", "t": "Kowalski hat den Schlüssel fürs Treppenhaus. Oben in der Aula steht der Prüfungsserver – und er sagt, da stimmt was nicht." }
+  ],
+
+  "q15_start": [
+    { "s": "kowalski", "t": "Da bist du ja. Die Aula oben war ein Jahr lang Baustelle von Sterling Bau. Heute Nachmittag hab ich endlich den Schlüssel gekriegt." },
+    { "s": "kowalski", "t": "Ich hab den Prüfungsserver für morgen aufgebaut. Neun Prüfungs-PCs, ein Server, alles fest verkabelt. Aber die PCs finden den Server nicht. Mal ja, mal nein." },
+    { "s": "kowalski", "t": "Und hinter dem Server blinkt ein Kästchen, das ich nicht bestellt habe." },
+    { "s": "spieler", "t": "Ich gehe die Adressen durch. Bit für Bit." },
+    { "s": "kowalski", "t": "Die Treppe ist offen, das Absperrband ist weg. Vorne links im Flur." },
+    { "wahl": [ { "t": "Ich geh hoch in die Aula.", "ok": true }, { "t": "Gleich, Mr. Kowalski.", "ok": false } ] }
+  ],
+  "q15_ende": [
+    { "s": "spieler", "t": "Das Kästchen hatte dieselbe IP-Adresse wie der Prüfungsserver: 192.168.10.10. Ein Adresskonflikt – die PCs haben mal den Server erwischt, mal das Kästchen." },
+    { "s": "spieler", "t": "Morgen um neun hätte es sich als Prüfungsserver ausgegeben und alle Prüfungs-PCs abstürzen lassen. Jetzt ist es abgeklemmt." },
+    { "s": "kowalski", "t": "Und wem gehört das Ding?" },
+    { "s": "erzaehler", "t": "Auf der Unterseite: ein Aufkleber „Sterling Bau – Baustellen-IT“. Und eine Seriennummer, registriert auf Vince Moretti." },
+    { "s": "kowalski", "t": "Das reicht. Ich ruf den Lehrer." },
+    { "s": "erzaehler", "t": "Es knackt in der Sprechanlage." },
+    { "s": "lehrer", "t": "Hier spricht der Lehrer. Ich habe alles gehört. Morgen um acht ist die Prüfung. In der Aula. Und du schreibst mit." },
+    { "s": "lehrer", "t": "Schlaf ein paar Stunden. Dann komm hoch – ich warte in der Aula." }
+  ],
+
+  "q16_start": [
+    { "s": "erzaehler", "t": "Am nächsten Morgen, 7:55 Uhr. Die Aula ist voll, die Lüfter summen, aus der Cafeteria riecht es nach Toast." },
+    { "s": "lehrer", "t": "Guten Morgen, {name}. Rührei bei Rosalita gegessen? Gut. Ein Prüfling mit leerem Magen nützt mir nichts." },
+    { "s": "lehrer", "t": "Laut Einsatzplan wollen die Black Roses heute um neun alles abschalten. Küche, Lüftung, Bänder, Netz. Alles, was du repariert hast." },
+    { "s": "lehrer", "t": "Das ist nicht mehr dein Problem. Das hier ist deine Abschlussprüfung: Elektrotechnik, Steuerungstechnik, Netzwerke. Setz dich an deinen Platz – vorne links." },
+    { "s": "spieler", "t": "Ich bin bereit." },
+    { "wahl": [ { "t": "Ich setze mich an meinen Platz.", "ok": true }, { "t": "Einen Moment noch.", "ok": false } ] }
+  ],
+  "q16_ende": [
+    { "s": "lehrer", "t": "Stift weg, {name}. Die Prüfung ist vorbei." },
+    { "s": "erzaehler", "t": "Der Lehrer dreht sich langsam zur Tür. Vince Moretti rührt sich nicht." },
+    { "s": "lehrer", "t": "Vince. Küche, Lüftung, Bänder, Prüfungsnetz. Alles um neun Uhr. Hat nicht geklappt, was?" },
+    { "s": "vince", "t": "Sterling hat gesagt, das ist nur Technik. Niemand kommt zu Schaden. Und danach krieg ich bei denen einen Ausbildungsplatz." },
+    { "s": "lehrer", "t": "Und die Schule kriegt einen Wartungsvertrag über 480 000 Dollar. Für Sachen, die ihr vorher kaputt gemacht habt." },
+    { "s": "spieler", "t": "Wir haben alles: Lieferschein, Router, Foto, USB-Stick, Schlüssel, Vertrag, Mitschnitt, Einsatzplan, Funkmodul, das Kästchen am Server. Und jetzt dein Tablet." },
+    { "s": "lehrer", "t": "Die Schulleitung hat die Beweise seit heute früh. Das Schulamt auch. Der Vertrag mit Sterling Bau wird nicht unterschrieben. Nie." },
+    { "s": "vince", "t": "Und ich?" },
+    { "s": "lehrer", "t": "Du gehst jetzt mit Kowalski zur Schulleitung. Und dann reparierst du einen Sommer lang mit ihm alles, was ihr kaputt gemacht habt. Wer zur Familie will, fängt ganz unten an." },
+    { "s": "lehrer", "t": "Und du, {name}: Deine Prüfung ist bestanden. Aber das war nicht die Prüfung, die ich gemeint habe." },
+    { "s": "lehrer", "t": "Du hast für die ganze Schule gearbeitet. Gemessen statt geschätzt, sicher statt schnell. Ab heute bist du mein Consigliere." }
   ],
 
   "lehrer_abgelehnt": [ { "s": "lehrer", "t": "Die Familie wartet. Aber nicht ewig." } ],
@@ -209,14 +304,14 @@
   ],
   "lehrer_verweis": [ { "s": "lehrer", "t": "Was stehst du hier unten herum? Oben wartet Arbeit auf dich. Schau auf die Karte – wer dich braucht, ist markiert." } ],
   "lehrer_ende": [
-    { "s": "erzaehler", "t": "Es knackt in der Sprechanlage." },
-    { "s": "lehrer", "t": "Hier spricht der Lehrer. Sparky hat mir das Gerät gebracht. Ein Mitschnitt vom Prüfungsserver." },
-    { "s": "lehrer", "t": "Sterling Bau will den Wartungsvertrag. Die Black Roses machen die Drecksarbeit. Und die Abschlussprüfung der MT10 soll der große Knall werden." },
-    { "s": "lehrer", "t": "Nicht in meiner Schule, Capo. Ruh dich aus. Wenn es so weit ist, brauche ich dich." },
-    { "s": "erzaehler", "t": "Ende von Akt 3, Teil 1. Die Geschichte geht weiter mit dem Finale: der Abschlussprüfung." }
+    { "s": "erzaehler", "t": "Es knackt in den Lautsprechern der Aula." },
+    { "s": "radio", "t": "WLHS 88.3 mit einer Sondermeldung: Die Schulleitung der Lincoln High hat den Wartungsvertrag mit Sterling Bau abgelehnt. Gegen die Firma wird ermittelt." },
+    { "s": "radio", "t": "Außerdem: Die MT10 hat ihre Abschlussprüfung geschrieben – bei Licht, mit Lüftung und mit Frühstück. Und in der Cafeteria gibt es heute Pudding für alle. Das Band läuft." },
+    { "s": "radio", "t": "Ein letzter Gruß geht an die Familie. Ihr wisst schon, welche." },
+    { "s": "erzaehler", "t": "ENDE. Danke fürs Spielen – und viel Erfolg bei deiner echten Prüfung." }
   ],
 
-  "kowalski_aktiv": [ { "s": "kowalski", "t": "Na los, die Leitung repariert sich nicht von allein. Dein Ziel ist auf der Karte markiert." } ],
+  "kowalski_aktiv": [ { "s": "kowalski", "t": "Na los, das repariert sich nicht von allein. Dein Ziel ist auf der Karte markiert." } ],
   "kowalski_abgelehnt": [ { "s": "kowalski", "t": "Gut, gut. Ich halte solange den Automaten fest." } ],
   "kowalski_verweis": [ { "s": "kowalski", "t": "Ich hab gerade nichts für dich. Aber jemand anderes schon – schau auf deine Karte." } ],
   "kowalski_leerlauf": [
@@ -224,7 +319,7 @@
     { "s": "kowalski", "t": "Wenn du jemanden von Sterling Bau siehst, sag mir Bescheid." },
     { "s": "kowalski", "t": "Freischalten, sichern, prüfen. Das hab ich schon gemacht, da ging der Lehrer noch selbst zur Schule." }
   ],
-  "rosalita_aktiv": [ { "s": "rosalita", "t": "Die Bedienstelle ist gleich da drüben am Band. ¡Ándale!" } ],
+  "rosalita_aktiv": [ { "s": "rosalita", "t": "Dein Ziel ist auf der Karte markiert, cariño. ¡Ándale!" } ],
   "rosalita_abgelehnt": [ { "s": "rosalita", "t": "Gut. Ich koche solange. Aber nicht ewig." } ],
   "rosalita_verweis": [ { "s": "rosalita", "t": "Ich habe gerade nichts für dich, cariño. Aber jemand anderes in dieser Schule bestimmt." } ],
   "bradley_aktiv": [ { "s": "bradley", "t": "Los, los, los! Das Ziel ist auf deiner Karte. Sprint, nicht spazieren." } ],
@@ -247,5 +342,6 @@
     { "s": "rosalita", "t": "Pudding gibt es erst, wenn das Band läuft. Das ist Gesetz." },
     { "s": "rosalita", "t": "Hast du Hunger, cariño? Nein? Dann arbeite." },
     { "s": "rosalita", "t": "In meiner Küche bin ich der Lehrer." }
-  ]
+  ],
+  "vince_leerlauf": [ { "s": "vince", "t": "Lass mich in Ruhe. Ich warte auf Kowalski." } ]
 }

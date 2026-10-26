@@ -1,5 +1,5 @@
 {
-  "_info": "Missionen in Spielreihenfolge. 'auftraggeber' ist die Figur, die den Auftrag vergibt und abnimmt (lehrer, kowalski, rosalita, bradley, sparky). 'station' ist die ID eines interaktiven Objekts in der Welt. 'ruf' = Grundbelohnung, je Aufgabe beim ersten Versuch gibt es zusätzlich 'bonus_pro_aufgabe'.",
+  "_info": "Missionen in Spielreihenfolge. 'auftraggeber' ist die Figur, die den Auftrag vergibt und abnimmt (lehrer, kowalski, rosalita, bradley, sparky). 'station' ist die ID eines interaktiven Objekts in der Welt. 'ziel_start' ersetzt den Standardhinweis zum Auftraggeber. 'ruf' = Grundbelohnung, je Aufgabe beim ersten Versuch gibt es zusätzlich 'bonus_pro_aufgabe'.",
   "bonus_pro_aufgabe": 2,
   "raenge": [
     {
@@ -20,7 +20,7 @@
     },
     {
       "name": "Consigliere",
-      "ab": 700
+      "ab": 900
     }
   ],
   "quests": [
@@ -299,13 +299,147 @@
         "Und am alten Hub hing ein kleiner fremder Rechner, der alles mitgeschnitten hat."
       ],
       "ziel_zurueck": "Bring Sparky das Mitschnitt-Gerät."
+    },
+    {
+      "id": "q12_kochplatte",
+      "nr": 12,
+      "titel": "Heiße Platten",
+      "akt": "Akt 4 – Die Nacht vor der Prüfung",
+      "auftraggeber": "rosalita",
+      "ruf": 45,
+      "dialog_start": "q12_start",
+      "dialog_ende": "q12_ende",
+      "station": "kochstation",
+      "ziel_hin": "Untersuche Rosalitas Kochstation an der Südwand der Cafeteria.",
+      "aufgaben": [
+        "et_toaster",
+        "et_wirkungsgrad",
+        "et_kochstufen",
+        "et_heizwiderstand",
+        "et_kochplatte_fehler",
+        "et_kosten"
+      ],
+      "beweis": "b_einsatzplan",
+      "fund": [
+        "Alle drei Platten heizen wieder – auf jeder Stufe. Und die Wärmeplatten laufen nur noch, wenn sie gebraucht werden.",
+        "Hinter der Blende der Kochstation klemmt ein gefalteter Zettel. Dieselbe Handschrift wie auf dem USB-Stick."
+      ],
+      "ziel_zurueck": "Zeig Rosalita den Zettel."
+    },
+    {
+      "id": "q13_luft",
+      "nr": 13,
+      "titel": "Frische Luft",
+      "akt": "Akt 4 – Die Nacht vor der Prüfung",
+      "auftraggeber": "bradley",
+      "ruf": 50,
+      "dialog_start": "q13_start",
+      "dialog_ende": "q13_ende",
+      "station": "solarluefter",
+      "ziel_hin": "Prüfe Bradleys Solarlüfter auf dem Tisch an der Westseite der Turnhalle.",
+      "aufgaben": [
+        "et_solar",
+        "et_regeln",
+        "et_knoten",
+        "et_innenwiderstand",
+        "et_reihe",
+        "et_gemischt"
+      ],
+      "beweis": "b_rechnung",
+      "fund": [
+        "Unter dem Baustrahler drehen sich alle Lüfter. Parallel geschaltet, frischer Akku, richtiger Regler.",
+        "In der Kiste, in der die Module lagen, steckt noch ein Lieferschein von Sterling Bau."
+      ],
+      "ziel_zurueck": "Zeig Coach Bradley den Lieferschein."
+    },
+    {
+      "id": "q14_nachlauf",
+      "nr": 14,
+      "titel": "Der Nachlauf",
+      "akt": "Akt 4 – Die Nacht vor der Prüfung",
+      "auftraggeber": "sparky",
+      "ruf": 55,
+      "dialog_start": "q14_start",
+      "dialog_ende": "q14_ende",
+      "station": "laborbaender",
+      "ziel_hin": "Nimm dir die Laborbänder für die praktische Prüfung in der Werkstatt vor.",
+      "aufgaben": [
+        "st_zeitrelais_art",
+        "st_zeitablauf",
+        "st_zeitfolge",
+        "st_kf1_folge",
+        "st_zwilling",
+        "st_vps"
+      ],
+      "beweis": "b_funkmodul",
+      "fund": [
+        "Band 2 läuft an – und nach vier Sekunden folgt Band 1. Das Zeitrelais schaltet sich danach ab.",
+        "Im Steuerkasten der Laborbänder steckt ein Modul, das dort nicht hingehört. Mit Antenne und SIM-Karte."
+      ],
+      "ziel_zurueck": "Bring Sparky das Funkmodul."
+    },
+    {
+      "id": "q15_adresse",
+      "nr": 15,
+      "titel": "Die falsche Adresse",
+      "akt": "Akt 4 – Die Nacht vor der Prüfung",
+      "auftraggeber": "kowalski",
+      "ruf": 60,
+      "dialog_start": "q15_start",
+      "dialog_ende": "q15_ende",
+      "station": "pruefungsserver",
+      "ziel_hin": "Geh durch das Treppenhaus hoch in die Aula und prüfe den Prüfungsserver an der Westwand.",
+      "aufgaben": [
+        "lt_protokoll",
+        "lt_osi",
+        "lt_dual",
+        "lt_hex",
+        "lt_broadcast",
+        "lt_adresskonflikt"
+      ],
+      "beweis": "b_klon",
+      "fund": [
+        "Neun Prüfungs-PCs, ein Server, jede Adresse nur einmal. Auf allen Bildschirmen: „Prüfungsserver bereit“.",
+        "Hinter dem Server hängt ein kleines Kästchen am Switch – mit derselben Adresse wie der Prüfungsserver."
+      ],
+      "ziel_zurueck": "Bring Kowalski das Kästchen. Er wartet im Flur."
+    },
+    {
+      "id": "q16_pruefung",
+      "nr": 16,
+      "titel": "Die Abschlussprüfung",
+      "akt": "Finale – Die Prüfung",
+      "auftraggeber": "lehrer",
+      "ruf": 200,
+      "dialog_start": "q16_start",
+      "dialog_ende": "q16_ende",
+      "station": "pruefungsplatz",
+      "ziel_start": "Der Lehrer wartet in der Aula im ersten Stock. Die Prüfung beginnt.",
+      "ziel_hin": "Setz dich an deinen Prüfungsplatz – vorne links in der Aula.",
+      "aufgaben": [
+        "ex_leistung",
+        "ex_parallel",
+        "ex_gemischt",
+        "ex_verriegelung",
+        "ex_simulation",
+        "ex_statisch",
+        "ex_mac",
+        "ex_ipv4"
+      ],
+      "beweis": "b_tablet",
+      "fund": [
+        "9:00 Uhr. Das Licht in der Aula flackert – einmal, zweimal. Dann bleibt es an. Die Lüfter summen weiter.",
+        "Hinten an der Tür steht Vince Moretti, das Tablet in der Hand. Auf dem Bildschirm: „Fernwartung Sterling Bau – Verbindung fehlgeschlagen.“"
+      ],
+      "ziel_zurueck": "Gib deine Prüfung beim Lehrer ab."
     }
   ],
   "tueren": {
     "tuer": "q04_netz",
     "turnhalle": "q07_bedienstelle",
-    "werkstatt": "q09_vorhang"
+    "werkstatt": "q09_vorhang",
+    "oben": "q14_nachlauf"
   },
   "_tueren": "Türen zwischen den Bereichen: Tür-ID -> Mission, nach der die Tür offen ist.",
-  "bilanz_titel": "FORTSETZUNG FOLGT: DAS FINALE"
+  "bilanz_titel": "BESTANDEN!"
 }

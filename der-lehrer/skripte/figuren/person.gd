@@ -40,6 +40,13 @@ func sprich_mit(ziel: Node3D) -> void:
 	figur.gestik = 0.6
 
 
+## An einen neuen Platz stellen (z. B. der Lehrer zieht fürs Finale in die Aula)
+func platzieren(pos: Vector3, blick: float) -> void:
+	global_position = pos
+	rotation.y = blick
+	_ruhe_blick = blick
+
+
 func fertig() -> void:
 	_ziel = null
 	figur.gestik = 0.0

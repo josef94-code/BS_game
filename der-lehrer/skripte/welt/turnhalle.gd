@@ -13,6 +13,7 @@ var bradley_blick := 2.4
 
 var anzeige_ok := false
 var vorhang_ok := false
+var luefter_ok := false
 
 var _zeit := 0.0
 var _takt := 0.0
@@ -22,6 +23,9 @@ var _usb: Node3D
 var _vorhang: Node3D
 var _schluessel: Node3D
 var _hallen_lichter: Array[Light3D] = []
+var _rotoren: Array[Node3D] = []
+var _lieferschein: Node3D
+var _akku_led: StandardMaterial3D
 
 var m_metall: StandardMaterial3D
 var m_dunkel: StandardMaterial3D
@@ -43,6 +47,7 @@ func _ready() -> void:
 	_geraete()
 	_anzeigetafel()
 	_trennvorhang()
+	_solarluefter()
 	_sammel_neu("s_asi", Vector3(8.0, 0.06, -Z + 3.7))
 	_schatten()
 	tueren = {"turnhalle_raus": "Erdgeschoss"}
@@ -379,6 +384,110 @@ func _schatten() -> void:
 	_schattenfleck(Vector3(11.3, 0, 8.0), Vector2(3.6, 1.8), 0.5)
 
 
+# ---------------------------------------------------------------- Solarlüfter (Akt 4)
+
+## Bradleys Solarlüfter für die Aula auf einem Klapptisch an der Westseite: vier Mini-Solarmodule,
+## zwei Lüfter, Akku-Pack, Regler – und ein Baustrahler, der die Sonne spielt
+func _solarluefter() -> void:
+	var t := Node3D.new()
+	t.position = Vector3(-12.6, 0, 4.6)
+	add_child(t)
+	var platte := Bau.mat(Color(0.85, 0.82, 0.75), "holz", 1.2, 0.0)
+	Bau.box(t, Vector3(0.9, 0.05, 2.2), Vector3(0, 0.76, 0), platte)
+	for dz in [-1.0, 1.0]:
+		for dx in [-0.38, 0.38]:
+			Bau.zylinder(t, 0.02, 0.76, Vector3(dx, 0.38, dz), m_metall)
+	# vier Mini-Solarmodule, schräg aufgestellt
+	var zelle := Bau.mat(Color(0.12, 0.2, 0.45), "", 1.0, 0.0, false, 0.15)
+	var raster := Bau.mat(Color(0.75, 0.78, 0.82), "", 1.0, 0.0)
+	for i in 4:
+		var m := Node3D.new()
+		m.position = Vector3(-0.15, 0.84, -0.8 + i * 0.36)
+		m.rotation.z = -0.6
+		t.add_child(m)
+		Bau.box(m, Vector3(0.18, 0.012, 0.3), Vector3.ZERO, zelle)
+		Bau.box(m, Vector3(0.005, 0.014, 0.3), Vector3(0, 0, 0), raster)
+		Bau.box(m, Vector3(0.18, 0.014, 0.005), Vector3(0, 0, 0), raster)
+	# zwei Lüfter auf Ständern
+	var gehaeuse := Bau.mat(Color(0.2, 0.22, 0.25), "", 1.0, 0.01)
+	var fluegel := Bau.mat(Color(0.95, 0.95, 0.92), "", 1.0, 0.0)
+	for i in 2:
+		var l := Node3D.new()
+		l.position = Vector3(0.15, 0.78, -0.25 + i * 0.75)
+		t.add_child(l)
+		Bau.zylinder(l, 0.02, 0.2, Vector3(0, 0.1, 0), gehaeuse)
+		Bau.torus(l, 0.15, 0.17, Vector3(0, 0.36, 0), gehaeuse, Vector3(0, 0, PI / 2))
+		var rotor := Node3D.new()
+		rotor.position = Vector3(0.0, 0.36, 0)
+		rotor.set_meta("dynamisch", true)
+		l.add_child(rotor)
+		Bau.zylinder(rotor, 0.03, 0.04, Vector3.ZERO, gehaeuse, Vector3(0, 0, PI / 2))
+		for k in 3:
+			var f := Bau.box(rotor, Vector3(0.01, 0.13, 0.05), Vector3(0, 0.07, 0), fluegel)
+			var halter := Node3D.new()
+			rotor.add_child(halter)
+			halter.rotation.x = k * TAU / 3.0
+			f.reparent(halter, false)
+			f.rotation.y = 0.4
+		_rotoren.append(rotor)
+	# Akku-Pack und Regler
+	Bau.box(t, Vector3(0.3, 0.18, 0.22), Vector3(0.2, 0.88, 0.85), Bau.mat(Color(0.15, 0.15, 0.17)))
+	_akku_led = StandardMaterial3D.new()
+	_akku_led.albedo_color = Color(1.0, 0.2, 0.1)
+	_akku_led.emission_enabled = true
+	_akku_led.emission = Color(1.0, 0.2, 0.1)
+	_akku_led.emission_energy_multiplier = 2.5
+	Bau.box(t, Vector3(0.01, 0.02, 0.04), Vector3(0.355, 0.92, 0.85), _akku_led)
+	Bau.schild(t, "AKKU 24 V", Vector3(0.355, 0.86, 0.85), 10, Color(0.9, 0.9, 0.9), PI / 2)
+	for k in 3:
+		var kabel := Bau.zylinder(t, 0.006, 0.6, Vector3(0.05, 0.81, -0.4 + k * 0.45), Bau.mat([Color(0.8, 0.1, 0.1), Color(0.1, 0.1, 0.1)][k % 2]), Vector3(PI / 2, 0, 0))
+		kabel.rotation.y = 0.2 * (k - 1)
+	# Karton „Lüftungsanlage Aula“ unter dem Tisch
+	var karton := Bau.mat(Color(1, 1, 1), "karton", 1.0, 0.0)
+	Bau.box(t, Vector3(0.6, 0.45, 0.8), Vector3(0.05, 0.225, 0.3), karton)
+	Bau.schild(t, "STERLING BAU\nLÜFTUNGSANLAGE AULA", Vector3(0.36, 0.3, 0.3), 14, Color(0.15, 0.1, 0.05), PI / 2)
+	_lieferschein = Node3D.new()
+	_lieferschein.position = Vector3(0.3, 0.83, 0.4)
+	_lieferschein.set_meta("dynamisch", true)
+	_lieferschein.visible = false
+	t.add_child(_lieferschein)
+	Bau.box(_lieferschein, Vector3(0.004, 0.2, 0.15), Vector3.ZERO, Bau.mat(Color(0.97, 0.96, 0.9)))
+	Bau.schild(_lieferschein, "STERLING BAU\nLüftung Aula\n38 000 $\n„abgenommen“", Vector3(0.004, 0, 0), 8, Color(0.1, 0.1, 0.3), PI / 2)
+	_lieferschein.rotation.z = -0.4
+	# Baustrahler auf Stativ, auf die Module gerichtet
+	var b := Node3D.new()
+	b.position = Vector3(-11.9, 0, 6.5)
+	b.rotation.y = 0.35
+	add_child(b)
+	for k in 3:
+		var bein := Bau.zylinder(b, 0.015, 1.5, Vector3(cos(k * TAU / 3.0) * 0.2, 0.72, sin(k * TAU / 3.0) * 0.2), m_dunkel)
+		bein.rotation = Vector3(sin(k * TAU / 3.0) * 0.15, 0, -cos(k * TAU / 3.0) * 0.15)
+	Bau.box(b, Vector3(0.3, 0.25, 0.15), Vector3(0, 1.55, 0), Bau.mat(Color(0.95, 0.75, 0.1), "metall", 1.0, 0.01))
+	Bau.box(b, Vector3(0.26, 0.2, 0.01), Vector3(0, 1.55, -0.08), Bau.leucht(Color(1.0, 0.95, 0.8), 3.0))
+	var strahler := SpotLight3D.new()
+	strahler.position = Vector3(0, 1.55, -0.12)
+	strahler.rotation.x = -0.4
+	strahler.light_color = Color(1.0, 0.95, 0.82)
+	strahler.light_energy = 3.0
+	strahler.spot_range = 4.5
+	strahler.spot_angle = 35.0
+	b.add_child(strahler)
+	Bau.kollisionsbox(t, Vector3(0.9, 0.9, 2.2), Vector3(0, 0.45, 0))
+	_form(-12.6, 4.6, 0.9, 2.2, Color(0.8, 0.75, 0.65))
+	stationen["solarluefter"] = Interaktiv.neu(self, "solarluefter", Vector3(-11.4, 0, 4.6), "Solarlüfter prüfen", 1.5)
+
+
+func luefter_reparieren() -> void:
+	luefter_ok = true
+	_akku_led.albedo_color = Color(0.1, 0.9, 0.3)
+	_akku_led.emission = Color(0.1, 0.9, 0.3)
+
+
+func lieferschein_zeigen(an: bool) -> void:
+	_lieferschein.visible = an
+	_lieferschein.scale = Vector3.ONE * (1.8 if an else 1.0)
+
+
 # ---------------------------------------------------------------- Anlagen
 
 func usb_zeigen(an: bool) -> void:
@@ -415,6 +524,9 @@ func _process(delta: float) -> void:
 	_sammel_animieren(delta)
 	if not is_visible_in_tree():
 		return
+	# Lüfter: vorher nur ein müdes Zucken, nach der Reparatur volle Drehzahl
+	for r in _rotoren:
+		r.rotate_object_local(Vector3.RIGHT, delta * (30.0 if luefter_ok else 0.6 * absf(sin(_zeit * 0.7))))
 	_takt -= delta
 	if _takt > 0.0:
 		return

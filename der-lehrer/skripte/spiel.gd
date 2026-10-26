@@ -1,7 +1,7 @@
 extends Node3D
 ## Spielablauf: baut Welt, Figuren und Oberfläche auf und steuert die Missionen
 ## (Auftrag annehmen -> Anlage reparieren -> Beweis finden -> beim Auftraggeber melden).
-## Die Welt besteht aus Bereichen (Keller, Erdgeschoss, Turnhalle, Werkstatt), die über Türen verbunden sind.
+## Die Welt besteht aus Bereichen (Keller, Erdgeschoss, Turnhalle, Werkstatt, Aula), die über Türen verbunden sind.
 
 const ZIEL_START := {
 	"lehrer": "Sprich mit dem Lehrer in seinem Büro im Keller.",
@@ -15,9 +15,9 @@ const TUER_ZU := {
 	"tuer": "Die Tür nach oben ist zu. Erst muss im Keller alles laufen – der Lehrer sagt dir, wann.",
 	"turnhalle": "Die Turnhalle ist abgeschlossen. Erst müssen Flur und Cafeteria laufen.",
 	"werkstatt": "Die Werkstatt ist abgeschlossen. Coach Bradley weiß, wer den Schlüssel hat.",
+	"oben": "Das Treppenhaus nach oben ist Baustelle von Sterling Bau. Kowalski bekommt den Schlüssel erst kurz vor der Prüfung.",
 }
 const VERSCHLOSSEN := {
-	"oben": ["Abgesperrt", "Das Treppenhaus nach oben ist Baustelle von Sterling Bau. Hier kommst du noch nicht weiter."],
 	"mt10": ["R 104 · MT10", "Dein Klassenzimmer. Abgeschlossen – um diese Uhrzeit ist hier niemand mehr."],
 	"sekretariat": ["Sekretariat", "Abgeschlossen. Durch die Glasscheibe siehst du einen Stapel Rechnungen von Sterling Bau."],
 	"geraeteraum": ["Geräteraum", "Abgeschlossen. Coach Bradley lässt hier niemanden rein – „Da drin ist Ordnung, und so bleibt das.“"],
@@ -27,6 +27,7 @@ var keller: Keller
 var erdgeschoss: Erdgeschoss
 var turnhalle: Turnhalle
 var werkstatt: Werkstatt
+var aula: Aula
 var bereiche: Array[Bereich] = []
 var aktueller_bereich: Bereich
 var spieler: Spieler
@@ -67,7 +68,10 @@ func _ready() -> void:
 	werkstatt = Werkstatt.new()
 	werkstatt.position = Vector3(0, 0, -240)
 	add_child(werkstatt)
-	bereiche = [keller, erdgeschoss, turnhalle, werkstatt]
+	aula = Aula.new()
+	aula.position = Vector3(0, 0, -320)
+	add_child(aula)
+	bereiche = [keller, erdgeschoss, turnhalle, werkstatt, aula]
 	_umgebung = WorldEnvironment.new()
 	add_child(_umgebung)
 	marker = Zielmarker.new()
@@ -156,6 +160,29 @@ func _welt_aus_spielstand() -> void:
 	for id in Spielstand.d["sammel"]:
 		for b in bereiche:
 			b.sammel_entfernen(id)
+	_finale_zustand()
+
+
+## Finale: Nach Mission 15 ist Prüfungsmorgen, der Lehrer wartet in der Aula;
+## nach der Prüfung steht Vince Moretti neben ihm.
+func _finale_zustand() -> void:
+	var morgen := Spielstand.quest_status("q15_adresse") == "erledigt"
+	aula.tageszeit(morgen)
+	if aktueller_bereich == aula:
+		_umgebung.environment = aula.umwelt
+	if morgen:
+		aula.server_reparieren()
+		lehrer.platzieren(aula.lehrer_platz(), aula.lehrer_blick)
+		personen["lehrer"]["bereich"] = aula
+		personen["lehrer"]["blick"] = aula.lehrer_blick
+		personen["lehrer"]["abstand"] = 1.9
+		keller.stationen["lehrer"].aktiv = false
+		aula.stationen["lehrer"].aktiv = true
+		lehrer.visible = aktueller_bereich == aula
+	var pruefung := Spielstand.quest_status("q16_pruefung")
+	aula.vince_zeigen("lehrer" if pruefung in ["zurueck", "erledigt"] else "")
+	if pruefung == "erledigt":
+		aula.pruefung_beendet()
 
 
 func _anlage_reparieren(quest_id: String) -> void:
@@ -186,6 +213,18 @@ func _anlage_reparieren(quest_id: String) -> void:
 		"q11_lauscher":
 			werkstatt.netz_reparieren()
 			werkstatt.lauscher_zeigen(false)
+		"q12_kochplatte":
+			erdgeschoss.kochstation_reparieren()
+		"q13_luft":
+			turnhalle.luefter_reparieren()
+		"q14_nachlauf":
+			werkstatt.baender_reparieren()
+			werkstatt.funkmodul_zeigen(false)
+		"q15_adresse":
+			aula.server_reparieren()
+			aula.klon_zeigen(false)
+		"q16_pruefung":
+			aula.vince_zeigen("lehrer")
 
 
 func _zustand_sichern() -> void:
@@ -235,6 +274,7 @@ func _bereich_mit_titel(t: String) -> Bereich:
 func _ziel_aktualisieren() -> void:
 	var q := Spielstand.aktuelle_quest()
 	keller.stationen["tuer"].hinweis = "Treppe nach oben" if _tuer_offen("tuer") else "Tür nach oben"
+	erdgeschoss.treppe_oben(_tuer_offen("oben"))
 	var ziel: Variant = null
 	var geber := ""
 	var status := ""
@@ -245,7 +285,7 @@ func _ziel_aktualisieren() -> void:
 		status = Spielstand.quest_status(q["id"])
 		match status:
 			"offen":
-				hud.ziel(ZIEL_START.get(geber, "Sprich mit deinem Auftraggeber."))
+				hud.ziel(q.get("ziel_start", ZIEL_START.get(geber, "Sprich mit deinem Auftraggeber.")))
 				ziel = person_vorne(geber)
 			"aktiv":
 				hud.ziel(q["ziel_hin"])
@@ -428,7 +468,9 @@ func _tuer_bereich(id: String) -> Bereich:
 
 func _radio_spielen() -> void:
 	var akt := "akt1"
-	if _tuer_offen("turnhalle"):
+	if Spielstand.quest_status("q11_lauscher") == "erledigt":
+		akt = "akt4"
+	elif _tuer_offen("turnhalle"):
 		akt = "akt3"
 	elif _tuer_offen("tuer"):
 		akt = "akt2"
@@ -457,6 +499,7 @@ func _station(id: String) -> void:
 			"unterverteilung": erdgeschoss.uv_oeffnen(true)
 			"bedienstelle": erdgeschoss.bedienstelle_oeffnen(true)
 			"absaugung": werkstatt.schrank_oeffnen(true)
+			"kochstation": erdgeschoss.kochstation_oeffnen(true)
 		var ok := await aufgaben.starte(q, Spielstand.fortschritt(q["id"]))
 		if ok:
 			await _auftrag_geloest(q)
@@ -465,6 +508,7 @@ func _station(id: String) -> void:
 				"unterverteilung": erdgeschoss.uv_oeffnen(false)
 				"bedienstelle": erdgeschoss.bedienstelle_oeffnen(false)
 				"absaugung": werkstatt.schrank_oeffnen(false)
+				"kochstation": erdgeschoss.kochstation_oeffnen(false)
 		return
 	var texte := {
 		"verteiler_licht": ["Die Leuchte flackert. Die Abzweigdose -XD3 sieht unauffällig aus … Vielleicht weiß der Lehrer mehr.",
@@ -489,6 +533,16 @@ func _station(id: String) -> void:
 			"+S3: Erst die Absaugung, dann die Säge. Die Luft ist klar."],
 		"werkstatt_pc": ["Der Werkstatt-PC zeigt den 1. Januar 2000. Daneben blinkt ein alter Hub wie wild.",
 			"Neuer Switch, richtige Uhrzeit, ein ordentlicher Stuhl. So arbeitet man."],
+		"kochstation": ["Rosalitas Kochstation: drei Kochplatten mit Siebentaktschaltern, daneben eine Wärmeplatte im Dauerbetrieb. Die große Platte bleibt kalt.",
+			"Alle drei Platten heizen, der Topf dampft. Die Wärmeplatte ist aus – bis morgen früh."],
+		"solarluefter": ["Bradleys Solarlüfter: vier Mini-Module, zwei Lüfter, ein Akku. Unter dem Baustrahler zucken die Lüfter nur.",
+			"Unter dem Baustrahler laufen beide Lüfter mit voller Drehzahl."],
+		"laborbaender": ["Die Laborbänder für die praktische Prüfung. Im Steuerkasten blinkt etwas Blaues, das nicht in den Plan gehört.",
+			"Band 2 läuft an, nach 4 Sekunden folgt Band 1. So soll es sein."],
+		"pruefungsserver": ["Prüfungsserver 192.168.10.10. Die LEDs blinken unruhig, die Prüfungs-PCs finden ihn nur manchmal.",
+			"Prüfungsserver bereit. Jede Adresse gibt es nur einmal."],
+		"pruefungsplatz": ["Dein Prüfungsplatz: vorne links, mit Namensschild.",
+			"Dein Prüfungsplatz. Die Prüfung ist geschrieben."],
 	}
 	var fertig := false
 	match id:
@@ -503,6 +557,11 @@ func _station(id: String) -> void:
 		"vorhang": fertig = turnhalle.vorhang_ok
 		"absaugung": fertig = werkstatt.absaugung_ok
 		"werkstatt_pc": fertig = werkstatt.netz_ok
+		"kochstation": fertig = erdgeschoss.kochstation_ok
+		"solarluefter": fertig = turnhalle.luefter_ok
+		"laborbaender": fertig = werkstatt.baender_ok
+		"pruefungsserver": fertig = aula.server_ok
+		"pruefungsplatz": fertig = Spielstand.quest_status("q16_pruefung") in ["zurueck", "erledigt"]
 	if texte.has(id):
 		hud.toast("Untersucht", texte[id][1 if fertig else 0])
 
@@ -604,6 +663,46 @@ func _fund_sequenz(q: Dictionary) -> void:
 				{"von": ws.to_global(Vector3(9.0, 1.3, 5.6)), "nach": ws.to_global(Vector3(9.1, 1.2, 5.85)), "blick_von": ws.to_global(Vector3(9.22, 0.8, 6.45)),
 					"dauer": 5.0, "t": fund[1], "aktion": func(): ws.lauscher_zeigen(true); Audio.spiele("beweis", -2.0)},
 			]
+		"q12_kochplatte":
+			var eg := erdgeschoss
+			shots = [
+				{"von": eg.to_global(Vector3(27.8, 2.0, 5.4)), "nach": eg.to_global(Vector3(28.5, 1.8, 6.1)), "blick_von": eg.to_global(Vector3(28.9, 0.9, 8.4)),
+					"dauer": 4.0, "t": fund[0], "aktion": func(): eg.kochstation_reparieren(); Audio.spiele("richtig", -6.0)},
+				{"von": eg.to_global(Vector3(29.1, 1.0, 7.2)), "nach": eg.to_global(Vector3(29.25, 0.8, 7.55)), "blick_von": eg.to_global(Vector3(29.35, 0.45, 8.1)),
+					"dauer": 5.0, "t": fund[1], "aktion": func(): eg.kochstation_oeffnen(true, true); Audio.spiele("beweis", -2.0)},
+			]
+		"q13_luft":
+			var th := turnhalle
+			shots = [
+				{"von": th.to_global(Vector3(-9.6, 1.8, 6.6)), "nach": th.to_global(Vector3(-10.3, 1.6, 5.9)), "blick_von": th.to_global(Vector3(-12.5, 1.0, 4.6)),
+					"dauer": 4.0, "t": fund[0], "aktion": func(): th.luefter_reparieren(); Audio.spiele("richtig", -6.0)},
+				{"von": th.to_global(Vector3(-11.3, 1.45, 5.7)), "nach": th.to_global(Vector3(-11.65, 1.3, 5.35)), "blick_von": th.to_global(Vector3(-12.3, 0.85, 5.0)),
+					"dauer": 5.0, "t": fund[1], "aktion": func(): th.lieferschein_zeigen(true); Audio.spiele("beweis", -2.0)},
+			]
+		"q14_nachlauf":
+			var ws := werkstatt
+			shots = [
+				{"von": ws.to_global(Vector3(2.0, 1.9, 0.4)), "nach": ws.to_global(Vector3(2.8, 1.7, 0.8)), "blick_von": ws.to_global(Vector3(4.0, 1.1, 2.6)),
+					"dauer": 5.0, "t": fund[0], "aktion": func(): ws.baender_reparieren(); Audio.spiele("richtig", -6.0)},
+				{"von": ws.to_global(Vector3(5.5, 1.4, 1.6)), "nach": ws.to_global(Vector3(5.6, 1.28, 1.95)), "blick_von": ws.to_global(Vector3(5.67, 1.12, 2.55)),
+					"dauer": 5.0, "t": fund[1], "aktion": func(): ws.funkmodul_zeigen(true); Audio.spiele("beweis", -2.0)},
+			]
+		"q15_adresse":
+			var au := aula
+			shots = [
+				{"von": au.to_global(Vector3(-7.6, 2.2, -1.2)), "nach": au.to_global(Vector3(-8.6, 2.0, -2.0)), "blick_von": au.to_global(Vector3(-11.5, 1.2, -4.2)),
+					"dauer": 4.0, "t": fund[0], "aktion": func(): au.server_reparieren(); Audio.spiele("richtig", -6.0)},
+				{"von": au.to_global(Vector3(-10.8, 1.4, -3.1)), "nach": au.to_global(Vector3(-11.05, 1.25, -3.35)), "blick_von": au.to_global(Vector3(-11.58, 1.1, -3.7)),
+					"dauer": 5.0, "t": fund[1], "aktion": func(): au.klon_zeigen(true); Audio.spiele("beweis", -2.0)},
+			]
+		"q16_pruefung":
+			var au := aula
+			shots = [
+				{"von": au.to_global(Vector3(-2.0, 3.4, 8.6)), "nach": au.to_global(Vector3(0.0, 3.0, 7.6)), "blick_von": au.to_global(Vector3(0.0, 2.2, -6.0)),
+					"dauer": 4.5, "t": fund[0], "aktion": func(): au.licht_flackern(); Audio.spiele("klick", -2.0)},
+				{"von": au.to_global(Vector3(-7.4, 1.75, 5.4)), "nach": au.to_global(Vector3(-7.9, 1.7, 6.3)), "blick_von": au.to_global(Vector3(-9.0, 1.45, 8.7)),
+					"dauer": 5.0, "t": fund[1], "aktion": func(): au.vince_zeigen("tuer"); Audio.spiele("beweis", -2.0)},
+			]
 	if not shots.is_empty():
 		spieler.visible = false
 		await sequenz.spiele(shots)
@@ -621,6 +720,10 @@ func _fund_sequenz(q: Dictionary) -> void:
 			turnhalle.schluessel_zeigen(false)
 		"q10_absaugung":
 			werkstatt.vertrag_entfernen()
+		"q12_kochplatte":
+			erdgeschoss.kochstation_oeffnen(false)
+		"q13_luft":
+			turnhalle.lieferschein_zeigen(false)
 
 
 # ---------------------------------------------------------------- Gespräche mit Auftraggebern
@@ -690,6 +793,7 @@ func _mission_abschluss(q: Dictionary) -> void:
 	var rang_vorher := Spielstand.rang()
 	Spielstand.ruf_dazu(int(q["ruf"]) + bonus)
 	Spielstand.setze_quest_status(q["id"], "erledigt")
+	_finale_zustand()
 	_ziel_aktualisieren()
 	await hud.mission_passed(int(q["ruf"]) + bonus, bonus)
 	if Spielstand.rang() != rang_vorher:
@@ -733,12 +837,18 @@ func _bilanz() -> void:
 				geloest += 1
 			if s.get("aufgeloest", false):
 				aufgeloest += 1
+	var pruefung := Daten.quest("q16_pruefung")
+	var pruefung_erster := 0
+	for aid in pruefung.get("aufgaben", []):
+		if Spielstand.d["statistik"].get(aid, {}).get("erster_versuch", false):
+			pruefung_erster += 1
 	var zeit := int(Spielstand.d["spielzeit"])
 	var zeilen := [
 		"Spieler/-in:  %s   ·   Klasse MT10" % Spielstand.d["name"],
 		"Rang:  %s   (Ruf %d)" % [Spielstand.rang(), Spielstand.ruf()],
 		"Fachaufgaben gelöst:  %d / %d   –   davon beim ersten Versuch: %d" % [geloest, gesamt, erster],
 		"Lösung anzeigen lassen:  %d×" % aufgeloest,
+		"Abschlussprüfung:  %d / %d Aufgaben beim ersten Versuch" % [pruefung_erster, pruefung.get("aufgaben", []).size()],
 		"Beweisstücke:  %d / %d" % [Spielstand.d["beweise"].size(), Daten.beweise.get("beweise", {}).size()],
 		"Verlorene Bauteile:  %d / %d" % [Spielstand.d["sammel"].size(), Daten.beweise.get("sammel", {}).size()],
 		"Spielzeit:  %d min %02d s" % [zeit / 60, zeit % 60],

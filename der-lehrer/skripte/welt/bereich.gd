@@ -254,6 +254,10 @@ func _sammel_neu(id: String, pos: Vector3) -> void:
 			var b := Bau.box(k, Vector3(0.16, 0.008, 0.03), Vector3(0, -0.004, 0), metall)
 			a.rotation.z = 0.15
 			b.rotation.z = 0.15
+		"s_zeitrelais":
+			Bau.box(k, Vector3(0.09, 0.12, 0.07), Vector3.ZERO, Bau.mat(Color(0.85, 0.85, 0.82)))
+			Bau.box(k, Vector3(0.07, 0.03, 0.005), Vector3(0, 0.03, 0.036), Bau.mat(Color(0.2, 0.3, 0.55)))
+			Bau.zylinder(k, 0.012, 0.01, Vector3(0, -0.02, 0.038), Bau.mat(Color(0.95, 0.75, 0.1)), Vector3(PI / 2, 0, 0))
 		_:
 			Bau.box(k, Vector3(0.1, 0.12, 0.08), Vector3.ZERO, Bau.mat(Color(0.35, 0.37, 0.4)))
 			Bau.box(k, Vector3(0.06, 0.02, 0.085), Vector3(0, 0.03, 0), Bau.mat(Color(0.9, 0.9, 0.9)))

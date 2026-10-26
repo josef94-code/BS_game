@@ -65,6 +65,13 @@ static func zahl_gueltig(x: float, gueltig: int = 3) -> String:
 	return s.replace(".", ",")
 
 
+## Ergebnis einer Rechenaufgabe für die Anzeige: drei gültige Stellen, bei "ganzzahl" (Zahlensysteme) ohne Komma
+static func ergebnis_text(a: Dictionary, x: float) -> String:
+	if a.get("ganzzahl", false):
+		return zahl_text(roundf(x), 0)
+	return zahl_gueltig(x)
+
+
 ## Platzhalter {X} im Text ersetzen ({ERG} mit drei gültigen Stellen)
 static func text(t: String, w: Dictionary, stellen: int = 3) -> String:
 	for k in w.keys():
@@ -132,9 +139,17 @@ static func spulen(a: Dictionary) -> Dictionary:
 	return {logik["spule"]: logik["ausdruck"]}
 
 
+## Ansprechverzögerte Zeitrelais der Schaltung: Name -> Verzögerungszeit in s (z. B. {"KF1": 4}).
+## Ihre verzögerten Kontakte heißen in den Logikausdrücken <Name>_T (z. B. KF1_T).
+static func zeitrelais(a: Dictionary) -> Dictionary:
+	return a["logik"].get("zeitrelais", {})
+
+
 ## Simuliert den Steuerstromkreis.
 ## belegung: Lücken-ID -> Options-ID, eingaenge: Taster -> bool (z. B. {"SJ1": false, "SJ2": true}),
 ## vorher: Spule -> bool (Zustand vor dem Schritt; Selbsthaltung und Verriegelung hängen davon ab).
+## Bei Zeitrelais steht in eingaenge zusätzlich <Name>_T = true, sobald die Verzögerungszeit abgelaufen ist;
+## der verzögerte Kontakt schaltet nur, solange die Spule des Zeitrelais Spannung hat.
 ## Alle Spulen werden gleichzeitig neu berechnet, bis sich nichts mehr ändert.
 ## Rückgabe: {"spulen": {Spule: bool}, "stabil": bool}
 static func simuliere(a: Dictionary, belegung: Dictionary, eingaenge: Dictionary, vorher: Dictionary) -> Dictionary:
@@ -142,8 +157,12 @@ static func simuliere(a: Dictionary, belegung: Dictionary, eingaenge: Dictionary
 	namen_spulen.sort()
 	var taster: Array = a["logik"].get("taster", {}).keys()
 	taster.sort()
+	var zeiten: Array = zeitrelais(a).keys()
+	zeiten.sort()
 	var namen := PackedStringArray(taster)
 	namen.append_array(PackedStringArray(namen_spulen))
+	for z in zeiten:
+		namen.append(z + "_T")
 	var ausdruecke := {}
 	for sp in namen_spulen:
 		var ausdruck: String = spulen(a)[sp]
@@ -166,6 +185,8 @@ static func simuliere(a: Dictionary, belegung: Dictionary, eingaenge: Dictionary
 			werte.append(bool(eingaenge.get(t, false)))
 		for sp in namen_spulen:
 			werte.append(zustand[sp])
+		for z in zeiten:
+			werte.append(bool(eingaenge.get(z + "_T", false)) and bool(zustand.get(z, false)))
 		var neu := {}
 		for sp in namen_spulen:
 			neu[sp] = bool((ausdruecke[sp] as Expression).execute(werte))
@@ -180,12 +201,23 @@ static func simuliere(a: Dictionary, belegung: Dictionary, eingaenge: Dictionary
 
 
 ## Prüfablauf aus der Aufgabe durchspielen. Rückgabe: Liste {text, ok, stabil}
+## Ein Schritt mit "zeit": true lässt die Verzögerungszeit aller angezogenen Zeitrelais ablaufen.
 static func pruefe_schaltung(a: Dictionary, belegung: Dictionary) -> Array:
 	var erg := []
 	var zustand := {}
+	var abgelaufen := {}
 	for schritt in a["pruefung"]:
-		var r := simuliere(a, belegung, schritt, zustand)
+		var eingaenge: Dictionary = schritt.duplicate()
+		for z in zeitrelais(a):
+			if schritt.get("zeit", false) and zustand.get(z, false):
+				abgelaufen[z] = true
+			eingaenge[z + "_T"] = abgelaufen.get(z, false)
+		var r := simuliere(a, belegung, eingaenge, zustand)
 		zustand = r["spulen"]
+		# Fällt das Zeitrelais ab, beginnt die Verzögerung beim nächsten Anzug von vorn
+		for z in zeitrelais(a):
+			if not zustand.get(z, false):
+				abgelaufen[z] = false
 		var ok: bool = r["stabil"]
 		for sp in zustand:
 			if schritt.has(sp) and bool(schritt[sp]) != bool(zustand[sp]):

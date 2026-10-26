@@ -13,6 +13,7 @@ var sparky_blick := PI
 
 var absaugung_ok := false
 var netz_ok := false
+var baender_ok := false
 
 var _zeit := 0.0
 var _takt := 0.0
@@ -27,6 +28,12 @@ var _lauscher_led: StandardMaterial3D
 var _stuhl_alt: Node3D
 var _stuhl_neu: Node3D
 var _absaug_audio: AudioStreamPlayer3D
+var _gurt_mats: Array[StandardMaterial3D] = []
+var _pakete: Array[Node3D] = []
+var _band_zeit := 0.0
+var _funkmodul: Node3D
+var _funk_led: StandardMaterial3D
+var _kf1_led: StandardMaterial3D
 
 var m_metall: StandardMaterial3D
 var m_dunkel: StandardMaterial3D
@@ -49,6 +56,7 @@ func _ready() -> void:
 	_schaltschrank()
 	_laborplaetze()
 	_pc_ecke()
+	_laborbaender()
 	_sammel_neu("s_knopfzelle", Vector3(X - 0.6, 0.98, -3.0))
 	_sammel_neu("s_bimetall", Vector3(-8.0, 0.06, 6.6))
 	_schatten()
@@ -437,6 +445,87 @@ func _schatten() -> void:
 		_schattenfleck(Vector3(-2.5 + i * 2.6, 0, -Z + 0.45), Vector2(2.6, 1.2))
 
 
+# ---------------------------------------------------------------- Laborbänder (Akt 4)
+
+## Modell der Sortierstation für die praktische Prüfung: Band 1 übergibt an Band 2,
+## Steuerkasten mit Zeitrelais -KF1 (ansprechverzögert, 4 s)
+func _laborbaender() -> void:
+	var t := Node3D.new()
+	t.position = Vector3(4.0, 0, 2.6)
+	add_child(t)
+	Bau.box(t, Vector3(3.2, 0.06, 1.0), Vector3(0, 0.82, 0), m_holz)
+	Bau.box(t, Vector3(3.1, 0.78, 0.9), Vector3(0, 0.4, 0), m_gruen)
+	var rahmen := Bau.mat(Color(0.3, 0.45, 0.65), "metall", 1.0, 0.01)
+	# Band 1 (höher, links) und Band 2 (rechts)
+	for i in 2:
+		var laenge := 1.2 if i == 0 else 1.5
+		var mx := -0.75 if i == 0 else 0.62
+		var h := 1.18 if i == 0 else 1.02
+		for seite in [-1, 1]:
+			Bau.box(t, Vector3(laenge, 0.06, 0.03), Vector3(mx, h, 0.13 * seite), rahmen)
+		for dx in [-laenge * 0.45, laenge * 0.45]:
+			Bau.box(t, Vector3(0.04, h - 0.85, 0.04), Vector3(mx + dx, 0.85 + (h - 0.85) * 0.5, 0.0), rahmen)
+		var gurt := StandardMaterial3D.new()
+		gurt.albedo_texture = Bau.tex("nadelstreifen")
+		gurt.albedo_color = Color(0.35, 0.35, 0.37)
+		gurt.uv1_scale = Vector3(laenge * 2.0, 1, 1)
+		Bau.box(t, Vector3(laenge, 0.02, 0.24), Vector3(mx, h + 0.02, 0), gurt)
+		_gurt_mats.append(gurt)
+		Bau.schild(t, "BAND %d" % (i + 1), Vector3(mx, h - 0.05, -0.15), 12, Color(0.95, 0.95, 0.95), PI, 2)
+	# kleine Pakete auf den Bändern
+	var farben := [Color(0.85, 0.6, 0.3), Color(0.3, 0.5, 0.8), Color(0.75, 0.2, 0.2)]
+	for i in 3:
+		var p := Bau.box(t, Vector3(0.12, 0.1, 0.12), Vector3(-1.2 + i * 0.95, 1.25, 0), Bau.mat(farben[i]))
+		p.set_meta("dynamisch", true)
+		_pakete.append(p)
+	# Steuerkasten mit Tastern, Meldeleuchten und Zeitrelais
+	var k := Node3D.new()
+	k.position = Vector3(1.75, 0.85, 0.05)
+	t.add_child(k)
+	Bau.box(k, Vector3(0.4, 0.6, 0.3), Vector3(0, 0.3, 0), Bau.mat(Color(0.85, 0.85, 0.82), "metall", 1.0, 0.01))
+	Bau.box(k, Vector3(0.36, 0.56, 0.01), Vector3(0, 0.3, -0.155), Bau.glas(Color(0.6, 0.7, 0.8, 0.2)))
+	Bau.box(k, Vector3(0.3, 0.02, 0.02), Vector3(0, 0.45, -0.12), m_metall)
+	for j in 4:
+		Bau.box(k, Vector3(0.05, 0.1, 0.07), Vector3(-0.11 + j * 0.07, 0.45, -0.1), Bau.mat([Color(0.25, 0.3, 0.38), Color(0.85, 0.85, 0.82)][j % 2]))
+	Bau.box(k, Vector3(0.07, 0.1, 0.07), Vector3(0.12, 0.25, -0.1), Bau.mat(Color(0.2, 0.3, 0.55)))
+	_kf1_led = StandardMaterial3D.new()
+	_kf1_led.albedo_color = Color(0.9, 0.2, 0.1)
+	_kf1_led.emission_enabled = true
+	_kf1_led.emission = Color(0.9, 0.2, 0.1)
+	_kf1_led.emission_energy_multiplier = 2.0
+	Bau.box(k, Vector3(0.015, 0.015, 0.01), Vector3(0.12, 0.28, -0.14), _kf1_led)
+	Bau.schild(k, "-KF1  4 s", Vector3(0.12, 0.18, -0.14), 8, Color(0.1, 0.1, 0.1), PI)
+	for j in 3:
+		Bau.zylinder(k, 0.025, 0.03, Vector3(-0.12 + j * 0.08, 0.12, -0.17), Bau.mat([Color(0.85, 0.1, 0.1), Color(0.1, 0.6, 0.2), Color(0.95, 0.95, 0.9)][j]), Vector3(PI / 2, 0, 0))
+	# Das Funkschaltmodul von Sterling Bau
+	_funkmodul = Node3D.new()
+	_funkmodul.position = Vector3(-0.08, 0.27, -0.1)
+	_funkmodul.set_meta("dynamisch", true)
+	k.add_child(_funkmodul)
+	Bau.box(_funkmodul, Vector3(0.09, 0.07, 0.05), Vector3.ZERO, Bau.mat(Color(0.08, 0.08, 0.09)))
+	Bau.zylinder(_funkmodul, 0.005, 0.14, Vector3(0.03, 0.1, 0), m_dunkel)
+	_funk_led = StandardMaterial3D.new()
+	_funk_led.albedo_color = Color(0.2, 0.5, 1.0)
+	_funk_led.emission_enabled = true
+	_funk_led.emission = Color(0.2, 0.5, 1.0)
+	_funk_led.emission_energy_multiplier = 2.5
+	Bau.box(_funkmodul, Vector3(0.012, 0.012, 0.01), Vector3(-0.025, 0.015, -0.026), _funk_led)
+	Bau.schild(k, "LABORBÄNDER · PRÜFUNG MT10", Vector3(-2.0, 0.06, -0.52), 14, Color(0.95, 0.95, 0.9), PI, 2)
+	Bau.kollisionsbox(t, Vector3(3.2, 1.0, 1.0), Vector3(0, 0.5, 0))
+	_form(4.0, 2.6, 3.2, 1.0, Color(0.25, 0.42, 0.33))
+	stationen["laborbaender"] = Interaktiv.neu(self, "laborbaender", Vector3(4.0, 0, 1.5), "Laborbänder prüfen", 1.6)
+
+
+func baender_reparieren() -> void:
+	baender_ok = true
+	_band_zeit = 0.0
+
+
+func funkmodul_zeigen(an: bool) -> void:
+	_funkmodul.visible = an
+	_funkmodul.scale = Vector3.ONE * (2.2 if an else 1.0)
+
+
 # ---------------------------------------------------------------- Anlagen
 
 func absaugung_reparieren() -> void:
@@ -473,6 +562,23 @@ func _process(delta: float) -> void:
 		return
 	# Säge läuft (Leerlauf), Absaugung erst nach der Reparatur
 	_saegeblatt.rotate_y(delta * 30.0)
+	# Laborbänder: Band 2 sofort, Band 1 nach 4 s (Zeitrelais)
+	if baender_ok:
+		_band_zeit += delta
+		var band1 := _band_zeit > 4.0
+		_gurt_mats[1].uv1_offset.x -= delta * 0.6
+		if band1:
+			_gurt_mats[0].uv1_offset.x -= delta * 0.6
+		_kf1_led.emission_energy_multiplier = 0.2 if band1 else 2.0
+		for p in _pakete:
+			var auf_band1 := p.position.x < -0.15
+			if band1 or not auf_band1:
+				p.position.x += delta * 0.3
+			p.position.y = 1.25 if p.position.x < -0.15 else 1.09
+			if p.position.x > 1.3:
+				p.position.x = -1.3
+	if _funkmodul.visible:
+		_funk_led.emission_energy_multiplier = 2.5 if fmod(_zeit, 0.7) < 0.2 else 0.2
 	_takt -= delta
 	if _takt > 0.0:
 		return

@@ -92,3 +92,23 @@ static func rosalita() -> Person:
 	})
 	p.arbeitet = true
 	return p
+
+
+## Vince Moretti, Abschlussklasse, Anführer der Black Roses: schwarze Jacke mit Rosen-Schriftzug
+static func vince() -> Person:
+	return Person.new({
+		"haut": Color(0.9, 0.73, 0.6),
+		"haare": Color(0.05, 0.04, 0.04),
+		"frisur": "tolle",
+		"augenfarbe": Color(0.2, 0.18, 0.15),
+		"bart": 0.25,
+		"haaransatz": 0.28,
+		"jacke": Color(0.07, 0.07, 0.08),
+		"hose": Color(0.12, 0.13, 0.16),
+		"hose_textur": "jeans",
+		"schuhe": Color(0.05, 0.05, 0.05),
+		"sohle": Color(0.9, 0.9, 0.88),
+		"anzug": false,
+		"aufdruck_hinten": "BLACK ROSES",
+		"breite": 0.97,
+	})

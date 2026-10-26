@@ -58,6 +58,25 @@ const SCHALTUNG_VARIANTEN := {
 			{"L1": "QA2_NO", "L2": "BRUECKE", "L3": "SJ4_NO", "L4": "QA1_NO"},
 		],
 	},
+	"st_zeitfolge": {
+		"richtig": [
+			{"L1": "QA2_43", "L2": "QA1_21", "L3": "KF1_17", "L4": "QA1_13"},
+			{"L1": "QA2_43", "L2": "QA1_21", "L3": "QA1_13", "L4": "KF1_17"},
+		],
+		"falsch": [
+			# Zeitrelais bleibt dauernd an (Grundversion ohne Abschaltung)
+			{"L1": "QA2_43", "L2": "BRUECKE", "L3": "KF1_17", "L4": "QA1_13"},
+			# ohne Folgekontakt bzw. mit Öffner von -QA2: Band 1 startet ohne Band 2
+			{"L1": "BRUECKE", "L2": "QA1_21", "L3": "KF1_17", "L4": "QA1_13"},
+			{"L1": "QA2_21", "L2": "QA1_21", "L3": "KF1_17", "L4": "QA1_13"},
+			# verzögerter Öffner statt Schließer: Band 1 läuft sofort an
+			{"L1": "QA2_43", "L2": "QA1_21", "L3": "KF1_15", "L4": "QA1_13"},
+			# Selbsthaltung fehlt: Band 1 fällt ab, sobald -KF1 abschaltet
+			{"L1": "QA2_43", "L2": "QA1_21", "L3": "KF1_17", "L4": "BRUECKE"},
+			{"L1": "QA2_43", "L2": "QA1_21", "L3": "KF1_17", "L4": "QA2_21"},
+			{"L1": "QA2_43", "L2": "QA1_13", "L3": "KF1_17", "L4": "QA1_21"},
+		],
+	},
 }
 
 
@@ -75,6 +94,18 @@ func _init() -> void:
 	var beweise: Dictionary = DatenSkript.lade("res://daten/beweise.json")
 
 	var personen := ["lehrer", "kowalski", "rosalita", "bradley", "sparky"]
+	# Ränge: Consigliere erst mit dem Finale (auch mit allen Bonuspunkten nicht vorher)
+	var ruf_min := 0
+	var ruf_max := 0
+	var raenge: Array = quests["raenge"]
+	var letzter: int = int(raenge[raenge.size() - 1]["ab"])
+	for i in quests["quests"].size():
+		var q: Dictionary = quests["quests"][i]
+		ruf_min += int(q["ruf"])
+		ruf_max += int(q["ruf"]) + int(quests["bonus_pro_aufgabe"]) * q["aufgaben"].size()
+		if i == quests["quests"].size() - 2:
+			pruefe(ruf_max < letzter, "Höchster Rang schon vor dem Finale erreichbar (%d)" % ruf_max)
+	pruefe(ruf_min >= letzter, "Höchster Rang im Finale nicht sicher erreichbar (%d)" % ruf_min)
 	for q in quests["quests"]:
 		var geber: String = q.get("auftraggeber", "lehrer")
 		pruefe(geber in personen, "%s: unbekannter Auftraggeber %s" % [q["id"], geber])

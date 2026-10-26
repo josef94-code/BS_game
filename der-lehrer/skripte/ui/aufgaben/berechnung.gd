@@ -33,17 +33,17 @@ func pruefen() -> bool:
 
 
 func loesung_zeigen() -> void:
-	_eingabe.text = AufgabenLogik.zahl_gueltig(float(w["ERG"]))
+	_eingabe.text = AufgabenLogik.ergebnis_text(a, float(w["ERG"]))
 	_eingabe.editable = false
 
 
 func automatisch_loesen() -> void:
-	_eingabe.text = AufgabenLogik.zahl_gueltig(float(w["ERG"]))
+	_eingabe.text = AufgabenLogik.ergebnis_text(a, float(w["ERG"]))
 	bereit_geaendert.emit()
 
 
 func loesung_text() -> String:
-	return "%s %s" % [AufgabenLogik.zahl_gueltig(float(w["ERG"])), a.get("einheit", "")]
+	return ("%s %s" % [AufgabenLogik.ergebnis_text(a, float(w["ERG"])), a.get("einheit", "")]).strip_edges()
 
 
 func fehler_info() -> String:

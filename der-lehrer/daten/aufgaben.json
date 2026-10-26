@@ -833,7 +833,7 @@
     "thema": "Elektrotechnik",
     "lehrplan": "LF 3 – Auswahl von Kabeln und Leitungen für die Energie- und Informationsübertragung (Lernunterlagen ET Kap. 4)",
     "schwierigkeit": 2,
-    "frage": "Der Snackautomat im Flur fällt immer wieder aus, seine Zuleitung ist auffällig warm. Auf dem Mantel steht: J-Y(ST)Y 2×2×0,8 mm². Der Automat nimmt im Betrieb I = {I} A auf. Berechne die Stromdichte J in einer Ader (A = 0,8 mm²).",
+    "frage": "Der Snackautomat im Flur fällt immer wieder aus, seine Zuleitung ist auffällig warm. Auf dem Mantel steht: J-Y(ST)Y 2×2×0,8 – die 0,8 ist der Aderdurchmesser in mm. Der Automat nimmt im Betrieb I = {I} A auf. Berechne die Stromdichte J in einer Ader.",
     "varianten": [
       {
         "I": 6
@@ -845,15 +845,15 @@
         "I": 7.2
       }
     ],
-    "loesung": "I / 0.8",
+    "loesung": "I / (0.8 * 0.8 * 3.14159265 / 4)",
     "einheit": "A/mm²",
     "toleranz": 0.02,
     "stellen": 3,
     "tipps": [
-      "Die Stromdichte gibt an, wie viel Strom sich auf welche Fläche verteilt.",
-      "J = I / A – Strom in A durch Querschnitt in mm² ergibt A/mm²."
+      "Erst den Querschnitt aus dem Durchmesser berechnen: A = π · d² / 4.",
+      "Dann J = I / A – Strom in A durch Querschnitt in mm² ergibt A/mm². A ≈ 0,503 mm²."
     ],
-    "erklaerung": "J = I / A = {I} A / 0,8 mm² ≈ {ERG} A/mm². Die Leitung ist deutlich überlastet und erwärmt sich unzulässig: Die Isolierung altert, wird spröde und kann schmelzen – Brandgefahr. J-Y(ST)Y ist eine Fernmeldeleitung für Signale, keine Energieleitung. Nach der Tabelle ist 0,8 mm² für diesen Zweck gar nicht zulässig."
+    "erklaerung": "A = π · (0,8 mm)² / 4 = 0,503 mm²; J = I / A = {I} A / 0,503 mm² ≈ {ERG} A/mm². Die Leitung ist deutlich überlastet und erwärmt sich unzulässig: Die Isolierung altert, wird spröde und kann schmelzen – Brandgefahr. J-Y(ST)Y ist eine Fernmeldeleitung für Signale, keine Energieleitung. Energieleitungen brauchen mindestens 1,5 mm²; 0,5 mm² ist nur für Steuer- und Signalstromkreise zulässig."
   },
   "et_belastbarkeit": {
     "typ": "mc",
@@ -861,11 +861,11 @@
     "thema": "Elektrotechnik",
     "lehrplan": "LF 3 – Auswahl von Kabeln und Leitungen für die Energie- und Informationsübertragung (Lernunterlagen ET Kap. 4)",
     "schwierigkeit": 2,
-    "frage": "Die neue Zuleitung versorgt Snack- und Kaffeeautomat gemeinsam und führt dauerhaft 22 A. Auszug aus der Tabelle (Verlegeart C, 30 °C, 2 belastete Adern): 0,8 mm² nicht zulässig · 1,5 mm² 19,5 A · 2,5 mm² 27 A · 4 mm² 36 A · 6 mm² 46 A. Welchen Querschnitt brauchst du mindestens?",
+    "frage": "Die neue Zuleitung versorgt Snack- und Kaffeeautomat gemeinsam und führt dauerhaft 22 A. Auszug aus dem Tabellenbuch (Verlegeart C, 30 °C, 2 belastete Adern): 1,5 mm² 19,5 A · 2,5 mm² 27 A · 4 mm² 36 A · 6 mm² 46 A. Welchen Querschnitt brauchst du mindestens?",
     "optionen": [
       "2,5 mm²",
       "1,5 mm²",
-      "0,8 mm²",
+      "0,5 mm²",
       "6 mm²"
     ],
     "richtig": [
@@ -875,7 +875,7 @@
       "Die Strombelastbarkeit ist der höchste Strom, den eine Leitung dauerhaft führen darf.",
       "Suche den kleinsten Querschnitt, dessen Strombelastbarkeit mindestens 22 A beträgt. 19,5 A reichen nicht."
     ],
-    "erklaerung": "1,5 mm² darf nur 19,5 A dauerhaft führen – zu wenig für 22 A. 2,5 mm² verträgt 27 A und ist der kleinste passende Querschnitt. 6 mm² ginge auch, ist aber unnötig teuer und schwer zu verlegen. Die Werte hängen von Verlegeart, Umgebungstemperatur und Aderzahl ab – deshalb immer die Bedingungen der Tabelle beachten."
+    "erklaerung": "1,5 mm² darf nur 19,5 A dauerhaft führen – zu wenig für 22 A. 2,5 mm² verträgt 27 A und ist der kleinste passende Querschnitt. 6 mm² ginge auch, ist aber unnötig teuer und schwer zu verlegen. 0,5 mm² ist nur für Steuer- und Signalstromkreise zulässig, Energieleitungen brauchen mindestens 1,5 mm². Die Werte hängen von Verlegeart, Umgebungstemperatur und Aderzahl ab – deshalb immer die Bedingungen der Tabelle beachten."
   },
   "et_nym": {
     "typ": "mc",
@@ -921,7 +921,7 @@
       "Eine Farbkombination ist ausschließlich für den Schutzleiter reserviert.",
       "Außenleiter L1, L2, L3 sind braun, schwarz oder grau. Der Neutralleiter ist blau."
     ],
-    "erklaerung": "PE – Schutzleiter, grün-gelb, leitet Fehlerströme ab. N – Neutralleiter, blau, führt den Betriebsstrom zurück. L1, L2, L3 – Außenleiter, braun/schwarz/grau. Grün-gelb darf für nichts anderes als den Schutzleiter (bzw. PEN) verwendet werden."
+    "erklaerung": "PE – Schutzleiter, grün-gelb, leitet Fehlerströme ab. N – Neutralleiter, blau, führt den Betriebsstrom zurück. L1, L2, L3 – Außenleiter, braun/schwarz/grau. Grün-gelb darf für nichts anderes verwendet werden als für den Schutzleiter – und für den PEN-Leiter: grün-gelb, an den Enden blau markiert."
   },
   "et_spannungsfall": {
     "typ": "berechnung",
@@ -3297,5 +3297,1344 @@
       "Ein zu tiefer Bildschirm führt zu Nackenverspannungen – zu hoch aber auch."
     ],
     "erklaerung": "Sehabstand 50–80 cm, oberste Zeile auf oder unter Augenhöhe, Tischhöhe 68–76 cm, Sitzhöhe 42–53 cm, Winkel an Knie und Ellbogen etwa 90°, mindestens 500 lx blendfrei. Gegen Nackenschmerzen am Notebook: Notebook-Ständer, externe Tastatur und Maus, regelmäßige Pausen (20-20-20-Regel)."
+  },
+  "et_toaster": {
+    "typ": "berechnung",
+    "titel": "Toast für die Prüflinge",
+    "thema": "Elektrotechnik",
+    "lehrplan": "LF 3 – Elektrische Größen, deren Zusammenhänge und Berechnungen (Lernunterlagen ET Kap. 5)",
+    "schwierigkeit": 1,
+    "frage": "Rosalita toastet für das Prüfungsfrühstück der MT10. Ein Toastvorgang dauert t = {t} s, der Toaster hat eine Leistung von P = {P} W. Berechne die elektrische Arbeit für einen Toastvorgang in Wh.",
+    "varianten": [
+      {
+        "P": 700,
+        "t": 90,
+        "Ws": "63 000"
+      },
+      {
+        "P": 800,
+        "t": 120,
+        "Ws": "96 000"
+      },
+      {
+        "P": 1000,
+        "t": 150,
+        "Ws": "150 000"
+      }
+    ],
+    "loesung": "P * t / 3600",
+    "einheit": "Wh",
+    "toleranz": 0.02,
+    "stellen": 3,
+    "tipps": [
+      "Elektrische Arbeit: W = P · t. Mit W und s ergibt das Ws.",
+      "1 Wh = 3 600 Ws – teile das Ergebnis in Ws durch 3 600."
+    ],
+    "erklaerung": "W = P · t = {P} W · {t} s = {Ws} Ws; {Ws} Ws / 3 600 ≈ {ERG} Wh. Zum Vergleich: 1 kWh = 1 000 Wh = 3 600 000 Ws."
+  },
+  "et_wirkungsgrad": {
+    "typ": "berechnung",
+    "titel": "Zwei Wirkungsgrade",
+    "thema": "Elektrotechnik",
+    "lehrplan": "LF 3 – Elektrische Größen, deren Zusammenhänge und Berechnungen (Lernunterlagen ET Kap. 5)",
+    "schwierigkeit": 2,
+    "frage": "Der Antrieb des Förderbands in der Cafeteria: Motor η₁ = 0,85, Getriebe η₂ = 0,90. Am Band werden P_ab = {P} W gebraucht. Welche Leistung P_zu nimmt der Antrieb auf?",
+    "varianten": [
+      {
+        "P": 700
+      },
+      {
+        "P": 550
+      },
+      {
+        "P": 850
+      }
+    ],
+    "loesung": "P / (0.85 * 0.90)",
+    "einheit": "W",
+    "toleranz": 0.02,
+    "stellen": 3,
+    "tipps": [
+      "Hintereinander geschaltete Wirkungsgrade werden multipliziert: η_ges = η₁ · η₂.",
+      "η = P_ab / P_zu, also P_zu = P_ab / η_ges. Das Ergebnis muss größer sein als P_ab."
+    ],
+    "erklaerung": "η_ges = η₁ · η₂ = 0,85 · 0,90 = 0,765 = 76,5 %; P_zu = P_ab / η_ges = {P} W / 0,765 ≈ {ERG} W. Die Differenz P_V = P_zu − P_ab geht als Wärme in Wicklungen und Getriebe verloren."
+  },
+  "et_kochstufen": {
+    "typ": "sortieren",
+    "titel": "Der Siebentaktschalter",
+    "thema": "Elektrotechnik",
+    "lehrplan": "LF 3 – Elektrische Größen, deren Zusammenhänge und Berechnungen: Grundschaltungen (Lernunterlagen ET Kap. 6.9)",
+    "schwierigkeit": 3,
+    "frage": "Die große Kochplatte hat drei Heizwiderstände: R1 = 146 Ω, R2 = 165 Ω, R3 = 66,1 Ω, Spannung 230 V. Der Siebentaktschalter schaltet sie unterschiedlich zusammen. Sortiere nach der Leistung – oben die kleinste, unten die größte.",
+    "elemente": [
+      "R1, R2 und R3 in Reihe",
+      "R2 und R3 in Reihe",
+      "R2 allein",
+      "R3 allein",
+      "R2 und R3 parallel",
+      "R1, R2 und R3 parallel"
+    ],
+    "tipps": [
+      "Die Spannung ist immer 230 V. Nach P = U² / R gilt: je kleiner der Ersatzwiderstand, desto größer die Leistung.",
+      "In Reihe addieren sich die Widerstände, parallel ist der Ersatzwiderstand kleiner als der kleinste Einzelwiderstand."
+    ],
+    "erklaerung": "Reihe R1 + R2 + R3 = 378 Ω (Stufe 1, 140 W) → R2 + R3 = 231 Ω (Stufe 2, 220 W) → R2 = 165 Ω (Stufe 3, 320 W) → R3 = 66,1 Ω (Stufe 4, 800 W) → R2 ∥ R3 ≈ 47 Ω (Stufe 5, 1 100 W) → alle parallel ≈ 32 Ω (Stufe 6, 1 500 W). P = U² / R: Kleiner Widerstand – große Leistung."
+  },
+  "et_heizwiderstand": {
+    "typ": "berechnung",
+    "titel": "Ein Widerstand allein",
+    "thema": "Elektrotechnik",
+    "lehrplan": "LF 3 – Elektrische Größen, deren Zusammenhänge und Berechnungen: Grundschaltungen (Lernunterlagen ET Kap. 6.9)",
+    "schwierigkeit": 2,
+    "frage": "In Stellung 4 liegt der Heizwiderstand R3 allein an 230 V. Laut Typenschild nimmt die Platte dann P = {P} W auf. Berechne R3.",
+    "varianten": [
+      {
+        "P": 800
+      },
+      {
+        "P": 520
+      },
+      {
+        "P": 950
+      }
+    ],
+    "loesung": "230 * 230 / P",
+    "einheit": "Ω",
+    "toleranz": 0.02,
+    "stellen": 3,
+    "tipps": [
+      "Leite aus P = U · I und I = U / R eine Formel mit U und R her.",
+      "P = U² / R, also R = U² / P."
+    ],
+    "erklaerung": "P = U · I = U · U / R = U² / R → R3 = U² / P = (230 V)² / {P} W ≈ {ERG} Ω. Tipp aus der Werkstattküche: Zuerst die Stellungen nutzen, in denen ein Heizwiderstand allein angeschlossen ist."
+  },
+  "et_kochplatte_fehler": {
+    "typ": "mc",
+    "titel": "Kalt auf Stufe 1",
+    "thema": "Elektrotechnik",
+    "lehrplan": "LF 3 – Elektrische Größen, deren Zusammenhänge und Berechnungen: Grundschaltungen (Lernunterlagen ET Kap. 6.9)",
+    "schwierigkeit": 3,
+    "frage": "Rosalita: „Auf Stufe 1 bleibt die große Platte kalt, auf Stufe 6 wird sie nur langsam heiß. Die Stufen 2 bis 5 sind normal.“ (Stufe 1: R1, R2, R3 in Reihe · 2: R2 + R3 in Reihe · 3: R2 · 4: R3 · 5: R2 ∥ R3 · 6: alle parallel). Welcher Heizwiderstand ist unterbrochen?",
+    "optionen": [
+      "R1",
+      "R2",
+      "R3",
+      "Keiner – der Schalter klemmt auf Stellung 0"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Welcher Widerstand wird nur in den Stufen 1 und 6 benutzt?",
+      "Ist ein Widerstand in einer Reihenschaltung unterbrochen, fließt gar kein Strom mehr. Parallel fehlt nur sein Anteil."
+    ],
+    "erklaerung": "R1 wirkt nur in den Stellungen 1 und 6 – die Stufen 2 bis 5 nutzen nur R2 und R3. Ist R1 unterbrochen, bleibt Stufe 1 (Reihe) stromlos, und in Stufe 6 fehlen etwa 360 W (nur 1,1 kW statt 1,5 kW). Rückmeldung: Heizwiderstand R1 ist defekt, die Platte wird getauscht; bis dahin nicht benutzen, nach dem Tausch elektrisch prüfen."
+  },
+  "et_kosten": {
+    "typ": "berechnung",
+    "titel": "Dauerbetrieb",
+    "thema": "Elektrotechnik",
+    "lehrplan": "LF 3 – Elektrische Größen, deren Zusammenhänge und Berechnungen (Lernunterlagen ET Kap. 5)",
+    "schwierigkeit": 2,
+    "frage": "Ein Monteur von Sterling Bau hat die Wärmeplatten der Essensausgabe auf Dauerbetrieb gestellt: zusammen P = {P} kW, {h} h pro Tag, 365 Tage im Jahr. Rechenpreis 0,40 €/kWh. Was kostet das im Jahr?",
+    "varianten": [
+      {
+        "P": 1.01,
+        "h": 2
+      },
+      {
+        "P": 1.5,
+        "h": 6
+      },
+      {
+        "P": 2.4,
+        "h": 4
+      }
+    ],
+    "loesung": "P * h * 365 * 0.40",
+    "einheit": "€",
+    "toleranz": 0.02,
+    "stellen": 3,
+    "tipps": [
+      "Erst die Arbeit in kWh: W = P · t mit t = Stunden pro Tag · 365 Tage.",
+      "Dann die Kosten: K = W · k mit k = 0,40 €/kWh."
+    ],
+    "erklaerung": "W = P · t = {P} kW · {h} h/Tag · 365 Tage; K = W · 0,40 €/kWh ≈ {ERG} €. Geräte, die niemand braucht, gehören ausgeschaltet – das spart Energie und Geld."
+  },
+  "et_solar": {
+    "typ": "mc",
+    "titel": "Zwei Module, ein Lüfter",
+    "thema": "Elektrotechnik",
+    "lehrplan": "LF 3 – Elektrische Größen, deren Zusammenhänge und Berechnungen: Grundschaltungen (Lernunterlagen ET Kap. 6)",
+    "schwierigkeit": 2,
+    "frage": "Coach Bradley hat Mini-Solarmodule (je 5 V, 100 mA bei voller Sonne) und Lüftermotoren (3 – 6 V, Nennstrom 0,2 A). Zwei Module sollen einen Lüfter antreiben. Wie schließt du sie an?",
+    "optionen": [
+      "Parallel – 5 V und 0,2 A passen zum Motor",
+      "In Reihe – 10 V und 0,1 A",
+      "In Reihe – 10 V und 0,2 A",
+      "Parallel – 10 V und 0,1 A"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Reihe: Spannungen addieren sich, der Strom bleibt gleich. Parallel: Ströme addieren sich, die Spannung bleibt gleich.",
+      "Der Motor braucht 3 – 6 V und 0,2 A."
+    ],
+    "erklaerung": "Parallel: U = U1 = U2 = 5 V, I = I1 + I2 = 0,2 A – passt zum Motor. In Reihe: U = 10 V (über dem Motorbereich), I = 0,1 A (zu wenig). Dazu kommt: Wird ein Modul teilweise beschattet, läuft der Lüfter bei Parallelschaltung weiter; in Reihe begrenzt das beschattete Modul den Strom der ganzen Kette."
+  },
+  "et_regeln": {
+    "typ": "mc",
+    "titel": "Merksätze",
+    "thema": "Elektrotechnik",
+    "lehrplan": "LF 3 – Elektrische Größen, deren Zusammenhänge und Berechnungen: Grundschaltungen (Lernunterlagen ET Kap. 6)",
+    "schwierigkeit": 2,
+    "frage": "Bradley hat die Regeln auf die Taktiktafel geschrieben – aber nicht alle stimmen. Welche Aussagen sind richtig?",
+    "optionen": [
+      "Parallel ist der Ersatzwiderstand kleiner als der kleinste Einzelwiderstand.",
+      "In Reihe erhält der größte Widerstand die größte Teilspannung.",
+      "Parallel führt der größte Widerstand den größten Teilstrom.",
+      "In einer Reihenschaltung ist der Strom an jeder Stelle gleich.",
+      "Bei Parallelschaltung addieren sich die Teilspannungen."
+    ],
+    "richtig": [
+      0,
+      1,
+      3
+    ],
+    "tipps": [
+      "Reihe: I = I1 = I2, U = U1 + U2, U1 / U2 = R1 / R2.",
+      "Parallel: U = U1 = U2, I = I1 + I2, I1 / I2 = R2 / R1."
+    ],
+    "erklaerung": "Richtig: Parallel ist R kleiner als der kleinste Einzelwiderstand; in Reihe bekommt der größte Widerstand die größte Teilspannung (U1 / U2 = R1 / R2); in Reihe gibt es nur einen Stromweg, also überall denselben Strom. Falsch: Parallel führt der größte Widerstand den kleinsten Teilstrom (I1 / I2 = R2 / R1), und parallel liegt an allen dieselbe Spannung."
+  },
+  "et_knoten": {
+    "typ": "berechnung",
+    "titel": "Der Knoten",
+    "thema": "Elektrotechnik",
+    "lehrplan": "LF 3 – Elektrische Größen, deren Zusammenhänge und Berechnungen: Grundschaltungen (Lernunterlagen ET Kap. 6)",
+    "schwierigkeit": 2,
+    "frage": "Am Verteiler der Solarlüfter fließen von den Modulen I1 = {I1} mA und I2 = {I2} mA zu. Lüfter A zieht I3 = {I3} mA ab, Lüfter B I4 = {I4} mA. Der Rest fließt in die Ladeschaltung. Wie groß ist dieser Strom I5?",
+    "varianten": [
+      {
+        "I1": 200,
+        "I2": 200,
+        "I3": 120,
+        "I4": 150
+      },
+      {
+        "I1": 180,
+        "I2": 160,
+        "I3": 95,
+        "I4": 110
+      },
+      {
+        "I1": 250,
+        "I2": 230,
+        "I3": 200,
+        "I4": 140
+      }
+    ],
+    "loesung": "I1 + I2 - I3 - I4",
+    "einheit": "mA",
+    "toleranz": 0.02,
+    "stellen": 3,
+    "tipps": [
+      "Knotenregel: Die Summe der zufließenden Ströme ist gleich der Summe der abfließenden Ströme.",
+      "I1 + I2 = I3 + I4 + I5 – nach I5 umstellen."
+    ],
+    "erklaerung": "ΣI_zu = ΣI_ab: I1 + I2 = I3 + I4 + I5 → I5 = {I1} mA + {I2} mA − {I3} mA − {I4} mA = {ERG} mA. Probe: Zufluss und Abfluss sind gleich – die Knotenregel ist erfüllt."
+  },
+  "et_innenwiderstand": {
+    "typ": "berechnung",
+    "titel": "Der müde Akku",
+    "thema": "Elektrotechnik",
+    "lehrplan": "LF 3 – Elektrische Größen, deren Zusammenhänge und Berechnungen: Grundschaltungen (Lernunterlagen ET Kap. 6)",
+    "schwierigkeit": 2,
+    "frage": "Bradleys Akku-Pack für die Lüfter hat eine Leerlaufspannung von U0 = {U0} V. Mit angeschlossenen Lüftern fließen I = {I} A, und du misst an den Klemmen nur noch U = {U} V. Berechne den Innenwiderstand Ri.",
+    "varianten": [
+      {
+        "U0": 24,
+        "U": 21,
+        "I": 2
+      },
+      {
+        "U0": 12,
+        "U": 11.2,
+        "I": 1.6
+      },
+      {
+        "U0": 12.6,
+        "U": 11.4,
+        "I": 3
+      }
+    ],
+    "loesung": "(U0 - U) / I",
+    "einheit": "Ω",
+    "toleranz": 0.02,
+    "stellen": 3,
+    "tipps": [
+      "Eine reale Quelle besteht aus einer idealen Quelle U0 und dem Innenwiderstand Ri in Reihe.",
+      "Am Innenwiderstand fällt Ui = U0 − U ab. Dann Ri = Ui / I."
+    ],
+    "erklaerung": "Ui = U0 − U = {U0} V − {U} V; Ri = (U0 − U) / I = Ui / {I} A ≈ {ERG} Ω. Je größer der Strom, desto mehr Spannung fällt im Inneren ab – die Klemmenspannung sinkt (U = U0 − I · Ri)."
+  },
+  "et_reihe": {
+    "typ": "berechnung",
+    "titel": "Der Lüfterregler",
+    "thema": "Elektrotechnik",
+    "lehrplan": "LF 3 – Elektrische Größen, deren Zusammenhänge und Berechnungen: Grundschaltungen (Lernunterlagen ET Kap. 6)",
+    "schwierigkeit": 2,
+    "frage": "Im Regler eines Hallenlüfters liegen R1 = {R1} Ω und R2 = {R2} Ω in Reihe an U = {U} V. Berechne die Teilspannung U2 an R2.",
+    "varianten": [
+      {
+        "R1": 47,
+        "R2": 82,
+        "U": 24
+      },
+      {
+        "R1": 100,
+        "R2": 220,
+        "U": 24
+      },
+      {
+        "R1": 33,
+        "R2": 68,
+        "U": 12
+      }
+    ],
+    "loesung": "U * R2 / (R1 + R2)",
+    "einheit": "V",
+    "toleranz": 0.02,
+    "stellen": 3,
+    "tipps": [
+      "In Reihe verhalten sich die Spannungen wie die Widerstände: U2 / U = R2 / R.",
+      "R = R1 + R2, dann U2 = U · R2 / R."
+    ],
+    "erklaerung": "R = R1 + R2 = {R1} Ω + {R2} Ω; U2 = U · R2 / R = {U} V · {R2} Ω / ({R1} Ω + {R2} Ω) ≈ {ERG} V. Kontrolle: U1 + U2 = U, und der größere Widerstand hat die größere Teilspannung."
+  },
+  "et_gemischt": {
+    "typ": "berechnung",
+    "titel": "Die Prüflast",
+    "thema": "Elektrotechnik",
+    "lehrplan": "LF 3 – Elektrische Größen, deren Zusammenhänge und Berechnungen: Grundschaltungen (Lernunterlagen ET Kap. 6)",
+    "schwierigkeit": 3,
+    "frage": "Bradley hat die Lüfter durch eine Prüflast ersetzt: R1 = {R1} Ω und R2 = {R2} Ω liegen parallel, R3 = {R3} Ω liegt dazu in Reihe. Berechne den Ersatzwiderstand R.",
+    "varianten": [
+      {
+        "R1": 40,
+        "R2": 120,
+        "R3": 18
+      },
+      {
+        "R1": 30,
+        "R2": 45,
+        "R3": 12
+      },
+      {
+        "R1": 60,
+        "R2": 40,
+        "R3": 26
+      }
+    ],
+    "loesung": "R1 * R2 / (R1 + R2) + R3",
+    "einheit": "Ω",
+    "toleranz": 0.02,
+    "stellen": 3,
+    "tipps": [
+      "Von innen nach außen: Zuerst die Parallelgruppe zusammenfassen: R12 = R1 · R2 / (R1 + R2).",
+      "Dann liegt R12 in Reihe mit R3: R = R12 + R3."
+    ],
+    "erklaerung": "R12 = R1 · R2 / (R1 + R2) = {R1} Ω · {R2} Ω / ({R1} Ω + {R2} Ω); R = R12 + R3 ≈ {ERG} Ω. Kontrolle: R12 ist kleiner als der kleinere der beiden Parallelwiderstände."
+  },
+  "st_zeitrelais_art": {
+    "typ": "mc",
+    "titel": "Welches Zeitrelais?",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik, Zeitrelais (Lernunterlagen Schütztechnik Kap. 6) – 6.1",
+    "schwierigkeit": 1,
+    "frage": "Die Laborbänder für die praktische Prüfung: Band 2 startet auf Knopfdruck, Band 1 soll 4 s später automatisch folgen. Sparky hat zwei Zeitrelais in der Kiste. Welches brauchst du?",
+    "optionen": [
+      "Ein ansprechverzögertes Zeitrelais (Einschaltverzögerung)",
+      "Ein rückfallverzögertes Zeitrelais (Ausschaltverzögerung)",
+      "Ein Motorschutzrelais mit 4 s Auslösezeit",
+      "Eine Zeitschaltuhr wie bei der Schulglocke"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Soll der Kontakt verzögert schließen, nachdem die Spule Spannung bekommt – oder verzögert öffnen, nachdem sie abgeschaltet wurde?",
+      "Ein rückfallverzögertes Zeitrelais nimmt man z. B. für einen Lüfter, der nach dem Ausschalten noch nachläuft."
+    ],
+    "erklaerung": "Ansprechverzögert: Bekommt die Spule Spannung, schließt der Schließer (17–18) erst nach der eingestellten Zeit tv; fällt die Spule ab, öffnet er sofort. Rückfallverzögert ist es umgekehrt (z. B. Lüfter-Nachlauf). Zeitrelais sitzen im Steuerstromkreis – ihre Kontakte sind nur für kleine Steuerströme ausgelegt."
+  },
+  "st_zeitablauf": {
+    "typ": "sortieren",
+    "titel": "Der Ablauf",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik, Zeitrelais (Lernunterlagen Schütztechnik Kap. 6) – 6.2",
+    "schwierigkeit": 2,
+    "frage": "Bring den Ablauf der zeitgesteuerten Folgeschaltung in die richtige Reihenfolge – oben das erste Ereignis.",
+    "elemente": [
+      "-SJ2 wird gedrückt",
+      "-QA2 zieht an und hält sich selbst – Band 2 läuft",
+      "Der Folgekontakt von -QA2 schließt, die Spule von -KF1 bekommt Spannung",
+      "Nach 4 s schließt -KF1 17–18",
+      "-QA1 zieht an – Band 1 läuft",
+      "-SJ1 wird gedrückt – beide Bänder stehen"
+    ],
+    "tipps": [
+      "Band 2 läuft zuerst – sonst würde Band 1 Müll auf ein stehendes Band werfen.",
+      "Das Zeitrelais beginnt erst zu zählen, wenn seine Spule Spannung hat."
+    ],
+    "erklaerung": "-SJ2 → -QA2 zieht an (Selbsthaltung) → Folgekontakt -QA2 schließt, -KF1 bekommt Spannung → nach tv = 4 s schließt -KF1 17–18 → -QA1 zieht an, Band 1 läuft → -SJ1 (Zentral-AUS) schaltet alles ab. Im Zeitablaufdiagramm sieht man die Verzögerung als Versatz zwischen -QA2 und -QA1."
+  },
+  "st_zeitfolge": {
+    "typ": "schaltung",
+    "titel": "Zeitgesteuerte Folgeschaltung",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik, Zeitrelais (Lernunterlagen Schütztechnik Kap. 6) – 6.2, A80",
+    "schwierigkeit": 3,
+    "frage": "Band 2 (-QA2) startet mit -SJ2. Band 1 (-QA1) soll 4 s später über das Zeitrelais -KF1 folgen – aber nur, wenn Band 2 läuft. Sobald Band 1 läuft, soll -KF1 wieder abschalten (spart Energie, schont das Zeitrelais). -SJ1 ist Zentral-AUS. Ergänze die Lücken und teste mit dem Probelauf.",
+    "schaltplan": {
+      "breite": 10.3,
+      "hoehe": 9,
+      "schienen": [
+        {
+          "y": 0,
+          "text": "24 V"
+        },
+        {
+          "y": 9,
+          "text": "0 V"
+        }
+      ],
+      "elemente": [
+        {
+          "id": "FC1",
+          "typ": "sicherung",
+          "x": 3.5,
+          "y": 0,
+          "bez": "-FC1",
+          "kl": "B 2 A"
+        },
+        {
+          "id": "SG0",
+          "typ": "nothalt_nc",
+          "x": 3.5,
+          "y": 1,
+          "bez": "-SG0",
+          "kl": "11/12"
+        },
+        {
+          "id": "BC2",
+          "typ": "mschutz_nc",
+          "x": 3.5,
+          "y": 2,
+          "bez": "-BC2",
+          "kl": "95/96"
+        },
+        {
+          "id": "SJ1",
+          "typ": "taster_nc",
+          "x": 3.5,
+          "y": 3,
+          "bez": "-SJ1",
+          "kl": "21/22"
+        },
+        {
+          "id": "SJ2",
+          "typ": "taster_no",
+          "x": 2,
+          "y": 4.3,
+          "bez": "-SJ2",
+          "kl": "13/14"
+        },
+        {
+          "id": "QA2_13",
+          "typ": "schliesser",
+          "x": 3.7,
+          "y": 4.3,
+          "bez": "-QA2",
+          "kl": "13/14"
+        },
+        {
+          "id": "QA2",
+          "typ": "spule",
+          "x": 2,
+          "y": 7.6,
+          "bez": "-QA2",
+          "kl": "A1/A2"
+        },
+        {
+          "id": "L1",
+          "typ": "luecke",
+          "x": 6,
+          "y": 4.3
+        },
+        {
+          "id": "L3",
+          "typ": "luecke",
+          "x": 6,
+          "y": 5.75
+        },
+        {
+          "id": "L4",
+          "typ": "luecke",
+          "x": 7.6,
+          "y": 5.75
+        },
+        {
+          "id": "BC1",
+          "typ": "mschutz_nc",
+          "x": 6,
+          "y": 6.95,
+          "bez": "-BC1",
+          "kl": "95/96"
+        },
+        {
+          "id": "QA1",
+          "typ": "spule",
+          "x": 6,
+          "y": 7.95,
+          "bez": "-QA1",
+          "kl": "A1/A2"
+        },
+        {
+          "id": "L2",
+          "typ": "luecke",
+          "x": 9.4,
+          "y": 5.75
+        },
+        {
+          "id": "KF1",
+          "typ": "spule_verz",
+          "x": 9.4,
+          "y": 7.6,
+          "bez": "-KF1",
+          "kl": "A1/A2"
+        }
+      ],
+      "leitungen": [
+        [
+          [
+            3.5,
+            4
+          ],
+          [
+            3.5,
+            4.15
+          ]
+        ],
+        [
+          [
+            2,
+            4.15
+          ],
+          [
+            3.5,
+            4.15
+          ]
+        ],
+        [
+          [
+            3.5,
+            4.15
+          ],
+          [
+            6,
+            4.15
+          ]
+        ],
+        [
+          [
+            2,
+            4.15
+          ],
+          [
+            2,
+            4.3
+          ]
+        ],
+        [
+          [
+            6,
+            4.15
+          ],
+          [
+            6,
+            4.3
+          ]
+        ],
+        [
+          [
+            2,
+            4.3
+          ],
+          [
+            3.7,
+            4.3
+          ]
+        ],
+        [
+          [
+            2,
+            5.3
+          ],
+          [
+            3.7,
+            5.3
+          ]
+        ],
+        [
+          [
+            2,
+            5.3
+          ],
+          [
+            2,
+            7.6
+          ]
+        ],
+        [
+          [
+            2,
+            8.6
+          ],
+          [
+            2,
+            9
+          ]
+        ],
+        [
+          [
+            6,
+            5.3
+          ],
+          [
+            6,
+            5.45
+          ]
+        ],
+        [
+          [
+            6,
+            5.45
+          ],
+          [
+            9.4,
+            5.45
+          ]
+        ],
+        [
+          [
+            6,
+            5.45
+          ],
+          [
+            6,
+            5.75
+          ]
+        ],
+        [
+          [
+            9.4,
+            5.45
+          ],
+          [
+            9.4,
+            5.75
+          ]
+        ],
+        [
+          [
+            6,
+            5.75
+          ],
+          [
+            7.6,
+            5.75
+          ]
+        ],
+        [
+          [
+            6,
+            6.75
+          ],
+          [
+            7.6,
+            6.75
+          ]
+        ],
+        [
+          [
+            6,
+            6.75
+          ],
+          [
+            6,
+            6.95
+          ]
+        ],
+        [
+          [
+            6,
+            8.95
+          ],
+          [
+            6,
+            9
+          ]
+        ],
+        [
+          [
+            9.4,
+            6.75
+          ],
+          [
+            9.4,
+            7.6
+          ]
+        ],
+        [
+          [
+            9.4,
+            8.6
+          ],
+          [
+            9.4,
+            9
+          ]
+        ]
+      ]
+    },
+    "optionen": [
+      {
+        "id": "QA2_43",
+        "text": "-QA2 Folgekontakt, Schließer (43–44)",
+        "symbol": "schliesser",
+        "bez": "-QA2",
+        "kl": "43/44",
+        "logik": "QA2"
+      },
+      {
+        "id": "QA2_21",
+        "text": "-QA2 Öffner (21–22)",
+        "symbol": "oeffner",
+        "bez": "-QA2",
+        "kl": "21/22",
+        "logik": "(not QA2)"
+      },
+      {
+        "id": "KF1_17",
+        "text": "-KF1 Schließer, ansprechverzögert (17–18)",
+        "symbol": "verz_no",
+        "bez": "-KF1",
+        "kl": "17/18",
+        "logik": "KF1_T"
+      },
+      {
+        "id": "KF1_15",
+        "text": "-KF1 Öffner, ansprechverzögert (15–16)",
+        "symbol": "verz_nc",
+        "bez": "-KF1",
+        "kl": "15/16",
+        "logik": "(not KF1_T)"
+      },
+      {
+        "id": "QA1_13",
+        "text": "-QA1 Selbsthaltekontakt, Schließer (13–14)",
+        "symbol": "schliesser",
+        "bez": "-QA1",
+        "kl": "13/14",
+        "logik": "QA1"
+      },
+      {
+        "id": "QA1_21",
+        "text": "-QA1 Öffner (21–22)",
+        "symbol": "oeffner",
+        "bez": "-QA1",
+        "kl": "21/22",
+        "logik": "(not QA1)"
+      },
+      {
+        "id": "BRUECKE",
+        "text": "Drahtbrücke",
+        "symbol": "leitung",
+        "bez": "",
+        "kl": "",
+        "logik": "true"
+      }
+    ],
+    "loesung_belegung": {
+      "L1": "QA2_43",
+      "L2": "QA1_21",
+      "L3": "KF1_17",
+      "L4": "QA1_13"
+    },
+    "logik": {
+      "spulen": {
+        "QA2": "(not BC2) and (not SJ1) and (SJ2 or QA2)",
+        "KF1": "(not BC2) and (not SJ1) and {L1} and {L2}",
+        "QA1": "(not BC2) and (not SJ1) and {L1} and ({L3} or {L4}) and (not BC1)"
+      },
+      "zeitrelais": {
+        "KF1": 4
+      },
+      "taster": {
+        "SJ1": "-SJ1 AUS",
+        "SJ2": "-SJ2 EIN",
+        "BC1": "Test -BC1",
+        "BC2": "Test -BC2"
+      },
+      "anzeige": {
+        "QA2": "Band 2 LÄUFT",
+        "QA1": "Band 1 LÄUFT",
+        "KF1": "Zeit abgelaufen",
+        "aus": "beide Bänder stehen"
+      }
+    },
+    "pruefung": [
+      {
+        "QA1": false,
+        "QA2": false,
+        "KF1": false,
+        "text": "Grundstellung: alles steht"
+      },
+      {
+        "zeit": true,
+        "QA1": false,
+        "QA2": false,
+        "KF1": false,
+        "text": "4 s warten ohne Band 2: Band 1 bleibt stehen"
+      },
+      {
+        "SJ2": true,
+        "QA1": false,
+        "QA2": true,
+        "KF1": true,
+        "text": "-SJ2: Band 2 läuft sofort, -KF1 zieht an"
+      },
+      {
+        "QA1": false,
+        "QA2": true,
+        "KF1": true,
+        "text": "-SJ2 loslassen: Band 2 läuft weiter, die Zeit läuft"
+      },
+      {
+        "zeit": true,
+        "QA1": true,
+        "QA2": true,
+        "KF1": false,
+        "text": "Nach 4 s: Band 1 läuft an, -KF1 schaltet ab"
+      },
+      {
+        "QA1": true,
+        "QA2": true,
+        "KF1": false,
+        "text": "Beide Bänder laufen weiter"
+      },
+      {
+        "SJ1": true,
+        "QA1": false,
+        "QA2": false,
+        "KF1": false,
+        "text": "-SJ1: beide Bänder stehen"
+      },
+      {
+        "QA1": false,
+        "QA2": false,
+        "KF1": false,
+        "text": "-SJ1 loslassen: alles bleibt aus"
+      },
+      {
+        "SJ1": true,
+        "SJ2": true,
+        "QA1": false,
+        "QA2": false,
+        "KF1": false,
+        "text": "-SJ1 und -SJ2 gleichzeitig: kein Anlauf (Vorrang AUS)"
+      },
+      {
+        "SJ2": true,
+        "QA1": false,
+        "QA2": true,
+        "KF1": true,
+        "text": "-SJ2: Band 2 läuft wieder an"
+      },
+      {
+        "zeit": true,
+        "QA1": true,
+        "QA2": true,
+        "KF1": false,
+        "text": "Nach 4 s: Band 1 folgt"
+      },
+      {
+        "BC1": true,
+        "QA1": false,
+        "QA2": true,
+        "KF1": true,
+        "text": "Überlast Band 1 (-BC1): nur Band 1 stoppt"
+      },
+      {
+        "BC2": true,
+        "QA1": false,
+        "QA2": false,
+        "KF1": false,
+        "text": "Überlast Band 2 (-BC2): beide Bänder stehen"
+      }
+    ],
+    "tipps": [
+      "-KF1 und -QA1 dürfen nur Spannung bekommen, wenn Band 2 läuft: Ganz oben gehört der Folgekontakt von -QA2 hin.",
+      "Band 1 startet über den verzögerten Schließer 17–18 von -KF1 und hält sich danach mit seinem eigenen Schließer. Ein Öffner von -QA1 vor der Spule von -KF1 schaltet das Zeitrelais ab."
+    ],
+    "erklaerung": "Folgekontakt -QA2 (43–44) vor beiden Zweigen. Zweig -KF1: -QA1 (21–22) → Spule -KF1. Zweig -QA1: [-KF1 (17–18) ∥ -QA1 (13–14)] → -BC1 (95–96) → Spule -QA1. Nach 4 s schließt 17–18, -QA1 zieht an und hält sich selbst, sein Öffner schaltet -KF1 ab. Fällt Band 2 ab, öffnet der Folgekontakt – Band 1 bleibt dann ebenfalls stehen."
+  },
+  "st_kf1_folge": {
+    "typ": "mc",
+    "titel": "Warum hinter -QA2?",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik, Zeitrelais (Lernunterlagen Schütztechnik Kap. 6) – 6.2",
+    "schwierigkeit": 2,
+    "frage": "Im Plan der Sortierstation sitzt -KF1 hinter den parallel geschalteten Folgekontakten von -QA2 (Rechtslauf) und -QA3 (Linkslauf). Welche Gründe gibt es dafür?",
+    "optionen": [
+      "Das Zeitrelais startet nur, wenn Band 2 wirklich läuft – egal in welche Richtung (ODER).",
+      "Fällt Band 2 ab, wird -KF1 stromlos, 17–18 öffnet sofort, und Band 1 bleibt ebenfalls stehen.",
+      "So läuft Band 1 vor Band 2 an.",
+      "Das Zeitrelais übernimmt damit den Motorschutz von Band 2."
+    ],
+    "richtig": [
+      0,
+      1
+    ],
+    "tipps": [
+      "Parallel geschaltete Kontakte bilden eine ODER-Verknüpfung.",
+      "Was passiert mit dem Zeitrelais, wenn Band 2 durch Überlast abfällt?"
+    ],
+    "erklaerung": "Die parallelen Folgekontakte 43–44 von -QA2 und -QA3 bilden ein ODER: -KF1 startet nur, wenn Band 2 läuft, egal in welcher Richtung. Fällt Band 2 ab, wird -KF1 stromlos, der verzögerte Schließer öffnet sofort – Band 1 kann nicht auf ein stehendes Band 2 fördern. Den Motorschutz übernehmen weiterhin -BC1 und -BC2."
+  },
+  "st_zwilling": {
+    "typ": "mc",
+    "titel": "Der digitale Zwilling",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik, Zeitrelais (Lernunterlagen Schütztechnik Kap. 6) – 6.4",
+    "schwierigkeit": 2,
+    "frage": "Sterling Bau wirbt mit einem „digitalen Zwilling“ für die Werkstatt. Sparky ist skeptisch. Welches Beispiel ist wirklich ein digitaler Zwilling?",
+    "optionen": [
+      "Das Modell erkennt eine drohende Überlast und verringert an der realen Anlage automatisch die Fördermenge.",
+      "Du bedienst den Simulationsplan der Bänder mit der Maus.",
+      "Ein Bildschirm zeigt live die Motorströme der realen Bänder.",
+      "Eine Wartungs-App zählt die Schaltspiele der Schütze und zeigt ihren Verschleiß."
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Digitales Modell: kein automatischer Datenaustausch. Digitaler Schatten: Daten fließen nur von der realen Anlage zum Modell.",
+      "Beim digitalen Zwilling fließen die Daten in beide Richtungen – das Modell wirkt auf die reale Anlage zurück."
+    ],
+    "erklaerung": "Simulationsplan mit der Maus = digitales Modell (M). Live-Motorströme und Schaltspielzähler = digitaler Schatten (S): Daten fließen nur von der Anlage zum Modell. Nur wenn das Modell selbstständig auf die reale Anlage zurückwirkt – hier die Fördermenge verringert –, ist es ein digitaler Zwilling (Z)."
+  },
+  "st_vps": {
+    "typ": "mc",
+    "titel": "Grenzen der Schützsteuerung",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik, Zeitrelais (Lernunterlagen Schütztechnik Kap. 6) – 6.5",
+    "schwierigkeit": 2,
+    "frage": "Die Schule möchte die Verzögerungszeit später je nach Bedarf ändern, Störungen als Text anzeigen und die Bänder vernetzen. Welche Nachteile hat dafür die verbindungsprogrammierte Steuerung (VPS)?",
+    "optionen": [
+      "Jede Funktionsänderung erfordert eine neue Verdrahtung.",
+      "Viele Schütze und Relais: großer Platzbedarf und hohe Kosten.",
+      "Kontakte verschleißen, die Fehlersuche in der Verdrahtung ist aufwendig.",
+      "Keine Textanzeige und keine Vernetzung der Stationen möglich.",
+      "Eine VPS kann grundsätzlich keine Motoren schalten.",
+      "Eine VPS funktioniert nur mit einem einzigen Zeitrelais."
+    ],
+    "richtig": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "tipps": [
+      "Bei der VPS steckt die Funktion in der Verdrahtung.",
+      "Motoren schalten Schützsteuerungen seit Jahrzehnten – das ist nicht das Problem."
+    ],
+    "erklaerung": "Bei der verbindungsprogrammierten Steuerung steckt die Funktion in der Verdrahtung: Jede Änderung heißt umverdrahten, viele Schütze brauchen Platz und kosten Geld, Kontakte verschleißen, und Texte oder Netzwerke gibt es nicht. Ausblick: Bei einer SPS werden Befehlsgeräte an Eingänge und Schütze an Ausgänge angeschlossen – die Verknüpfung steckt im Programm."
+  },
+  "lt_protokoll": {
+    "typ": "mc",
+    "titel": "Wer vergibt die Adresse?",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Netzwerksysteme und -komponenten, Adressierung (Lernunterlagen LtK 05 Adressierung im Netzwerk, Kap. 1.1)",
+    "schwierigkeit": 1,
+    "frage": "Ein Prüfungs-PC in der Aula hat keine Adresse bekommen. Welches Protokoll vergibt automatisch IP-Adresse, Subnetzmaske und Standardgateway?",
+    "optionen": [
+      "DHCP",
+      "ARP",
+      "TCP",
+      "HTTPS"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Ein Netzwerkprotokoll ist ein Satz fester Regeln für die Datenübertragung. Jedes Protokoll hat eine Aufgabe.",
+      "ARP sucht zu einer IP-Adresse die MAC-Adresse, TCP sichert die Übertragung, HTTPS ruft Webseiten verschlüsselt ab."
+    ],
+    "erklaerung": "DHCP (Dynamic Host Configuration Protocol) vergibt automatisch IP-Adresse, Subnetzmaske und Standardgateway. IP adressiert die Pakete, TCP sichert die Übertragung (Reihenfolge, Bestätigung, Wiederholung), UDP überträgt ohne Bestätigung, ARP sucht zur IP-Adresse die passende MAC-Adresse, HTTPS ruft Webseiten verschlüsselt ab."
+  },
+  "lt_osi": {
+    "typ": "sortieren",
+    "titel": "Die Schichten",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Netzwerksysteme und -komponenten, Adressierung (Lernunterlagen LtK 05 Adressierung im Netzwerk, Kap. 2)",
+    "schwierigkeit": 2,
+    "frage": "Kowalski hat die Karteikarten zum OSI-Modell fallen lassen (Auszug: fünf der sieben Schichten). Sortiere sie – oben die höchste Schicht, unten die niedrigste.",
+    "elemente": [
+      "Anwendung – stellt die Dienste für das Programm bereit",
+      "Transport – zerlegt die Daten und sichert die Übertragung (TCP)",
+      "Vermittlung – adressiert Pakete und leitet sie weiter (IP-Adresse, Router)",
+      "Sicherung – bildet Rahmen, erkennt Übertragungsfehler (MAC-Adresse, Switch)",
+      "Bitübertragung – überträgt die einzelnen Bits (Kabel, Stecker)"
+    ],
+    "tipps": [
+      "Ganz unten geht es um Kabel und Stecker, ganz oben um das Programm.",
+      "Schicht 3 arbeitet mit IP-Adressen, Schicht 2 mit MAC-Adressen."
+    ],
+    "erklaerung": "Schicht 7 Anwendung – 4 Transport – 3 Vermittlung – 2 Sicherung – 1 Bitübertragung. Bei der Fehlersuche hilft das Modell: Link-LED am Switch prüft Schicht 1, ein Ping Schicht 3, der Verbindungsaufbau der Software Schicht 7."
+  },
+  "lt_dual": {
+    "typ": "berechnung",
+    "titel": "Binär",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Netzwerksysteme und -komponenten, Adressierung (Lernunterlagen LtK 05 Adressierung im Netzwerk, Kap. 3.3, 3.4)",
+    "schwierigkeit": 2,
+    "frage": "Auf dem Etikett des fremden Geräts hinter dem Prüfungsserver steht eine Gerätenummer im Dualsystem: {B}₂. Wandle sie in eine Dezimalzahl um.",
+    "varianten": [
+      {
+        "B": "1 0 0 1 0 1 0",
+        "D": 74,
+        "R": "64 + 8 + 2"
+      },
+      {
+        "B": "1 0 1 1 0 1",
+        "D": 45,
+        "R": "32 + 8 + 4 + 1"
+      },
+      {
+        "B": "1 1 0 1 1",
+        "D": 27,
+        "R": "16 + 8 + 2 + 1"
+      },
+      {
+        "B": "1 1 1 0 1 1",
+        "D": 59,
+        "R": "32 + 16 + 8 + 2 + 1"
+      }
+    ],
+    "loesung": "D",
+    "einheit": "",
+    "toleranz": 0.0,
+    "ganzzahl": true,
+    "tipps": [
+      "Schreibe die Stellenwerte von rechts nach links über die Ziffern: 1 – 2 – 4 – 8 – 16 – 32 – 64.",
+      "Addiere alle Stellenwerte, über denen eine 1 steht."
+    ],
+    "erklaerung": "{B}₂: Stellenwerte mit einer 1 addieren: {R} = {D}. Jede Stelle ist doppelt so viel wert wie die Stelle rechts daneben."
+  },
+  "lt_hex": {
+    "typ": "berechnung",
+    "titel": "Hexadezimal",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Netzwerksysteme und -komponenten, Adressierung (Lernunterlagen LtK 05 Adressierung im Netzwerk, Kap. 3.6, 3.8)",
+    "schwierigkeit": 3,
+    "frage": "In der Konfiguration des fremden Geräts steht eine Portnummer hexadezimal: {H}₁₆. Wandle sie in eine Dezimalzahl um.",
+    "varianten": [
+      {
+        "H": "1 A 3",
+        "D": 419,
+        "R": "1 · 256 + 10 · 16 + 3 · 1"
+      },
+      {
+        "H": "F F",
+        "D": 255,
+        "R": "15 · 16 + 15 · 1"
+      },
+      {
+        "H": "2 D",
+        "D": 45,
+        "R": "2 · 16 + 13 · 1"
+      },
+      {
+        "H": "B 4",
+        "D": 180,
+        "R": "11 · 16 + 4 · 1"
+      }
+    ],
+    "loesung": "D",
+    "einheit": "",
+    "toleranz": 0.0,
+    "ganzzahl": true,
+    "tipps": [
+      "A = 10, B = 11, C = 12, D = 13, E = 14, F = 15.",
+      "Die Stellenwerte sind von rechts nach links 1, 16, 256 … – Zeichenwert mal Stellenwert, dann addieren."
+    ],
+    "erklaerung": "{H}₁₆ = {R} = {D}. Ein Hex-Zeichen fasst genau vier Bit zusammen (0 bis 15)."
+  },
+  "lt_broadcast": {
+    "typ": "mc",
+    "titel": "An alle",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Netzwerksysteme und -komponenten, Adressierung (Lernunterlagen LtK 05 Adressierung im Netzwerk, Kap. 5.1)",
+    "schwierigkeit": 2,
+    "frage": "Das Prüfungsnetz in der Aula hat die Netzadresse 192.168.10.0 mit der Subnetzmaske 255.255.255.0. Welche Adresse ist die Broadcast-Adresse?",
+    "optionen": [
+      "192.168.10.255",
+      "192.168.10.0",
+      "192.168.10.1",
+      "192.168.10.254",
+      "255.255.255.0"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Die Maske hat 24 Einsen: Die ersten drei Blöcke sind der Netzanteil, der letzte Block ist der Hostanteil.",
+      "Bei der Broadcast-Adresse sind alle Bits des Hostanteils 1."
+    ],
+    "erklaerung": "Netzadresse: alle Hostbits 0 → 192.168.10.0. Broadcast-Adresse: alle Hostbits 1 → 192.168.10.255 – eine Nachricht an sie erreicht alle Teilnehmer. Nutzbar sind 192.168.10.1 bis .254, also 2⁸ − 2 = 254 Adressen. 255.255.255.0 ist die Subnetzmaske."
+  },
+  "lt_adresskonflikt": {
+    "typ": "mc",
+    "titel": "Doppelt vergeben",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Netzwerksysteme und -komponenten, Adressierung (Lernunterlagen LtK 05 Adressierung im Netzwerk, Kap. 5.1, 6)",
+    "schwierigkeit": 2,
+    "frage": "Kowalskis Adressliste: Router 192.168.10.1 · Prüfungsserver 192.168.10.10 · Prüfungs-PCs .11 bis .19 · Anzeige im Flur .20. Das fremde Gerät hinter dem Server hat sich ebenfalls die Adresse 192.168.10.10 gegeben. Was passiert?",
+    "optionen": [
+      "Adresskonflikt: Zwei Geräte antworten auf dieselbe Adresse – Verbindungen zum Prüfungsserver brechen ab.",
+      "Nichts – der Switch sortiert das über die IP-Adressen.",
+      "Der Router gibt dem fremden Gerät automatisch eine neue Adresse.",
+      "Nur die Datenrate sinkt etwas, sonst läuft alles normal."
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Jedes Gerät im Netz braucht eine eindeutige Adresse – wie eine Postanschrift.",
+      "Was passiert, wenn zwei Häuser dieselbe Hausnummer haben?"
+    ],
+    "erklaerung": "Bei doppelter IP-Adresse entsteht ein Adresskonflikt: Beide Geräte antworten, Verbindungen brechen ab, mindestens ein Gerät meldet einen Fehler. Eine feste Systematik (Router .1, Server .10, PCs .11–.19, Anzeigen .20–.29) hält das Netz übersichtlich und macht die Fehlersuche einfacher. Statische Adressen vergibt niemand automatisch neu."
+  },
+  "ex_leistung": {
+    "typ": "mc",
+    "titel": "Prüfung 1: Doppelte Spannung",
+    "thema": "Elektrotechnik",
+    "lehrplan": "LF 3 – Elektrische Größen, deren Zusammenhänge und Berechnungen (Lernunterlagen ET Kap. 5)",
+    "schwierigkeit": 2,
+    "frage": "Ein Widerstand für 12 V wird versehentlich an 24 V betrieben. Wie ändert sich seine Leistung?",
+    "optionen": [
+      "Sie vervierfacht sich",
+      "Sie verdoppelt sich",
+      "Sie bleibt gleich",
+      "Sie halbiert sich"
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Nimm die Leistungsformel mit U und R: P = U² / R.",
+      "R bleibt gleich. Was passiert mit (2 · U)²?"
+    ],
+    "erklaerung": "P = U² / R: Bei doppelter Spannung wird (2 · U)² = 4 · U², R bleibt gleich – die Leistung vervierfacht sich. Der Widerstand setzt viermal so viel Wärme um und kann durchbrennen."
+  },
+  "ex_parallel": {
+    "typ": "berechnung",
+    "titel": "Prüfung 2: Der fehlende Widerstand",
+    "thema": "Elektrotechnik",
+    "lehrplan": "LF 3 – Elektrische Größen, deren Zusammenhänge und Berechnungen: Grundschaltungen (Lernunterlagen ET Kap. 6)",
+    "schwierigkeit": 3,
+    "frage": "In einem Prüfadapter ist ein Widerstand ausgefallen. R1 = {R1} Ω bleibt, der Ersatzwiderstand der Parallelschaltung soll R = {R} Ω betragen. Berechne den Ersatz für R2.",
+    "varianten": [
+      {
+        "R1": 330,
+        "R": 150
+      },
+      {
+        "R1": 220,
+        "R": 132
+      },
+      {
+        "R1": 120,
+        "R": 80
+      }
+    ],
+    "loesung": "R * R1 / (R1 - R)",
+    "einheit": "Ω",
+    "toleranz": 0.02,
+    "stellen": 3,
+    "tipps": [
+      "Für zwei parallele Widerstände gilt R = R1 · R2 / (R1 + R2) – nach R2 umgestellt:",
+      "R2 = R · R1 / (R1 − R)."
+    ],
+    "erklaerung": "R2 = R · R1 / (R1 − R) = {R} Ω · {R1} Ω / ({R1} Ω − {R} Ω) ≈ {ERG} Ω. Probe: Der Ersatzwiderstand {R} Ω ist kleiner als beide Einzelwiderstände."
+  },
+  "ex_gemischt": {
+    "typ": "berechnung",
+    "titel": "Prüfung 3: Gemischte Schaltung",
+    "thema": "Elektrotechnik",
+    "lehrplan": "LF 3 – Elektrische Größen, deren Zusammenhänge und Berechnungen: Grundschaltungen (Lernunterlagen ET Kap. 6)",
+    "schwierigkeit": 3,
+    "frage": "R2 = {R2} Ω und R3 = {R3} Ω liegen in Reihe. Parallel zu dieser Gruppe liegt R4 = {R4} Ω. Davor liegt R1 = {R1} Ω in Reihe. Die Schaltung liegt an U = {U} V. Berechne den Gesamtstrom I.",
+    "varianten": [
+      {
+        "R1": 18,
+        "R2": 24,
+        "R3": 36,
+        "R4": 30,
+        "U": 230
+      },
+      {
+        "R1": 10,
+        "R2": 20,
+        "R3": 40,
+        "R4": 30,
+        "U": 230
+      },
+      {
+        "R1": 22,
+        "R2": 15,
+        "R3": 45,
+        "R4": 60,
+        "U": 24
+      }
+    ],
+    "loesung": "U / (R1 + (R2 + R3) * R4 / (R2 + R3 + R4))",
+    "einheit": "A",
+    "toleranz": 0.02,
+    "stellen": 3,
+    "tipps": [
+      "Von innen nach außen: R23 = R2 + R3, dann Rp = R23 · R4 / (R23 + R4), dann R = R1 + Rp.",
+      "Zum Schluss I = U / R."
+    ],
+    "erklaerung": "R23 = {R2} Ω + {R3} Ω; Rp = R23 · R4 / (R23 + R4); R = R1 + Rp; I = U / R ≈ {ERG} A. Kontrolle mit der Knotenregel: Die Ströme durch R4 und durch R2 ergeben zusammen I."
+  },
+  "ex_verriegelung": {
+    "typ": "mc",
+    "titel": "Prüfung 4: Nur in der Simulation",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik, Zeitrelais (Lernunterlagen Schütztechnik Kap. 6) – 6.3",
+    "schwierigkeit": 2,
+    "frage": "In der Simulation wird bei einer Wendeschützschaltung die Schützverriegelung entfernt und direkt zwischen Rechts- und Linkslauf umgeschaltet. Was passiert – und warum testet man das nur in der Simulation?",
+    "optionen": [
+      "Beide Schütze ziehen kurz gleichzeitig an: Im Hauptstromkreis entsteht ein Kurzschluss. Real lösen die Sicherungen aus, Kontakte können verschweißen.",
+      "Der Motor bleibt einfach stehen, weil sich die Drehfelder aufheben – ganz ungefährlich.",
+      "Nichts – die Tasterverriegelung allein verhindert jeden Fehler.",
+      "Nur die Meldeleuchten blinken, die Schütze ziehen gar nicht an."
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Beim Wendeschütz werden zwei Außenleiter getauscht. Was passiert, wenn beide Schütze gleichzeitig geschlossen sind?",
+      "Die Simulation zeigt Fehler gefahrlos und ohne Schaden."
+    ],
+    "erklaerung": "Ohne Schützverriegelung können beim direkten Umschalten beide Schütze kurz gleichzeitig anziehen – zwei Außenleiter werden kurzgeschlossen. In der Realität lösen -FC2.1/-FC2.2 aus, Kontakte können verschweißen. Die Simulation zeigt den Fehler gefahrlos. Was sie nicht zeigt: falsch gesteckte oder gebrochene Leitungen, verschweißte Kontakte, reale Erwärmung."
+  },
+  "ex_simulation": {
+    "typ": "mc",
+    "titel": "Prüfung 5: Grenzen der Simulation",
+    "thema": "Automatisierungstechnik",
+    "lehrplan": "LF 4 – Grundschaltungen der Steuerungstechnik, Zeitrelais (Lernunterlagen Schütztechnik Kap. 6) – 6.4",
+    "schwierigkeit": 2,
+    "frage": "Die Simulation ersetzt die Prüfung an der realen Anlage nicht. Welche Fehler kann sie NICHT zeigen?",
+    "optionen": [
+      "Falsch gesteckte oder gebrochene Leitungen",
+      "Verschweißte oder verschlissene Kontakte",
+      "Reale Erwärmung, Toleranzen und mechanische Probleme",
+      "Eine im Plan vergessene Selbsthaltung",
+      "Eine im Plan fehlende Verriegelung"
+    ],
+    "richtig": [
+      0,
+      1,
+      2
+    ],
+    "tipps": [
+      "Die Simulation kennt nur den Plan – nicht die echte Verdrahtung im Schrank.",
+      "Planungsfehler findet die Simulation sehr gut. Was passiert aber erst beim Bauen und im Betrieb?"
+    ],
+    "erklaerung": "Die Simulation prüft den Plan: Fehlt eine Selbsthaltung oder Verriegelung, sieht man das sofort. Fehler der realen Anlage – falsch gesteckte oder gebrochene Leitungen, verschweißte Kontakte, Erwärmung und Toleranzen – zeigt sie nicht. Deshalb wird nach dem Aufbau trotzdem real geprüft."
+  },
+  "ex_statisch": {
+    "typ": "mc",
+    "titel": "Prüfung 6: Fest oder automatisch?",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Netzwerksysteme und -komponenten, Adressierung (Lernunterlagen LtK 05 Adressierung im Netzwerk, Kap. 4.1)",
+    "schwierigkeit": 2,
+    "frage": "Welche Geräte im Prüfungsnetz sollten eine statische (fest eingetragene) IP-Adresse bekommen?",
+    "optionen": [
+      "Der Prüfungsserver – die Prüfungs-PCs müssen ihn immer unter derselben Adresse finden",
+      "Die Anzeige im Flur – ihre Adresse steht fest im Programm",
+      "Kowalskis Servicenotebook – es wechselt zwischen Schul- und Anlagennetz",
+      "Die vielen PCs in der Verwaltung"
+    ],
+    "richtig": [
+      0,
+      1
+    ],
+    "tipps": [
+      "Statisch: Die Adresse darf sich nie ändern, weil andere Geräte sie fest kennen.",
+      "Dynamisch (DHCP): weniger Aufwand bei vielen oder wechselnden Geräten."
+    ],
+    "erklaerung": "Server und Anzeigegeräte werden von anderen Geräten unter einer festen Adresse gesucht – statisch. Das Servicenotebook wechselt die Netze und bekommt seine Adresse dynamisch per DHCP, ebenso die vielen Verwaltungs-PCs (weniger Verwaltungsaufwand)."
+  },
+  "ex_mac": {
+    "typ": "mc",
+    "titel": "Prüfung 7: MAC und IP",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Netzwerksysteme und -komponenten, Adressierung (Lernunterlagen LtK 05 Adressierung im Netzwerk, Kap. 4.2)",
+    "schwierigkeit": 2,
+    "frage": "Welche Aussagen über MAC-Adresse und IP-Adresse sind richtig?",
+    "optionen": [
+      "Die MAC-Adresse ist 48 Bit lang, vom Hersteller fest eingebaut und wird hexadezimal geschrieben.",
+      "Die IPv4-Adresse ist 32 Bit lang und wird vom Administrator oder vom DHCP-Server vergeben.",
+      "Router werten die MAC-Adresse aus, um Pakete in andere Netze weiterzuleiten.",
+      "Die MAC-Adresse ändert sich jedes Mal, wenn das Gerät neu startet."
+    ],
+    "richtig": [
+      0,
+      1
+    ],
+    "tipps": [
+      "Die IP-Adresse ist die Anschrift, die MAC-Adresse die Fahrgestellnummer des Geräts.",
+      "Die MAC-Adresse gilt nur im eigenen Netzsegment."
+    ],
+    "erklaerung": "MAC: 48 Bit, hexadezimal (z. B. 8C-F3-19-2A-4B-C1), vom Hersteller fest vergeben, gilt nur im eigenen Netzsegment. IPv4: 32 Bit, dezimal in vier Blöcken, vom Administrator oder DHCP-Server vergeben, netzübergreifend – Router werten die IP-Adresse aus."
+  },
+  "ex_ipv4": {
+    "typ": "mc",
+    "titel": "Prüfung 8: Höchstens 255",
+    "thema": "Logistik und technische Kommunikation",
+    "lehrplan": "LF 5 – Netzwerksysteme und -komponenten, Adressierung (Lernunterlagen LtK 05 Adressierung im Netzwerk, Kap. 4)",
+    "schwierigkeit": 2,
+    "frage": "Warum kann ein Block einer IPv4-Adresse höchstens den Wert 255 haben?",
+    "optionen": [
+      "Ein Block hat 8 Bit. Sind alle acht Bit 1, ergibt das 128 + 64 + 32 + 16 + 8 + 4 + 2 + 1 = 255.",
+      "Weil es weltweit nur 255 Netze gibt.",
+      "Ein Block hat 16 Bit, davon sind nur 255 Werte erlaubt.",
+      "Die Zahl 255 ist für den Router reserviert."
+    ],
+    "richtig": [
+      0
+    ],
+    "tipps": [
+      "Eine IPv4-Adresse ist 32 Bit lang und besteht aus vier Blöcken.",
+      "Wie groß wird eine Dualzahl mit acht Stellen höchstens?"
+    ],
+    "erklaerung": "32 Bit / 4 Blöcke = 8 Bit je Block (ein Oktett). Die größte 8-Bit-Dualzahl ist 11111111₂ = 255. Deshalb reicht jeder Block von 0 bis 255. Insgesamt gibt es 2³² ≈ 4,3 Milliarden IPv4-Adressen – zu wenig, deshalb gibt es IPv6 mit 128 Bit."
   }
 }
