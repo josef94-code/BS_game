@@ -86,7 +86,7 @@ func _aufbauen() -> void:
 		stufe = 3
 		positionen = []
 		for i in 16:
-			positionen.append(Vector2((i % 4) * 250 + (i / 4 % 2) * 14, (i / 4) * 172 + (i % 2) * 12))
+			positionen.append(Vector2((i % 4) * 238 + (i / 4 % 2) * 10, (i / 4) * 172 + (i % 2) * 12))
 	elif gefunden.size() > 9:
 		stufe = 2
 		positionen = []
