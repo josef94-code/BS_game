@@ -97,6 +97,10 @@ func _ablauf() -> void:
 				await _tuer_testen("werkstatt", spiel.werkstatt, [["werkstatt_eingang", Vector3(-9.0, 0, -5.5), PI + 0.6],
 					["werkstatt_saege", Vector3(3.0, 0, -1.0), PI / 2.0 + 0.4], ["werkstatt_bank", Vector3(4.0, 0, 1.0), -PI / 2.0 + 0.5],
 					["werkstatt_labor", Vector3(1.0, 0, -1.5), 0.0]])
+			"q15_adresse":
+				await _tuer_testen("werkstatt_raus", spiel.erdgeschoss, [])
+				await _tuer_testen("oben", spiel.aula, [["aula_eingang", Vector3(-9.0, 0, 7.5), 0.3],
+					["aula_mitte", Vector3(1.0, 0, 6.5), 0.0], ["aula_server", Vector3(-7.0, 0, -1.5), PI / 2.0 + 0.4]])
 		# Auftrag beim Auftraggeber annehmen
 		_vor_person(geber)
 		await _warte(0.5)
