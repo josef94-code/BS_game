@@ -14,7 +14,7 @@ func _bauen() -> void:
 	zeile.add_child(gesucht)
 	_eingabe = LineEdit.new()
 	_eingabe.custom_minimum_size = Vector2(240, 54)
-	_eingabe.placeholder_text = "z. B. 0,25"
+	_eingabe.placeholder_text = "z. B. 42" if a.get("ganzzahl", false) else "z. B. 0,25"
 	_eingabe.alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_eingabe.text_changed.connect(func(_t): bereit_geaendert.emit())
 	_eingabe.text_submitted.connect(func(_t): absenden.emit())
