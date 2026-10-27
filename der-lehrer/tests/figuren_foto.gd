@@ -87,6 +87,13 @@ func _ablauf() -> void:
 	for j in 10:
 		await process_frame
 	await _foto("statisten")
+	# Porträt wie im Hauptmenü (Comic-Konturen)
+	welt.queue_free()
+	var portraet := Portraet.new(Vector2i(640, 800))
+	root.add_child(portraet)
+	for j in 12:
+		await process_frame
+	await _foto("portraet")
 	quit()
 
 

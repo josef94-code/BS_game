@@ -26,6 +26,8 @@ var stil := {
 	"ausdruck": "ernst",        # ernst, grimmig, skeptisch, arrogant, angespannt, warm, muede
 	"haltung": "",              # verschraenkt, hueften, taschen
 	"kiefer": 1.0,              # Breite des Unterkiefers
+	"kopfbreite": 1.0,          # schmales (< 1) oder breites Gesicht
+	"ohren": 1.0,               # Ohrgröße
 	"huefte": 1.0,              # Hüftbreite
 	"einfach": false,           # Statisten: weniger Polygone, kleinere Gesichtstextur, kein Blinzeln
 }
@@ -316,19 +318,20 @@ func _kopf_bauen(haut: StandardMaterial3D) -> void:
 	_gesicht_mat.albedo_texture = _gesicht_offen
 	_gesicht_mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	var kopf := MeshInstance3D.new()
-	kopf.mesh = _kopf_mesh(0.108, stil["kiefer"], stil["einfach"])
+	kopf.mesh = _kopf_mesh(0.108, stil["kiefer"], stil["einfach"], stil["kopfbreite"])
 	kopf.material_override = _gesicht_mat
 	k.add_child(kopf)
 	# Ohren
 	for seite in [-1, 1]:
-		var ohr := _kug(k, 0.026, Vector3(0.092 * seite, -0.008, 0.008), haut, Vector3(0.4, 1.05, 0.75))
+		var og: float = stil["ohren"]
+		var ohr := _kug(k, 0.026 * og, Vector3(0.09 * seite * stil["kopfbreite"], -0.008, 0.008), haut, Vector3(0.4, 1.05, 0.75))
 		ohr.rotation.y = -0.3 * seite
 	# Nase: Rücken und Spitze
 	var nasenhaut := _m(Color(stil["haut"]).darkened(0.04), "", 4.0, false)
 	var nase := Bau.box(k, Vector3(0.018, 0.052, 0.026), Vector3(0, -0.002, -0.097), nasenhaut)
 	nase.rotation.x = 0.3
 	_kug(k, 0.012, Vector3(0, -0.026, -0.106), nasenhaut, Vector3(1.25, 0.85, 1.0))
-	var haar := _m(stil["haare"], "", 4.0, true, 0.35 if stil["frisur"] in ["gegelt", "tolle"] else 0.8)
+	var haar := _m(stil["haare"], "", 4.0, true, 0.35 if stil["frisur"] in ["gegelt", "tolle"] else (0.55 if stil["frisur"] == "kurz_hoch" else 0.8))
 	# Frisur
 	match stil["frisur"]:
 		"tolle", "gegelt":
@@ -340,6 +343,14 @@ func _kopf_bauen(haut: StandardMaterial3D) -> void:
 			if stil["frisur"] == "tolle":
 				var welle := _kug(k, 0.04, Vector3(0.015, 0.108, -0.06), haar, Vector3(1.3, 0.38, 0.9))
 				welle.rotation.x = -0.3
+		"kurz_hoch":
+			var kappe := _kug(k, 0.111, Vector3(0, 0.028, 0.008), haar, Vector3(0.9 * stil["kopfbreite"], 0.86, 1.02), true)
+			kappe.rotation.x = 0.45
+			var oben := _kug(k, 0.07, Vector3(0, 0.084, -0.006), haar, Vector3(1.08 * stil["kopfbreite"], 0.36, 1.25))
+			oben.rotation.x = -0.1
+			# kurz hochgestellte Partie über der Stirn
+			var stirn := _kug(k, 0.045, Vector3(0.004, 0.1, -0.06), haar, Vector3(1.85 * stil["kopfbreite"], 0.42, 0.95))
+			stirn.rotation = Vector3(-0.6, 0, 0.05)
 		"dutt":
 			var kappe := _kug(k, 0.112, Vector3(0, 0.03, 0.006), haar, Vector3(0.92, 0.92, 1.03), true)
 			kappe.rotation.x = 0.45
@@ -401,8 +412,8 @@ func _kopf_bauen(haut: StandardMaterial3D) -> void:
 ## Wangenknochen, kantiger Unterkiefer, vorstehendes Kinn. Die UVs der Kugel bleiben gleich,
 ## daher passt die gemalte Gesichtstextur weiterhin.
 static var _kopf_cache := {}
-static func _kopf_mesh(r: float, kiefer: float, einfach: bool) -> ArrayMesh:
-	var schluessel := "%s_%s_%s" % [r, kiefer, einfach]
+static func _kopf_mesh(r: float, kiefer: float, einfach: bool, breite: float = 1.0) -> ArrayMesh:
+	var schluessel := "%s_%s_%s_%s" % [r, kiefer, einfach, breite]
 	if _kopf_cache.has(schluessel):
 		return _kopf_cache[schluessel]
 	var sm := SphereMesh.new()
@@ -417,7 +428,7 @@ static func _kopf_mesh(r: float, kiefer: float, einfach: bool) -> ArrayMesh:
 		var vorne := clampf(-p.z, 0.0, 1.0)
 		var y := p.y
 		# Grundform: etwas schmaler, höher, Hinterkopf länger
-		p.x *= 0.82
+		p.x *= 0.82 * breite
 		p.y *= 1.13
 		if p.z > 0.0:
 			p.z *= 1.06

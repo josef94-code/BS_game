@@ -105,6 +105,9 @@ static func _zuege(img: Image, stil: Dictionary, variante: String, gs: float) ->
 			neigung = 0.5; brauenhoehe = -1.0; lid = 0.25; winkel = -1.5
 		"muede":
 			neigung = 1.5; brauenhoehe = 1.0; lid = 0.55; winkel = 1.5
+		"ueberlegen":
+			# selbstsicheres, halbes Grinsen – der Pate weiß mehr als du
+			neigung = 2.5; brauenhoehe = 0.0; lid = 0.33; winkel = -0.8; schief = -0.9
 	var haarfarbe := haare.darkened(0.25)
 	# Frauen (mit Wimpern): schmalere, geschwungene Brauen, weniger Falten, vollere Lippen
 	var weiblich: bool = stil.get("wimpern", false)
