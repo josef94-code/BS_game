@@ -209,8 +209,9 @@ func _bauen() -> void:
 		kr.rotation.x = -0.12
 		Bau.box(_rumpf, Vector3(0.048, 0.032, 0.02), Vector3(0, 0.565, -0.135), kraw)
 		for seite in [-1, 1]:
-			var revers := Bau.box(_rumpf, Vector3(0.055, 0.25, 0.014), Vector3(0.062 * seite, 0.46, -0.136), dunkel)
-			revers.rotation = Vector3(-0.15, 0, 0.3 * seite)
+			# Revers als V: oben an den Schultern breit, unten am Knopf zusammenlaufend
+			var revers := Bau.box(_rumpf, Vector3(0.05, 0.28, 0.014), Vector3(0.058 * seite, 0.45, -0.137), dunkel)
+			revers.rotation = Vector3(-0.15, 0, -0.36 * seite)
 		var tuch := _m(stil.get("einstecktuch", stil["hemd"]))
 		Bau.box(_rumpf, Vector3(0.055, 0.025, 0.012), Vector3(-0.115 * br, 0.47, -0.128), tuch)
 		for i in 2:
