@@ -121,6 +121,10 @@ Interaktionshinweis "[E]". Taste `B` = Beweisbrett/Notizbuch, `Esc` = Pause/Spei
 > beim Lehrer in der Aula (acht gemischte Aufgaben), Vince Moretti wird überführt, Beförderung zum Consigliere.
 > Gegenüber dem ursprünglichen Plan sind es 16 statt 24 Missionen, weil sich die Aufträge eng an den vorliegenden
 > Lernunterlagen orientieren (keine Vorgriffe); Digitaltechnik (Logik, SPS) ist noch nicht dran.
+>
+> **v1.1:** Türschild „Mr. Hö“, Figuren im GTA-III-Stil (ernste Gesichter, Kiefer, Haltungen, Mundbewegung),
+> der Lehrer als Pate, Statisten (Heimspielabend in Akt 2–3, Black Roses in Akt 4, voller Prüfungsmorgen),
+> Satire (Radiowerbung, Plakate) und trockenere Sprüche.
 
 Fächer gemischt: **ET** Elektrotechnik, **AT-S** Automatisierung/Schütztechnik, **AT-D** Digitaltechnik, **LtK**.
 

@@ -7,14 +7,20 @@ Godot 4.5 (GDScript), Export als portable Windows-Anwendung (eine `.exe`, keine 
 > und die Schulglocke läutet, wann sie will. Alle reden von Kinderkrankheiten. Nur einer glaubt nicht an Zufälle:
 > **der Lehrer** – Klassenleiter der MT10, Türschild „Mr. Hö“. Er gibt dem Neuen erste Aufträge …
 
-**Grafikstil:** an GTA III angelehnt – Low-Poly-Figuren mit realistischen Proportionen und gemalten Gesichtern
-(Gesichtstextur mit Blinzeln, im Code erzeugt), schmuddelige Texturen, viel Kleinkram (Lüftungskanal, Kabeltrassen,
+**Grafikstil:** an GTA III angelehnt – Low-Poly-Figuren mit realistischen Proportionen (Schultern, Hüft- und
+Kniegelenke, Hände mit Daumen) und gemalten, ernsten Gesichtern auf einem verformten Kopf mit Kiefer und Kinn
+(Gesichtstextur je Ausdruck, mit Blinzeln und Mundbewegung beim Sprechen, im Code erzeugt). Die Figuren atmen,
+verlagern das Gewicht, haben eigene Haltungen und schauen die Spielfigur an, wenn sie näher kommt. Der Lehrer
+tritt als Pate auf (gegelte Tolle, Bartschatten, Einstecktuch, Siegelring); schmuddelige Texturen, viel Kleinkram (Lüftungskanal, Kabeltrassen,
 Ventile, Feuerlöscher, Maschendraht-Lager, Hausmeister-Ecke, Wanduhr mit Spielzeit),
 Nebel, Lichtinseln aus Glühbirnen und Leuchtstoffröhren, weicher PS2-Filter mit Filmkorn, HUD mit Uhr und grünen
 Ruf-Ziffern, Hilfe-Box oben links, Untertitel, Missionstitel unten rechts. Menü und Ladebildschirm zeigen den Lehrer
 als Porträt mit kräftigen Konturen.
 
-**Stand: v1.0** – sechs Räume, sechzehn Missionen, das ganze Spiel vom Intro bis zur Abschlussprüfung (ca. 3–4 Stunden):
+**Stand: v1.1** – sechs Räume, sechzehn Missionen, das ganze Spiel vom Intro bis zur Abschlussprüfung (ca. 3–4 Stunden).
+Neu in v1.1: überarbeitete Figuren, **Schülerinnen und Schüler als Statisten** (Heimspielabend in Flur, Cafeteria und
+Turnhalle, nachts die Black Roses, am Prüfungsmorgen eine volle Schule und Mitschüler an den Prüfungs-PCs – alle mit
+[E] ansprechbar) und mehr Satire im GTA-Stil (Werbespots im Schulradio, Plakate frei erfundener Firmen).
 - **Akt 1 – Seltsame Vorfälle** im Hausmeisterkeller (Büro des Lehrers), vier Missionen beim Lehrer.
 - **Akt 2 – Die schwarzen Rosen** im Erdgeschoss: **Flur** mit Spinden, Pokalvitrine, Fensterband im Mondlicht,
   Unterverteilung und Infoscreen; **Cafeteria** mit Essensausgabe, Tischreihen, Getränkeautomaten und dem Ende
@@ -69,7 +75,7 @@ etwa ein Fünftel der früheren Zeichenaufrufe.
 
 ## Spielablauf (GTA-Stil)
 
-1. Auf der Minimap zeigt der **Hut** den Lehrer, **K**, **R**, **B** und **S** zeigen Kowalski, Rosalita, Bradley und Sparky (groß und farbig,
+1. Auf der Minimap zeigt der **Hut** den Lehrer (Türschild „Mr. Hö“), **K**, **R**, **B** und **S** zeigen Kowalski, Rosalita, Bradley und Sparky (groß und farbig,
    wenn sie einen Auftrag haben). Der **gelbe Punkt** und der **gelbe Lichtkegel** am Boden zeigen das Ziel –
    liegt es in einem anderen Stockwerk, stehen sie an der Treppe.
 2. Beim Auftraggeber den Auftrag annehmen → **Missionstitel** wird groß eingeblendet.
@@ -234,15 +240,17 @@ der-lehrer/
 ├─ skripte/
 │  ├─ autoload/      Daten, Spielstand (Speichern/Laden), Audio (Klangsynthese), AufgabenLogik
 │  ├─ welt/          Bau (Grundkörper, Materialien, prozedurale Texturen), Bereich (gemeinsame Grundlage),
-│  │                 Keller, Erdgeschoss (Flur + Cafeteria), Turnhalle, Werkstatt, Aula, Zielmarker
-│  ├─ figuren/       Figur (Figur aus Grundkörpern), Person (ansprechbar), Lehrer, Nebenfiguren, Spieler
+│  │                 Keller, Erdgeschoss (Flur + Cafeteria), Turnhalle, Werkstatt, Aula, Zielmarker,
+│  │                 Schuelerschaft (Statisten je Raum und Tageszeit)
+│  ├─ figuren/       Figur (Figur aus Grundkörpern), Gesicht (gemalte Gesichter), Person (ansprechbar), Lehrer,
+│  │                 Nebenfiguren, Spieler, Statisten (Aussehen) und Schueler (Verhalten der Statisten)
 │  ├─ ui/            HUD, Minimap, Dialoge, Aufgabenfenster, Beweisbrett, Pausenmenü, Zwischensequenzen
 │  │  └─ aufgaben/   Multiple Choice, Berechnung, Sortieren, Fehlersuche, Schützschaltung, Stromlaufplan-Zeichner
 │  ├─ spiel.gd       Spielablauf (Missionen)
 │  └─ autotest.gd    automatischer Durchlauf mit Bildschirmfotos (--autotest)
 ├─ shader/           PS2-Filter, Kontur, Lichtkegel, Missionsmarker, Minimap-Maske
 ├─ fonts/            Special Elite, Anton, Oswald (SIL OFL)
-└─ tests/            Datenprüfung
+└─ tests/            Datenprüfung, Fotos aller Figuren (figuren_foto.gd)
 ```
 
 - Alle 3D-Modelle, Texturen, Klänge und die Musik werden im Code erzeugt – keine fremden Assets, Logos oder Namen aus GTA.
