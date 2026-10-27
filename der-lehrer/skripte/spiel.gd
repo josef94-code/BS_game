@@ -28,6 +28,7 @@ var erdgeschoss: Erdgeschoss
 var turnhalle: Turnhalle
 var werkstatt: Werkstatt
 var aula: Aula
+var schueler: Schuelerschaft
 var bereiche: Array[Bereich] = []
 var aktueller_bereich: Bereich
 var spieler: Spieler
@@ -90,6 +91,12 @@ func _ready() -> void:
 	if Spielstand.geladen and pos.size() == 3:
 		spieler.position = Vector3(pos[0], pos[1], pos[2])
 		spieler.setze_blick(float(Spielstand.d.get("blick", 0.0)))
+	for id in personen:
+		(personen[id]["node"] as Person).beobachter = spieler
+	aula.vince_beobachter(spieler)
+	schueler = Schuelerschaft.new()
+	schueler.spieler = spieler
+	add_child(schueler)
 	seq_kamera = Camera3D.new()
 	seq_kamera.fov = 50
 	add_child(seq_kamera)
@@ -101,6 +108,7 @@ func _ready() -> void:
 	hud.minimap.marker = marker
 	dialog = DialogUI.new()
 	add_child(dialog)
+	dialog.sprecher_wechsel.connect(_mund_bewegen)
 	aufgaben = AufgabenPanel.new()
 	add_child(aufgaben)
 	brett = Beweisbrett.new()
@@ -307,6 +315,28 @@ func _ziel_aktualisieren() -> void:
 		liste.append({"pos": (personen[id]["node"] as Node3D).global_position, "art": id,
 			"aktiv": id == geber and status in ["offen", "zurueck"]})
 	hud.minimap.personen = liste
+	schueler.aktualisieren(aktueller_bereich, _statisten_phase())
+
+
+## Wer läuft gerade durch die Schule? Heimspielabend (Akt 2–3), Nacht (Akt 4), Prüfungsmorgen, danach
+func _statisten_phase() -> String:
+	if Spielstand.quest_status("q16_pruefung") == "erledigt":
+		return "danach"
+	if Spielstand.quest_status("q15_adresse") == "erledigt":
+		return "morgen"
+	if Spielstand.quest_status("q11_lauscher") == "erledigt":
+		return "nacht"
+	if _tuer_offen("tuer"):
+		return "abend"
+	return ""
+
+
+## Mund der sprechenden Figur bewegen (Signal aus dem Dialogfenster)
+func _mund_bewegen(id: String) -> void:
+	for pid in personen:
+		(personen[pid]["node"] as Person).figur.spricht = pid == id
+	spieler.figur.spricht = id == "spieler"
+	aula.vince_spricht(id == "vince")
 
 
 # ---------------------------------------------------------------- Bereiche
@@ -420,8 +450,8 @@ func _suche_interaktiv() -> Interaktiv:
 		if i == null or not i.aktiv or not i.is_inside_tree():
 			continue
 		var d := Vector2(i.global_position.x - p.x, i.global_position.z - p.z).length()
-		if d < i.radius and d < abstand:
-			abstand = d
+		if d < i.radius and d + i.nachrang < abstand:
+			abstand = d + i.nachrang
 			bester = i
 	return bester
 
@@ -452,6 +482,8 @@ func interagieren(id: String) -> void:
 			_radio_spielen()
 	elif id.begins_with("sammel:"):
 		_sammeln(id.substr(7))
+	elif id.begins_with("schueler:"):
+		await _statist_ansprechen(id)
 	else:
 		await _station(id)
 	_beschaeftigt = false
@@ -466,6 +498,27 @@ func _tuer_bereich(id: String) -> Bereich:
 	return null
 
 
+## Statisten sagen einen Spruch (der Reihe nach, je Phase eigene Sprüche)
+func _statist_ansprechen(id: String) -> void:
+	var s := schueler.finden(id)
+	if s == null:
+		return
+	var zeilen: Array = Daten.dialog(s.sprueche)
+	if zeilen.is_empty():
+		zeilen = Daten.dialog("statisten_abend")
+	if zeilen.is_empty():
+		return
+	var n: int = _leerlauf_index.get(s.sprueche, randi() % zeilen.size())
+	_leerlauf_index[s.sprueche] = n + 1
+	var zeile: Dictionary = (zeilen[n % zeilen.size()] as Dictionary).duplicate()
+	zeile["n"] = s.anzeigename
+	s.reden(true)
+	_dialog_kamera(true, s)
+	await dialog.starte([zeile])
+	s.reden(false)
+	_dialog_kamera(false)
+
+
 func _radio_spielen() -> void:
 	var akt := "akt1"
 	if Spielstand.quest_status("q11_lauscher") == "erledigt":
@@ -477,7 +530,12 @@ func _radio_spielen() -> void:
 	var zeilen: Array = Daten.radio.get(akt, [])
 	if zeilen.is_empty():
 		return
-	hud.radio(zeilen[_radio_index % zeilen.size()])
+	# jede dritte Meldung ist Werbung (wie bei den Radiosendern in GTA)
+	var werbung: Array = Daten.radio.get("werbung", [])
+	if _radio_index % 3 == 2 and not werbung.is_empty():
+		hud.radio(werbung[(_radio_index / 3) % werbung.size()])
+	else:
+		hud.radio(zeilen[(_radio_index - _radio_index / 3) % zeilen.size()])
 	_radio_index += 1
 
 
@@ -767,7 +825,7 @@ func _gespraech(id: String) -> void:
 	person.fertig()
 
 
-func _dialog_kamera(an: bool, person: Person = null) -> void:
+func _dialog_kamera(an: bool, person: Node3D = null) -> void:
 	if not an:
 		spieler.kamera.current = true
 		return
@@ -780,7 +838,7 @@ func _dialog_kamera(an: bool, person: Person = null) -> void:
 	var ziel_pos := sp + Vector3(0, 1.8, 0) - richtung * 1.2 + rechts * 0.75
 	seq_kamera.global_transform = spieler.kamera.global_transform
 	seq_kamera.current = true
-	var blick := person.figur.kopf_position() - Vector3(0, 0.1, 0)
+	var blick := (person.get("figur") as Figur).kopf_position() - Vector3(0, 0.1, 0)
 	var ziel := Transform3D(Basis(), ziel_pos).looking_at(blick)
 	create_tween().tween_property(seq_kamera, "global_transform", ziel, 0.6).set_trans(Tween.TRANS_SINE)
 

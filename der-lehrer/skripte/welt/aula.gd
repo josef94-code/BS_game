@@ -413,6 +413,15 @@ func vince_zeigen(ort: String) -> void:
 			_tablet.visible = false
 
 
+func vince_beobachter(spieler: Node3D) -> void:
+	_vince.beobachter = spieler
+
+
+func vince_spricht(an: bool) -> void:
+	if _vince.figur:
+		_vince.figur.spricht = an
+
+
 func vince_position() -> Vector3:
 	return _vince.global_position
 
@@ -484,3 +493,21 @@ func _process(delta: float) -> void:
 			led.emission_energy_multiplier = 2.5 if randf() > 0.5 else 0.3
 	if _klon.visible:
 		_klon_led.emission_energy_multiplier = 3.0 if fmod(_zeit, 0.5) < 0.25 else 0.2
+
+
+# ---------------------------------------------------------------- Statisten
+
+## Prüfungsmorgen: die Mitschüler an den Prüfungs-PCs (Platz 1 vorne links gehört dem Spieler)
+func statisten_plan(phase: String) -> Array:
+	var liste := []
+	match phase:
+		"morgen":
+			var nr := 0
+			for z in [-2.8, 0.4, 3.6]:
+				for x in [-6.0, -1.0, 4.0]:
+					nr += 1
+					if nr > 1:
+						liste.append({"art": "sitzen", "pos": Vector3(x, 0, z + 0.72), "blick": 0.0, "sprueche": "statisten_pruefung"})
+		"danach":
+			liste = Bereich._gruppe(Vector3(-6.5, 0, 6.5), [Vector3(-7.1, 0, 6.8), Vector3(-6.0, 0, 6.9), Vector3(-6.5, 0, 6.0)], {"sprueche": "statisten_danach"})
+	return liste

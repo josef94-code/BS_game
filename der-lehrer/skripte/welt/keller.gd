@@ -285,7 +285,7 @@ func _buero() -> void:
 	# Glas-Trennwände (Eingang zwischen x = 5 und 6.8 an der Nordseite)
 	_trennwand(Vector3(6.8, 0, 2.5), Vector3(B, 0, 2.5))
 	_trennwand(Vector3(5.0, 0, 2.5), Vector3(5.0, 0, T))
-	Bau.schild(self, "MR. JOSEF\nKlassenleiter MT10", Vector3(9.4, 1.9, 2.47), 44, Color(0.9, 0.75, 0.3), PI, 4)
+	Bau.schild(self, "MR. HÖ\nKlassenleiter MT10", Vector3(9.4, 1.9, 2.47), 44, Color(0.9, 0.75, 0.3), PI, 4)
 	Bau.schild(self, "Bitte nicht klopfen.\nDie Familie weiß, dass du da bist.", Vector3(9.4, 1.35, 2.47), 22, Color(0.95, 0.95, 0.9), PI, 3)
 
 	# Schreibtisch

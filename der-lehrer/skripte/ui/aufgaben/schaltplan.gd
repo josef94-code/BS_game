@@ -126,7 +126,11 @@ func _draw() -> void:
 			var hoehe := 0.3 if mit_antrieb else 0.55
 			draw_string(f, Vector2(oben.x - links - bs.x, oben.y + (unten.y - oben.y) * hoehe + 6), bez, HORIZONTAL_ALIGNMENT_LEFT, -1, 19, Color(0.1, 0.15, 0.45))
 		if kl != "":
-			draw_string(ThemeDB.fallback_font, Vector2(oben.x + 16, (oben.y + unten.y) * 0.5 + 24), kl, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.3, 0.3, 0.3))
+			# Klemmenbezeichnung mit Papierhintergrund, damit keine Leitung durch die Schrift läuft
+			var kp := Vector2(oben.x + 16, (oben.y + unten.y) * 0.5 + 24)
+			var ks := ThemeDB.fallback_font.get_string_size(kl, HORIZONTAL_ALIGNMENT_LEFT, -1, 14)
+			draw_rect(Rect2(kp + Vector2(-2, -ks.y * 0.72), Vector2(ks.x + 4, ks.y * 0.82)), Stil.PAPIER)
+			draw_string(ThemeDB.fallback_font, kp, kl, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.3, 0.3, 0.3))
 
 
 func _ist_abzweig(p: Array) -> bool:

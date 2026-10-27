@@ -541,3 +541,20 @@ func _process(delta: float) -> void:
 	# Vorhang hängt schief und zittert
 	if not vorhang_ok:
 		_vorhang.rotation.x = 0.06 + sin(_zeit * 1.3) * 0.01
+
+
+# ---------------------------------------------------------------- Statisten
+
+## Heimspielabend: Fans auf der Tribüne (Sitzfläche der Stufe s: 0,45 · (s + 1) + 0,08 m)
+func statisten_plan(phase: String) -> Array:
+	if phase != "abend":
+		return []
+	var liste := []
+	var plaetze := [[0, -6.5], [1, -2.0], [0, 3.5], [2, 5.0], [1, 7.5], [3, -4.5], [0, -1.0], [2, 1.5], [1, 3.0], [3, 6.5]]
+	for p in plaetze:
+		var stufe: int = p[0]
+		var y := 0.45 * (stufe + 1) + 0.08 - 0.475
+		var z := -Z + 0.5 + (3 - stufe) * 0.75 - 0.05
+		liste.append({"art": "sitzen", "pos": Vector3(p[1], y, z), "blick": PI, "sprueche": "statisten_fans"})
+	liste.insert(2, {"art": "stehen", "pos": Vector3(-1.5, 0, -6.2), "blick": PI, "sprueche": "statisten_fans"})
+	return liste

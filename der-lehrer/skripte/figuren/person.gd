@@ -11,6 +11,8 @@ var comic := false
 var arbeitet := false
 var _ruhe_blick := 0.0
 var _ziel: Node3D = null
+## Spielfigur: Kommt sie näher, schaut die Person sie an
+var beobachter: Node3D = null
 var _zeit := 0.0
 
 
@@ -61,3 +63,6 @@ func _process(delta: float) -> void:
 	elif arbeitet:
 		figur.gestik = 0.35 + sin(_zeit * 1.7) * 0.25
 	rotation.y = lerp_angle(rotation.y, soll, minf(1.0, delta * 4.0))
+	if beobachter and is_visible_in_tree():
+		var nah := beobachter.global_position.distance_to(global_position) < 4.5
+		figur.blick_ziel = beobachter.global_position + Vector3(0, 1.6, 0) if nah else null

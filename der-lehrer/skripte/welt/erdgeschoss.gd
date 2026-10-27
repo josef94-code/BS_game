@@ -354,7 +354,12 @@ func _flur_details() -> void:
 	for seite in [-1, 1]:
 		Bau.zylinder(self, 0.005, 0.45, Vector3(-6.0 + 1.95 * seite, 3.27, 0), m_dunkel)
 	# Plakate über den Spinden (Südwand)
-	_plakat(Vector3(-11.5, 2.65, FZ - 0.02), PI, "SPRING DANCE\n14. Mai · Turnhalle", Color(0.85, 0.3, 0.55))
+	_plakat(Vector3(-11.5, 2.65, FZ - 0.02), PI, "HEIMSPIEL HEUTE 20 UHR\nLIONS – WESTSIDE", Color(0.85, 0.3, 0.55))
+	# Satire am Schwarzen Brett: Plakate frei erfundener Firmen und Programme
+	_plakat(Vector3(0.0, 2.65, FZ - 0.02), PI, "DIGITALPAKT\nTablets für alle!\nLieferung ca. 2031", Color(0.85, 0.85, 0.82))
+	_plakat(Vector3(10.6, 2.65, FZ - 0.02), PI, "STERLING BAU\nWir bauen Zukunft.\n(Rechnung folgt)", Color(0.15, 0.17, 0.22))
+	_plakat(Vector3(FX1 + 0.32, 2.6, 5.2), PI / 2, "PUDDING NUR BEI\nLAUFENDEM BAND\n– Die Küche", Color(0.95, 0.85, 0.55))
+	_plakat(Vector3(FX1 + 0.32, 2.6, -5.0), PI / 2, "ELTERNBEIRAT\nKuchenbasar Freitag\nDiskussionen bitte\nim Elternchat", Color(0.55, 0.75, 0.9))
 	_plakat(Vector3(-4.0, 2.65, FZ - 0.02), PI, "WÄHLT EUREN\nSCHÜLERSPRECHER!", Color(0.2, 0.45, 0.8))
 	_plakat(Vector3(3.5, 2.65, FZ - 0.02), PI, "5 SICHERHEITSREGELN\nFreischalten · Sichern\nPrüfen · Erden · Abdecken", Color(0.95, 0.75, 0.1))
 	_plakat(Vector3(7.5, 2.65, FZ - 0.02), PI, "MATHE-AG\nMo 14 Uhr · R 108", Color(0.3, 0.65, 0.35))
@@ -1254,3 +1259,45 @@ func _process(delta: float) -> void:
 		# -PF1 ist falsch angeschlossen: aus, obwohl das Band läuft
 		if not bedienstelle_ok:
 			_pf1.emission_energy_multiplier = 0.05
+
+
+# ---------------------------------------------------------------- Statisten
+
+## Heimspielabend: Fans und Schüler im Flur und in der Cafeteria; Prüfungsmorgen: noch voller.
+## Nachts lungern nur die Black Roses herum.
+func statisten_plan(phase: String) -> Array:
+	# Rundweg durch den Flur: nördliche Spur bis vor die Pflanze, südliche Spur an Kowalski und Warnschild vorbei
+	var runde := [Vector3(-14.0, 0, -1.45), Vector3(7.0, 0, -1.45), Vector3(11.5, 0, 0.05), Vector3(-14.0, 0, 0.05)]
+	var flur_ost := {"art": "laufen", "weg": runde}
+	var flur_west := {"art": "laufen", "weg": [runde[2], runde[3], runde[0], runde[1]], "pos": Vector3(3.0, 0, 0.05)}
+	var cafe_runde := {"art": "laufen", "weg": [Vector3(16.0, 0, 0.5), Vector3(28.0, 0, 0.5), Vector3(28.0, 0, -5.6), Vector3(16.0, 0, -5.6)]}
+	var gruppe_a := Bereich._gruppe(Vector3(-11.0, 0, 1.55), [Vector3(-11.6, 0, 1.8), Vector3(-10.4, 0, 1.8), Vector3(-11.0, 0, 1.0)])
+	var gruppe_b := Bereich._gruppe(Vector3(5.6, 0, 1.55), [Vector3(5.1, 0, 1.75), Vector3(6.1, 0, 1.75)])
+	var sitzen := [
+		{"art": "sitzen", "pos": Vector3(17.2, 0, 3.72), "blick": 0.0},
+		{"art": "sitzen", "pos": Vector3(22.0, 0, -3.08), "blick": 0.0},
+		{"art": "sitzen", "pos": Vector3(18.4, 0, 2.28), "blick": PI},
+		{"art": "sitzen", "pos": Vector3(25.7, 0, 5.48), "blick": PI},
+		{"art": "sitzen", "pos": Vector3(22.5, 0, 6.92), "blick": 0.0},
+		{"art": "sitzen", "pos": Vector3(26.8, 0, -4.52), "blick": PI},
+	]
+	var schlange := [
+		{"art": "stehen", "pos": Vector3(29.0, 0, 2.6), "blick": -PI / 2.0},
+		{"art": "stehen", "pos": Vector3(29.0, 0, 3.35), "blick": -PI / 2.0},
+		{"art": "stehen", "pos": Vector3(29.05, 0, 4.1), "blick": -PI / 2.0},
+	]
+	# die Black Roses lungern neben der Pokalvitrine am Westende des Flurs
+	var roses := Bereich._gruppe(Vector3(-13.3, 0, 1.25), [Vector3(-13.9, 0, 1.45), Vector3(-12.8, 0, 1.6)], {"rose": true})
+	match phase:
+		"abend":
+			return [flur_ost, sitzen[0], gruppe_a[0], cafe_runde, flur_west, schlange[0], gruppe_a[1], sitzen[1],
+				gruppe_b[0], gruppe_b[1], sitzen[2], gruppe_a[2], schlange[1], sitzen[3]]
+		"nacht":
+			return roses + [{"art": "sitzen", "pos": Vector3(26.8, 0, -3.08), "blick": 0.0, "rose": true}]
+		"morgen", "danach":
+			var liste := [flur_ost, sitzen[0], schlange[0], flur_west, gruppe_a[0], sitzen[1], schlange[1], cafe_runde,
+				gruppe_a[1], sitzen[2], schlange[2], sitzen[4], gruppe_b[0], gruppe_b[1], sitzen[3], sitzen[5], gruppe_a[2]]
+			if phase == "morgen":
+				liste.insert(4, roses[0])
+			return liste
+	return []

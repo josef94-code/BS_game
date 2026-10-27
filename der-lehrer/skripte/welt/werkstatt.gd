@@ -587,3 +587,12 @@ func _process(delta: float) -> void:
 		led.emission_energy_multiplier = 2.5 if randf() > 0.4 else 0.2
 	if _lauscher.visible:
 		_lauscher_led.emission_energy_multiplier = 3.0 if fmod(_zeit, 0.6) < 0.3 else 0.2
+
+
+# ---------------------------------------------------------------- Statisten
+
+## Heimspielabend: zwei aus der Abschlussklasse üben an den Laborplätzen
+func statisten_plan(phase: String) -> Array:
+	if phase != "abend":
+		return []
+	return [{"art": "stehen", "pos": Vector3(-2.5, 0, -6.75), "blick": 0.0}, {"art": "stehen", "pos": Vector3(0.1, 0, -6.75), "blick": 0.2}]

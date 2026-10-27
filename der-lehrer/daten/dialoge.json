@@ -9,7 +9,8 @@
     "rosalita": { "name": "Rosalita", "farbe": "#e8829f" },
     "bradley": { "name": "Coach Bradley", "farbe": "#f0b429" },
     "sparky": { "name": "Sparky", "farbe": "#ff8c42" },
-    "vince": { "name": "Vince Moretti", "farbe": "#c0394b" }
+    "vince": { "name": "Vince Moretti", "farbe": "#c0394b" },
+    "schueler": { "name": "Schüler", "farbe": "#c9c9c9" }
   },
 
   "intro": [
@@ -84,6 +85,7 @@
     { "s": "lehrer", "t": "Ein Konto ist noch kein Täter. Jeder, der das Passwort kennt, kann es benutzen. Und „lincoln123“ errät sogar Kowalski." },
     { "s": "lehrer", "t": "Aber jetzt wissen wir, wo wir suchen müssen." },
     { "s": "lehrer", "t": "Du hast heute für die ganze Schule gearbeitet, nicht nur für die MT10. Ab heute bist du Schülersprecher. Die Familie vergisst nicht." },
+    { "s": "lehrer", "t": "Oben ist heute Heimspiel gegen Westside. Die halbe Schule ist da – und die Black Roses vermutlich auch. Augen offen, Mund zu." },
     { "s": "lehrer", "t": "Und noch etwas: Die Kellertür ist ab jetzt für dich offen. Hausmeister Kowalski wartet oben im Flur. Er hat Ärger mit den neuen Leitungen." }
   ],
 
@@ -143,7 +145,7 @@
 
   "q08_start": [
     { "s": "bradley", "t": "Du bist also der Capo vom Lehrer. Bradley. Sportlehrer, Basketballtrainer, und seit heute auch Hausmeister, wie es aussieht." },
-    { "s": "bradley", "t": "Gestern: Heimspiel gegen Westside. Dritte Halbzeit … ich meine, drittes Viertel. Die Anzeigetafel geht aus. Und mit ihr das Hallenlicht, die Lüftung, alles." },
+    { "s": "bradley", "t": "Heute Abend: Heimspiel gegen Westside. Drittes Viertel – die Anzeigetafel geht aus. Und mit ihr das Hallenlicht, die Lüftung, alles. Die Fans sitzen jetzt im Dunkeln auf der Tribüne." },
     { "s": "spieler", "t": "Alles gleichzeitig? Dann hängt das irgendwie zusammen." },
     { "s": "bradley", "t": "Sterling Bau hat die ganze Hallentechnik „vernetzt“. Der Steuerrechner steht am Kampfgericht. Ich verstehe davon so viel wie vom Ballett." },
     { "wahl": [ { "t": "Ich sehe mir das Hallennetz an.", "ok": true }, { "t": "Gleich, Coach.", "ok": false } ] }
@@ -295,12 +297,65 @@
     { "s": "lehrer", "t": "Du hast für die ganze Schule gearbeitet. Gemessen statt geschätzt, sicher statt schnell. Ab heute bist du mein Consigliere." }
   ],
 
+  "statisten_abend": [
+    { "s": "schueler", "t": "Westside führt. Aber nur, weil unsere Anzeigetafel flackert. Sagt Coach Bradley." },
+    { "s": "schueler", "t": "Bist du der aus der MT10, der für den Lehrer arbeitet? Respekt. Oder Mitleid. Ich weiß es noch nicht." },
+    { "s": "schueler", "t": "Der Snackautomat hat mir zwei Dollar gefressen. Das ist entweder Sabotage oder Kapitalismus." },
+    { "s": "schueler", "t": "Mein Physiklehrer sagt, Strom ist wie Wasser. Der Lehrer sagt, wer das sagt, darf das Wasser beim nächsten Kurzschluss selbst aufwischen." },
+    { "s": "schueler", "t": "Ich warte hier seit zwanzig Minuten auf Pudding. Das Band steht. Wie meine Noten." },
+    { "s": "schueler", "t": "Grün-gelb ist für den Schutzleiter. Das hat er uns in der ersten Woche eingetrichtert. Bis heute träume ich davon." },
+    { "s": "schueler", "t": "Hast du die Black Roses gesehen? Die tun so, als gehört ihnen die Schule. Dabei gehört sie Sterling Bau. Sagt Sterling Bau." },
+    { "s": "schueler", "t": "Wenn du den Lehrer siehst: Ich war's nicht. Was auch immer es war." },
+    { "s": "schueler", "t": "Digitalpakt? Unser Whiteboard ist aus Kreide." },
+    { "s": "schueler", "t": "Sterling Bau hat die Toiletten saniert. Jetzt gibt es eine. Für alle. Mit Wartezeit." },
+    { "s": "schueler", "t": "Drei gültige Stellen, sagt er. Ich hab nicht mal drei gültige Ausreden." },
+    { "s": "schueler", "t": "Ich bin nur wegen dem Heimspiel hier. Und wegen dem Pudding. Hauptsächlich wegen dem Pudding." }
+  ],
+  "statisten_fans": [
+    { "s": "schueler", "t": "LIONS! LIONS! … Ist das Licht wieder an? Nein? LIONS!" },
+    { "s": "schueler", "t": "Drittes Viertel, und die Tafel zeigt 88:88. Westside behauptet, das ist ihr Ergebnis." },
+    { "s": "schueler", "t": "Mein Vater hat für diesen Platz fünf Dollar bezahlt. Für fünf Dollar will ich wenigstens Licht." },
+    { "s": "schueler", "t": "Coach Bradley ist so rot im Gesicht, man könnte ihn als Meldeleuchte verbauen." },
+    { "s": "schueler", "t": "Wenn das Licht wieder angeht, wäre das der erste Sieg heute." }
+  ],
+  "statisten_black_roses": [
+    { "s": "schueler", "t": "Verschwinde, Laufbursche. Hier gibt's nichts zu messen." },
+    { "s": "schueler", "t": "Schöne Grüße von den Roses. Du weißt schon." },
+    { "s": "schueler", "t": "Wir? Wir warten auf den Bus. Der fährt nicht? Pech." },
+    { "s": "schueler", "t": "Morgen um neun wird's dunkel hier. Nur so 'ne Ahnung." },
+    { "s": "schueler", "t": "Sag deinem Lehrer, er soll sich nicht so aufregen. Schlecht fürs Herz. Und für die Leitungen." }
+  ],
+  "statisten_morgen": [
+    { "s": "schueler", "t": "Heute Prüfung bei euch? Viel Glück. Er lässt angeblich niemanden durchfallen. Er lässt ihn einfach … wiederholen." },
+    { "s": "schueler", "t": "Kakao, Toast, Rührei. Rosalita meint es heute ernst." },
+    { "s": "schueler", "t": "Das Licht ist an, der Automat läuft, die Lüftung summt. Ist heute ein Feiertag?" },
+    { "s": "schueler", "t": "Ich hab gehört, ihr kriegt eine Aufgabe zur Kochplatte. Weil Rosalita sich beschwert hat." },
+    { "s": "schueler", "t": "Die Black Roses sind heute alle so früh da. Sonst kommen die erst zur dritten Stunde." },
+    { "s": "schueler", "t": "Mein Bruder hat seine Prüfung bei ihm geschrieben. Er spricht bis heute nur in drei gültigen Stellen." }
+  ],
+  "statisten_pruefung": [
+    { "s": "schueler", "t": "Psst. Wie viel ist 230 zum Quadrat? … Vergiss es, er schaut her." },
+    { "s": "schueler", "t": "Ich hab meinen Taschenrechner vergessen. Und meinen Mut." },
+    { "s": "schueler", "t": "Wenn die Aufgabe mit „Begründen Sie“ anfängt, bin ich raus." },
+    { "s": "schueler", "t": "Hör auf zu reden. Er hört alles. Er ist der Lehrer." }
+  ],
+  "statisten_danach": [
+    { "s": "schueler", "t": "Bestanden? Ich glaub schon. Ich hab bei jeder Aufgabe „freischalten“ geschrieben. Irgendwo passt es immer." },
+    { "s": "schueler", "t": "Hast du gesehen, wie Vince mit Kowalski den Flur fegt? Bestes Ende seit Jahren." },
+    { "s": "schueler", "t": "Sterling Bau ist raus. Kein Vertrag. Rosalita hat aus Freude Pudding für alle gemacht." },
+    { "s": "schueler", "t": "Ab jetzt sagen alle Consigliere zu dir? Ich sag weiter Kollege. Nichts für ungut." }
+  ],
+
   "lehrer_abgelehnt": [ { "s": "lehrer", "t": "Die Familie wartet. Aber nicht ewig." } ],
-  "lehrer_aktiv": [ { "s": "lehrer", "t": "Du hast einen Auftrag, Kleiner. Dein Ziel steht oben. Und auf der Karte ist es gelb markiert." } ],
+  "lehrer_aktiv": [ { "s": "lehrer", "t": "Du stehst hier noch rum? Dein Auftrag wartet nicht. Und ich auch nicht." } ],
   "lehrer_leerlauf": [
     { "s": "lehrer", "t": "Ein guter Mechatroniker misst zweimal und klemmt einmal." },
     { "s": "lehrer", "t": "Erst denken, dann klemmen." },
-    { "s": "lehrer", "t": "In dieser Schule passiert nichts, ohne dass ich davon erfahre. Fast nichts." }
+    { "s": "lehrer", "t": "In dieser Schule passiert nichts, ohne dass ich davon erfahre. Fast nichts." },
+    { "s": "lehrer", "t": "Ich mache dir ein Angebot, das du nicht ablehnen kannst: Hausaufgaben." },
+    { "s": "lehrer", "t": "Respekt bekommt man nicht geschenkt. Man misst ihn. Zweipolig." },
+    { "s": "lehrer", "t": "Die Familie zahlt nicht in Dollar. Sie zahlt in Noten." },
+    { "s": "lehrer", "t": "Wer mich anlügt, schreibt die Klausur zweimal. Einmal für sich, einmal für mich." }
   ],
   "lehrer_verweis": [ { "s": "lehrer", "t": "Was stehst du hier unten herum? Oben wartet Arbeit auf dich. Schau auf die Karte – wer dich braucht, ist markiert." } ],
   "lehrer_ende": [

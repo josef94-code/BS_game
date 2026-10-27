@@ -1,5 +1,5 @@
 {
-  "_info": "Schulradio WLHS 88.3 – Sprüche und Durchsagen je Akt. Werden der Reihe nach abgespielt.",
+  "_info": "Schulradio WLHS 88.3 – Sprüche und Durchsagen je Akt. Werden der Reihe nach abgespielt. 'werbung' wird zwischendurch eingestreut (Parodie, alle Firmen frei erfunden).",
   "sender": "WLHS 88.3 – Lincoln High Radio",
   "akt1": [
     "Guten Abend, Lincoln High! Hier ist WLHS 88.3 – das Radio, das nie schläft. Im Gegensatz zu euch in der ersten Stunde.",
@@ -19,7 +19,8 @@
     "Merke: AUS-Taster in Reihe, EIN-Taster parallel. Wer es andersherum macht, wischt Pudding auf.",
     "Gerücht der Woche: Die Black Roses aus der Abschlussklasse haben einen neuen Sponsor. Wer, das sagt keiner.",
     "Erinnerung an alle: Grün-gelb ist für den Schutzleiter. Nicht für eure Schnürsenkel.",
-    "Und jetzt ein Gruß an den neuen Schülersprecher. Die Familie hört mit."
+    "Und jetzt ein Gruß an den neuen Schülersprecher. Die Familie hört mit.",
+    "Heute Abend in der Turnhalle: Lincoln Lions gegen Westside. Die Cafeteria hat bis zum Schluss geöffnet. Der Pudding nicht."
   ],
   "akt3": [
     "WLHS 88.3 – Sportnachrichten: Das Heimspiel gegen Westside wurde unterbrochen. Der Trennvorhang wollte mitspielen.",
@@ -27,7 +28,8 @@
     "Wussten Sie schon? Ein Hub erzählt jedem alles. Ein Switch ist diskreter. Wie die Familie.",
     "Aus der Werkstatt: Erst die Absaugung, dann die Säge. Sparky sagt, das steht so in den Unterlagen.",
     "Erinnerung: Die Abschlussprüfung der MT10 findet wie geplant statt. Sagt die Schulleitung. Sagt Sterling Bau.",
-    "Ein Gruß an den Capo der MT10. Die schwarzen Rosen welken langsam."
+    "Ein Gruß an den Capo der MT10. Die schwarzen Rosen welken langsam.",
+    "Spielstand-Update aus der Turnhalle: 88 zu 88. Sagt die Anzeigetafel. Die Anzeigetafel lügt."
   ],
   "akt4": [
     "WLHS 88.3 – die Nacht vor der Prüfung. Alle Prüflinge der MT10: Schlaft! Nur einer von euch nicht, wie man hört.",
@@ -38,5 +40,15 @@
     "Hausmeister Kowalski meldet: Die Aula ist offen. Wer seine Absperrbänder geklaut hat, bringt sie bitte zurück.",
     "Eine IP-Adresse pro Gerät. Wie eine Hausnummer. Zwei Häuser mit derselben Nummer – da kommt keine Post an.",
     "Ein Gruß an den Capo der MT10. Morgen um acht. Die Familie drückt die Daumen."
+  ],
+  "werbung": [
+    "WERBUNG: Sterling Bau – Wir sanieren. Sie bezahlen. Fünf Jahre Wartung inklusive, Kündigung ausgeschlossen.",
+    "WERBUNG: Rosalitas Pudding-Abo! Jeden Tag ein Pudding. Solange das Band läuft. Haftung ausgeschlossen.",
+    "WERBUNG: Nachhilfe Dr. Ohm – Widerstand ist zwecklos. Ab 19,95 Dollar pro gültige Stelle.",
+    "WERBUNG: LiveWire Energy – Strom aus Kohle, Atom und guten Absichten. Jetzt neu: der Ökotarif. Gleicher Strom, grünere Rechnung.",
+    "WERBUNG: Der Digitalpakt kommt! Ein Tablet für jede Schule. Lieferung voraussichtlich 2031, Ladekabel separat erhältlich.",
+    "WERBUNG: BrainBoost Energy – doppeltes Koffein, halbe Konzentration. Nicht für Prüfungen geeignet. Nicht für Menschen empfohlen.",
+    "WERBUNG: Elternbeirat Lincoln High – Kuchenbasar am Freitag. Spenden erwünscht, Kuchen auch, Diskussionen bitte im Elternchat.",
+    "WERBUNG: Black Rose Security – Wir passen auf Ihre Schule auf. Ob Sie wollen oder nicht."
   ]
 }

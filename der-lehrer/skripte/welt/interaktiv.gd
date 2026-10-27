@@ -6,6 +6,8 @@ var id := ""
 var hinweis := ""
 var radius := 1.9
 var aktiv := true
+## wird beim Suchen zum Abstand addiert (Statisten treten hinter Anlagen und Türen zurück)
+var nachrang := 0.0
 
 
 static func neu(eltern: Node3D, p_id: String, pos: Vector3, p_hinweis: String, p_radius: float = 1.9) -> Interaktiv:

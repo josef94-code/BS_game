@@ -91,7 +91,7 @@ Interaktionshinweis "[E]". Taste `B` = Beweisbrett/Notizbuch, `Esc` = Pause/Spei
 
 | Figur | Rolle |
 |---|---|
-| **Josef – der Lehrer** | Lehrer, Auftraggeber. Stilisierte Figur nach Foto (bitte liefern, sobald der Prototyp steht) |
+| **Der Lehrer (Mr. Hö)** | Lehrer, Auftraggeber. Stilisierte Figur nach Foto (bitte liefern, sobald der Prototyp steht) |
 | Spielfigur ("der Neue") | Mechatroniker-Schüler, Name wählbar |
 | Mr. Kowalski | Hausmeister, mürrisch, kennt jede Leitung; falsche Fährte |
 | Ms. Delgado | Sekretärin, weiß alles, Klatsch-Quelle |

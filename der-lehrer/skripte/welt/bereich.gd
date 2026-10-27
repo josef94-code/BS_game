@@ -45,6 +45,23 @@ func ausgang_nach(ziel_titel: String) -> Interaktiv:
 	return null
 
 
+## Statisten je Phase (siehe Schuelerschaft): Liste von {art, pos | weg, blick, rose, sprueche}
+## in lokalen Koordinaten, wichtigste zuerst (bei niedriger Grafikstufe werden es weniger).
+func statisten_plan(_phase: String) -> Array:
+	return []
+
+
+## Gruppe, die im Kreis um eine Mitte steht und sich ansieht
+static func _gruppe(mitte: Vector3, punkte: Array, extra: Dictionary = {}) -> Array:
+	var liste := []
+	for p in punkte:
+		var d: Vector3 = mitte - p
+		var e := {"art": "stehen", "pos": p, "blick": atan2(-d.x, -d.z)}
+		e.merge(extra)
+		liste.append(e)
+	return liste
+
+
 ## Liegt ein Weltpunkt in diesem Bereich?
 func enthaelt(p: Vector3) -> bool:
 	return raum_an(p) != ""

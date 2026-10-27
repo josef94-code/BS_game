@@ -5,7 +5,7 @@ Godot 4.5 (GDScript), Export als portable Windows-Anwendung (eine `.exe`, keine 
 
 > Die Lincoln High wurde gerade frisch saniert. Trotzdem flackert das Licht, das Förderband zur Cafeteria steht
 > und die Schulglocke läutet, wann sie will. Alle reden von Kinderkrankheiten. Nur einer glaubt nicht an Zufälle:
-> **der Lehrer** – Mr. Josef, Klassenleiter der MT10. Er gibt dem Neuen erste Aufträge …
+> **der Lehrer** – Klassenleiter der MT10, Türschild „Mr. Hö“. Er gibt dem Neuen erste Aufträge …
 
 **Grafikstil:** an GTA III angelehnt – Low-Poly-Figuren mit realistischen Proportionen und gemalten Gesichtern
 (Gesichtstextur mit Blinzeln, im Code erzeugt), schmuddelige Texturen, viel Kleinkram (Lüftungskanal, Kabeltrassen,

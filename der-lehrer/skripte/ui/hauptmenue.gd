@@ -94,7 +94,7 @@ func _ready() -> void:
 	links.add_child(_hilfe)
 	_meldung = Stil.label("", 20, Color(1, 0.45, 0.35))
 	links.add_child(_meldung)
-	var fuss := Stil.label("Lernspiel für Mechatroniker/-innen · Klasse MT10 (10. Jahrgangsstufe) · Version 1.0 · Akt 1 bis 4 und Finale  ·  Alle Figuren und Ereignisse sind frei erfunden.", 16, Color(1, 1, 1, 0.45))
+	var fuss := Stil.label("Lernspiel für Mechatroniker/-innen · Klasse MT10 (10. Jahrgangsstufe) · Version 1.1 · Akt 1 bis 4 und Finale  ·  Alle Figuren und Ereignisse sind frei erfunden.", 16, Color(1, 1, 1, 0.45))
 	add_child(fuss)
 	Stil.setze(fuss, Control.PRESET_BOTTOM_WIDE, 110, -40, -40, -12)
 	if Spielstand.lehrer:

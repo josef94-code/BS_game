@@ -4,6 +4,8 @@ extends CanvasLayer
 
 signal _weiter_gedrueckt
 signal _gewaehlt(ok: bool)
+## wer gerade spricht (Sprecher-ID, "" = niemand) – für die Mundbewegung der Figuren
+signal sprecher_wechsel(id: String)
 
 var _wurzel: Control
 var _balken_oben: ColorRect
@@ -76,6 +78,7 @@ func starte(eintraege: Array) -> bool:
 		else:
 			_zeige(e)
 			await _weiter_gedrueckt
+	sprecher_wechsel.emit("")
 	_balken_rein(false)
 	_wurzel.visible = false
 	_aktiv = false
@@ -85,7 +88,8 @@ func starte(eintraege: Array) -> bool:
 
 func _zeige(e: Dictionary) -> void:
 	var sp := Daten.sprecher(e.get("s", "erzaehler"))
-	var name: String = String(sp.get("name", "")).replace("{name}", Spielstand.d["name"])
+	sprecher_wechsel.emit(String(e.get("s", "erzaehler")))
+	var name: String = String(e.get("n", sp.get("name", ""))).replace("{name}", Spielstand.d["name"])
 	_name.text = name
 	_name.visible = name != ""
 	_name.add_theme_color_override("font_color", Stil.farbe(sp.get("farbe", "#ffffff")))
